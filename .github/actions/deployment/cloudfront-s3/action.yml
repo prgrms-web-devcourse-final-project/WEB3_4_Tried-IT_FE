@@ -1,0 +1,73 @@
+name: "CloudFront S3 Deployment"
+description: "S3에 배포하고 CloudFront 무효화를 수행합니다"
+inputs:
+  app:
+    description: "배포할 애플리케이션 이름"
+    required: true
+  output-dir:
+    description: "배포할 파일들이 있는 디렉토리 경로"
+    required: true
+  github-token:
+    description: "GitHub 토큰"
+    required: true
+  aws-access-key-id:
+    description: "AWS Access Key ID"
+    required: true
+  aws-secret-access-key:
+    description: "AWS Secret Access Key"
+    required: true
+  aws-default-region:
+    description: "AWS 기본 리전"
+    required: true
+  aws-s3-bucket-name:
+    description: "AWS S3 버킷 이름"
+    required: true
+  aws-cf-distribution-id:
+    description: "AWS CloudFront 배포 ID"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: AWS 자격 증명 설정
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        aws-region: ${{ inputs.aws-default-region }}
+
+    - name: Pnpm 설정
+      uses: pnpm/action-setup@v4
+
+    - name: Node.js 설정
+      uses: actions/setup-node@v3
+      with:
+        node-version: "20"
+        cache: "pnpm"
+
+    - name: 의존성 설치
+      shell: bash
+      run: pnpm install --frozen-lockfile
+
+    - name: 빌드
+      shell: bash
+      run: pnpm --filter ${{ inputs.app }} build
+
+    - name: S3에 파일 업로드
+      shell: bash
+      run: |
+        echo "🚀 S3 버킷에 파일 업로드 중: ${{ inputs.aws-s3-bucket-name }}"
+        aws s3 sync ${{ inputs.output-dir }} s3://${{ inputs.aws-s3-bucket-name }} --delete
+
+    - name: CloudFront 무효화
+      shell: bash
+      run: |
+        echo "🔄 CloudFront 배포 무효화 중: ${{ inputs.aws-cf-distribution-id }}"
+        aws cloudfront create-invalidation --distribution-id ${{ inputs.aws-cf-distribution-id }} --paths "/*"
+
+    - name: 배포 완료 메시지
+      shell: bash
+      run: |
+        echo "✅ ${{ inputs.app }} 앱이 성공적으로 배포되었습니다!"
+        echo "S3 버킷: ${{ inputs.aws-s3-bucket-name }}"
+        echo "CloudFront 배포 ID: ${{ inputs.aws-cf-distribution-id }}"

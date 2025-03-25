@@ -1,0 +1,30 @@
+name: deployment
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: "배포할 대상"
+        type: choice
+        required: true
+        default: "service"
+        options: ["service", "admin"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.app }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: deployment
+        uses: ./.github/actions/deployment/cloudfront-s3
+        with:
+          app: ${{ github.event.inputs.app }}
+          output-dir: apps/${{ github.event.inputs.app }}/dist
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-default-region: ${{ secrets.AWS_DEFAULT_REGION }}
+          aws-s3-bucket-name: ${{ secrets.AWS_S3_BUCKET_NAME }}
+          aws-cf-distribution-id: ${{ secrets.AWS_CF_DISTRIBUTION_ID}}
