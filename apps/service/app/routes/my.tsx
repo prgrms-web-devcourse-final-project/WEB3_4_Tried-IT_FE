@@ -1,1 +1,1 @@
-export { HomePage as default, homePageMeta as meta } from "@/pages/home.page";
+export { MyPage as default, myPageMeta as meta } from "@/pages";
