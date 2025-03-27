@@ -1,4 +1,4 @@
-import "./App.css";
+import { Button } from "@/components/ui/button";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 
@@ -20,6 +20,18 @@ function App() {
             <img src={reactLogo} className="logo react" alt="React logo" />
           </a>
         </div>
+      </div>
+      <div>
+        <h2>TailwindCSS Test</h2>
+        <div className="flex gap-2">
+          <div className="bg-red-500 w-20 h-20">Red Box</div>
+          <div className="bg-blue-500 w-20 h-20">Blue Box</div>
+          <div className="bg-green-500 w-20 h-20">Green Box</div>
+        </div>
+      </div>
+      <div>
+        <h2>Shadcn/UI Test</h2>
+        <Button>Click me</Button>
       </div>
     </>
   );
