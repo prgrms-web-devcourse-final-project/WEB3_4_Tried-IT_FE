@@ -1,1 +1,8 @@
-export { LoginPage as default, loginPageMeta as meta } from "@/pages";
+export { LoginPage as default } from "@/pages";
+
+export function meta() {
+  return [
+    { title: "Login - Dementor" },
+    { name: "description", content: "Login to Dementor" },
+  ];
+}

@@ -1,1 +1,8 @@
-export { SignupPage as default, signupPageMeta as meta } from "@/pages";
+export { SignupPage as default } from "@/pages";
+
+export function meta() {
+  return [
+    { title: "Sign Up - Dementor" },
+    { name: "description", content: "Sign up for Dementor" },
+  ];
+}

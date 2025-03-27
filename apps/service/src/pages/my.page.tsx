@@ -1,10 +1,3 @@
-export function myPageMeta() {
-  return [
-    { title: "My Page - Dementor" },
-    { name: "description", content: "My Page in Dementor" },
-  ];
-}
-
 export function MyPage() {
   return (
     <>

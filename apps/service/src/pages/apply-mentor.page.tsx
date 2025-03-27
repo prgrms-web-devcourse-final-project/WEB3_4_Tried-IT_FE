@@ -1,10 +1,3 @@
-export function applyMentorPageMeta() {
-  return [
-    { title: "Apply as Mentor - Dementor" },
-    { name: "description", content: "Apply as a mentor in Dementor" },
-  ];
-}
-
 export function ApplyMentorPage() {
   return (
     <>

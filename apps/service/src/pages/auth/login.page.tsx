@@ -1,12 +1,5 @@
 import { PageLayout } from "@/shared/layouts/page-layout";
 
-export function loginPageMeta() {
-  return [
-    { title: "Login - Dementor" },
-    { name: "description", content: "Login to Dementor" },
-  ];
-}
-
 export function LoginPage() {
   return (
     <PageLayout>
