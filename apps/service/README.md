@@ -20,3 +20,7 @@ Infrastructure:
 
 - AWS S3
 - AWS CloudFront
+
+## 프로젝트 구조
+
+[Feature-Sliced Design](https://feature-sliced.design)
