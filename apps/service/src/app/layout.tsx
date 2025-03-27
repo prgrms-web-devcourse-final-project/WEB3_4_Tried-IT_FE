@@ -3,6 +3,7 @@ import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
 import { Route } from ".react-router/types/app/+types/root";
 import "@/app/styles/index.css";
 import { PageNavigationDevtools } from "@/shared/dev-tools/page-navigation-devtools";
+import { NavigationHeader } from "@/widgets/navigation-header";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -26,9 +27,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="min-h-dvh flex flex-col">
+        <NavigationHeader />
+        <div className="flex-1">{children}</div>
         <PageNavigationDevtools />
-        {children}
         <ScrollRestoration />
         <Scripts />
       </body>
