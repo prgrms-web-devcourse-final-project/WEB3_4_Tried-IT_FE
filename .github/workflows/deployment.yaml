@@ -21,7 +21,7 @@ jobs:
         uses: ./.github/actions/deployment/cloudfront-s3
         with:
           app: ${{ github.event.inputs.app }}
-          output-dir: apps/${{ github.event.inputs.app }}/dist
+          output-dir: apps/${{ github.event.inputs.app }}/dist/client
           github-token: ${{ secrets.GITHUB_TOKEN }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
