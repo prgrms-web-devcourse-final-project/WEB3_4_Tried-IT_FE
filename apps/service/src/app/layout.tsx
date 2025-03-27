@@ -3,6 +3,7 @@ import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
 import { Route } from ".react-router/types/app/+types/root";
 import "@/app/styles/index.css";
 import { PageNavigationDevtools } from "@/shared/dev-tools/page-navigation-devtools";
+import Footer from "@/widgets/footer";
 import { NavigationHeader } from "@/widgets/navigation-header";
 
 export const links: Route.LinksFunction = () => [
@@ -30,6 +31,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body className="min-h-dvh flex flex-col">
         <NavigationHeader />
         <div className="flex-1">{children}</div>
+        <Footer />
         <PageNavigationDevtools />
         <ScrollRestoration />
         <Scripts />
