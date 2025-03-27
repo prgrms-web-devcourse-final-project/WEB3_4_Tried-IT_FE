@@ -29,7 +29,7 @@ jobs:
         run: pnpm lint
 
       - name: 테스트 실행
-        run: pnpm test --passWithNoTests
+        run: pnpm test
 
       - name: 빌드
         run: pnpm build
