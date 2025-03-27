@@ -20,7 +20,11 @@ export function PageNavigationDevtools() {
   const [isHidden, setIsHidden] = useState(false);
 
   return (
-    <div className="fixed bottom-0 left-0 w-full flex flex-col gap-2 shadow border p-2 rounded-t-lg bg-background z-50">
+    <div
+      className={`fixed bottom-0 left-0 flex flex-col gap-2 shadow border p-2 rounded-t-lg bg-background z-50
+      ${isHidden ? "w-fit" : "w-full"}
+    `}
+    >
       <h1 className="text-sm font-bold">개발용 페이지 네비게이션</h1>
       <Button variant="outline" onClick={() => setIsHidden(!isHidden)}>
         {isHidden ? "Show" : "Hide"}
