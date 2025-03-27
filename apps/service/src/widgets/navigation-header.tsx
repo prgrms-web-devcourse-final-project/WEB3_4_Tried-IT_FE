@@ -1,3 +1,4 @@
+import { useTheme } from "@/app/theme-provider/theme-provider";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Separator } from "@/shared/ui/separator";
@@ -10,21 +11,40 @@ import {
   SheetTrigger,
 } from "@/shared/ui/sheet";
 import { ROUTE_PATH } from "@app/routes";
-import { Menu } from "lucide-react";
+import { Menu, MoonIcon, SunIcon } from "lucide-react";
 import { ComponentProps } from "react";
 import { Link, useLocation } from "react-router";
 
 export function NavigationHeader() {
+  const { theme, setTheme } = useTheme();
   return (
     <>
       <NavigationHeaderPadding />
       <div
-        className={`fixed top-0 left-0 right-0 z-50 h-[60px] md:h-[72px] bg-white shadow-md`}
+        className={`fixed top-0 left-0 right-0 z-50 h-[60px] md:h-[72px] bg-background shadow-md`}
       >
-        <div className="flex justify-between items-center h-full px-3 md:px-4">
-          <Link to={ROUTE_PATH.HOME}>
-            <div className="text-2xl font-bold">DeMentor</div>
-          </Link>
+        <div className="flex justify-between items-center h-full px-3 md:px-4 text-foreground">
+          <div className="flex items-center gap-2">
+            <Link to={ROUTE_PATH.HOME}>
+              <div className="text-2xl font-bold">DeMentor</div>
+            </Link>
+
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+              className="ml-2 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors"
+              aria-label={
+                theme === "light" ? "다크 모드로 전환" : "라이트 모드로 전환"
+              }
+            >
+              {theme === "light" ? (
+                <SunIcon className="size-4" />
+              ) : (
+                <MoonIcon className="size-4" />
+              )}
+            </Button>
+          </div>
 
           <div className="hidden md:flex items-center gap-2">
             <div className="flex gap-1">
@@ -102,7 +122,7 @@ export function NavigationHeaderPadding() {
   return <div className={`h-[60px] md:h-[72px]`} />;
 }
 
-interface NavigationMenuMobileProps {
+interface NavigationMenuProps {
   to: string;
   label: string;
   className?: string;
@@ -114,12 +134,16 @@ function NavigationMenuDesktop({
   label,
   className,
   variant = "link",
-}: NavigationMenuMobileProps) {
+}: NavigationMenuProps) {
   const location = useLocation();
   const isActive = location.pathname === to;
   return (
     <Button
-      className={cn("text-sm", isActive && "underline", className)}
+      className={cn(
+        isActive && "underline",
+        variant === "link" && "text-foreground",
+        className
+      )}
       variant={variant}
       asChild
     >
@@ -133,7 +157,7 @@ function NavigationMenuMobile({
   label,
   className,
   variant = "ghost",
-}: NavigationMenuMobileProps) {
+}: NavigationMenuProps) {
   const location = useLocation();
   const isActive = location.pathname === to;
 
