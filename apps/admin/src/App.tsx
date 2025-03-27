@@ -21,6 +21,14 @@ function App() {
           </a>
         </div>
       </div>
+      <div>
+        <h2>TailwindCSS Test</h2>
+        <div className="flex gap-2">
+          <div className="bg-red-500 w-20 h-20">Red Box</div>
+          <div className="bg-blue-500 w-20 h-20">Blue Box</div>
+          <div className="bg-green-500 w-20 h-20">Green Box</div>
+        </div>
+      </div>
     </>
   );
 }
