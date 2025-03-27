@@ -1,6 +1,7 @@
 import { AspectRatio } from "@/shared/ui/aspect-ratio";
 import { Button } from "@/shared/ui/button";
 import { Typography } from "@/shared/ui/typography";
+import { Logo } from "@/widgets/logo";
 import { ROUTE_PATH } from "@app/routes";
 import { Link } from "react-router";
 
@@ -16,10 +17,7 @@ export function HeroSection() {
           </div>
           <div className="flex flex-col order-2 lg:order-1">
             <div className="order-1">
-              <Typography.H3 className="text-muted-foreground">
-                개발자 멘토링 플랫폼
-              </Typography.H3>
-              <Typography.H1>디멘터</Typography.H1>
+              <Logo />
             </div>
             <div className="order-4 lg:order-2 mt-8 lg:mt-24">
               <Typography.P>
