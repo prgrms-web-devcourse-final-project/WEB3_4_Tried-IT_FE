@@ -14,6 +14,7 @@
     "components": "pnpm dlx shadcn@latest add"
   },
   "dependencies": {
+    "@radix-ui/react-aspect-ratio": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.6",
     "@radix-ui/react-separator": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.2",
