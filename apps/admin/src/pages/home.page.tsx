@@ -1,45 +1,53 @@
-import reactLogo from "@/shared/assets/react.svg";
-import { Button } from "@/shared/ui/button";
-import viteLogo from "/vite.svg";
-
 export function homePageMeta() {
   return [
-    { title: "Dementor" },
-    { name: "description", content: "Welcome to Dementor!" },
+    { title: "DeMentor Admin" },
+    { name: "description", content: "DeMentor 관리자 대시보드" },
   ];
 }
 
 export function HomePage() {
   return (
-    <>
-      <h1>DeMentor: Admin</h1>
-      <h2>Asset Test</h2>
-      <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
-        <div>
-          <h2>Public</h2>
-          <a href="https://vite.dev" target="_blank">
-            <img src={viteLogo} className="logo" alt="Vite logo" />
-          </a>
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">관리자 대시보드</h1>
+          <p className="text-gray-600 mt-2">DeMentor 플랫폼 관리 시스템</p>
         </div>
-        <div>
-          <h2>Bundled</h2>
-          <a href="https://react.dev" target="_blank">
-            <img src={reactLogo} className="logo react" alt="React logo" />
-          </a>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              멘토 신청
+            </h3>
+            <p className="text-3xl font-bold text-blue-600">12</p>
+            <p className="text-sm text-gray-500 mt-1">승인 대기중</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              문의사항
+            </h3>
+            <p className="text-3xl font-bold text-green-600">8</p>
+            <p className="text-sm text-gray-500 mt-1">미답변</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              직무 카테고리
+            </h3>
+            <p className="text-3xl font-bold text-purple-600">24</p>
+            <p className="text-sm text-gray-500 mt-1">등록됨</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              활성 멘토
+            </h3>
+            <p className="text-3xl font-bold text-orange-600">156</p>
+            <p className="text-sm text-gray-500 mt-1">현재 활동중</p>
+          </div>
         </div>
       </div>
-      <div>
-        <h2>TailwindCSS Test</h2>
-        <div className="flex gap-2">
-          <div className="bg-red-500 w-20 h-20">Red Box</div>
-          <div className="bg-blue-500 w-20 h-20">Blue Box</div>
-          <div className="bg-green-500 w-20 h-20">Green Box</div>
-        </div>
-      </div>
-      <div>
-        <h2>Shadcn/UI Test</h2>
-        <Button>Click me</Button>
-      </div>
-    </>
+    </div>
   );
 }
