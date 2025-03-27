@@ -1,3 +1,5 @@
+import { PageLayout } from "@/shared/layouts/page-layout";
+
 export function loginPageMeta() {
   return [
     { title: "Login - Dementor" },
@@ -7,9 +9,7 @@ export function loginPageMeta() {
 
 export function LoginPage() {
   return (
-    <>
-      <h1>DeMentor: Service</h1>
-      <h2>로그인</h2>
+    <PageLayout>
       <div className="max-w-md mx-auto">
         <form className="space-y-4">
           <div>
@@ -34,6 +34,6 @@ export function LoginPage() {
           </button>
         </form>
       </div>
-    </>
+    </PageLayout>
   );
 }

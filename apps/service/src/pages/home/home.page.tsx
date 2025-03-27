@@ -1,4 +1,5 @@
 import { HeroSection } from "@/pages/home/compoents/hero-section";
+import { PageLayout } from "@/shared/layouts/page-layout";
 
 export function homePageMeta() {
   return [
@@ -9,8 +10,8 @@ export function homePageMeta() {
 
 export function HomePage() {
   return (
-    <main className="bg-gradient-to-b from-blue-50 to-white">
+    <PageLayout>
       <HeroSection />
-    </main>
+    </PageLayout>
   );
 }

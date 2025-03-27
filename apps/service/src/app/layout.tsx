@@ -33,7 +33,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
         <body className="min-h-dvh flex flex-col">
           <NavigationHeader />
-          <div className="flex-1">{children}</div>
+          <div className="flex-1 flex flex-col">{children}</div>
           <Footer />
           <PageNavigationDevtools />
           <ScrollRestoration />
