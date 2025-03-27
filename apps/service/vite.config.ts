@@ -17,5 +17,6 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     passWithNoTests: true,
+    setupFiles: "./test/setup.ts",
   },
 });
