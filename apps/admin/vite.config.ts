@@ -1,13 +1,13 @@
 /// <reference types="vitest" />
 
+import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [tailwindcss(), !process.env.VITEST ? reactRouter() : undefined],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

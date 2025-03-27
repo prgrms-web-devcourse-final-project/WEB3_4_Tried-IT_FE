@@ -2,6 +2,13 @@ import reactLogo from "@/shared/assets/react.svg";
 import { Button } from "@/shared/ui/button";
 import viteLogo from "/vite.svg";
 
+export function homePageMeta() {
+  return [
+    { title: "Dementor" },
+    { name: "description", content: "Welcome to Dementor!" },
+  ];
+}
+
 export function HomePage() {
   return (
     <>

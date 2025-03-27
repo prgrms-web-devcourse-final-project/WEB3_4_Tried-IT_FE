@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import { render } from "@testing-library/react";
 
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {

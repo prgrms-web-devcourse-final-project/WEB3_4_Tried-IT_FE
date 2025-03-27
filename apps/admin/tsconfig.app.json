@@ -27,5 +27,11 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "test"]
+  "include": [
+    "app",
+    "src",
+    "test",
+    "**/.client/**/*",
+    ".react-router/types/**/*"
+  ]
 }
