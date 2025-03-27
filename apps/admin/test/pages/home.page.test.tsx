@@ -1,8 +1,8 @@
 import { test } from "vitest";
 
-import App from "@/App";
+import { HomePage } from "@/pages/home.page";
 import { render } from "../test-utils";
 
 test("renders", () => {
-  render(<App />);
+  render(<HomePage />);
 });

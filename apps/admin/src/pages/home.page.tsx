@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
-import reactLogo from "./assets/react.svg";
+import reactLogo from "@/shared/assets/react.svg";
+import { Button } from "@/shared/ui/button";
 import viteLogo from "/vite.svg";
 
-function App() {
+export function HomePage() {
   return (
     <>
       <h1>DeMentor: Admin</h1>
@@ -36,5 +36,3 @@ function App() {
     </>
   );
 }
-
-export default App;
