@@ -1,4 +1,8 @@
-export {
-  MentorDashboardPage as default,
-  mentorDashboardPageMeta as meta,
-} from "@/pages";
+export { MentorDashboardPage as default } from "@/pages";
+
+export function meta() {
+  return [
+    { title: "Mentor Dashboard - Dementor" },
+    { name: "description", content: "Mentor Dashboard in Dementor" },
+  ];
+}

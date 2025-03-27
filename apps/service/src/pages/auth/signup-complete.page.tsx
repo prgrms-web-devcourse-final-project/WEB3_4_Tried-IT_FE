@@ -1,10 +1,3 @@
-export function signupCompletePageMeta() {
-  return [
-    { title: "Sign Up Complete - Dementor" },
-    { name: "description", content: "Sign up completed in Dementor" },
-  ];
-}
-
 export function SignupCompletePage() {
   return (
     <>

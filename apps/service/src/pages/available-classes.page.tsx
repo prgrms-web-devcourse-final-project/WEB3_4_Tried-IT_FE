@@ -1,10 +1,3 @@
-export function availableClassesPageMeta() {
-  return [
-    { title: "Available Classes - Dementor" },
-    { name: "description", content: "Available Classes in Dementor" },
-  ];
-}
-
 export function AvailableClassesPage() {
   return (
     <>

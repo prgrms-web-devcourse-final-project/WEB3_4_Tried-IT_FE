@@ -1,10 +1,3 @@
-export function mentorDashboardPageMeta() {
-  return [
-    { title: "Mentor Dashboard - Dementor" },
-    { name: "description", content: "Mentor Dashboard in Dementor" },
-  ];
-}
-
 export function MentorDashboardPage() {
   return (
     <>
