@@ -1,4 +1,4 @@
-import { HeroSection } from "@/pages/home/compoents/hero-section";
+import { HeroSection } from "@/pages/home/components/hero-section";
 import { PageLayout } from "@/shared/layouts/page-layout";
 
 export function HomePage() {
