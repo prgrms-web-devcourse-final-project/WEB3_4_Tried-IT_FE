@@ -50,7 +50,7 @@ export function NavigationHeader() {
             <div className="flex gap-1">
               <NavigationMenuDesktop to={ROUTE_PATH.HOME} label="Home" />
               <NavigationMenuDesktop
-                to={ROUTE_PATH.APPLY_MENTOR}
+                to={ROUTE_PATH.MENTOR_APPLICATION}
                 label="멘토 지원하기"
               />
               <NavigationMenuDesktop
@@ -88,7 +88,7 @@ export function NavigationHeader() {
                 <div className="flex flex-col">
                   <NavigationMenuMobile to={ROUTE_PATH.HOME} label="Home" />
                   <NavigationMenuMobile
-                    to={ROUTE_PATH.APPLY_MENTOR}
+                    to={ROUTE_PATH.MENTOR_APPLICATION}
                     label="멘토 지원하기"
                   />
                   <NavigationMenuMobile

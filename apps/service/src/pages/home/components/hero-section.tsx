@@ -34,7 +34,7 @@ export function HeroSection() {
                   멘토링 신청하기
                 </Button>
               </Link>
-              <Link to={ROUTE_PATH.APPLY_MENTOR}>
+              <Link to={ROUTE_PATH.MENTOR_APPLICATION}>
                 <Button variant="secondary" className="rounded-md px-6">
                   멘토 지원하기
                 </Button>

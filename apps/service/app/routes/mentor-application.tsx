@@ -1,4 +1,4 @@
-export { ApplyMentorPage as default } from "@/pages";
+export { MentorApplicationPage as default } from "@/pages";
 
 export function meta() {
   return [

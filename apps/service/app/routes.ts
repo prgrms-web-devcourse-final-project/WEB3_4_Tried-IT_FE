@@ -10,7 +10,7 @@ export const ROUTE_PATH = {
   MENTOR: {
     DASHBOARD: "/mentor/dashboard",
   },
-  APPLY_MENTOR: "/apply-mentor",
+  MENTOR_APPLICATION: "/mentor-application",
   AVAILABLE_CLASSES: "/available-classes",
   MY: "/my",
 };
@@ -24,7 +24,7 @@ export default [
 
   route(ROUTE_PATH.MENTOR.DASHBOARD, "routes/mentor/dashboard.tsx"),
 
-  route(ROUTE_PATH.APPLY_MENTOR, "routes/apply-mentor.tsx"),
+  route(ROUTE_PATH.MENTOR_APPLICATION, "routes/mentor-application.tsx"),
   route(ROUTE_PATH.AVAILABLE_CLASSES, "routes/available-classes.tsx"),
   route(ROUTE_PATH.MY, "routes/my.tsx"),
 ] satisfies RouteConfig;
