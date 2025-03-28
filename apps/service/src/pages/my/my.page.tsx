@@ -1,17 +1,25 @@
+import { MyInfoSection } from "@/pages/my/components/my-info-section";
+import { PageLayout } from "@/shared/layouts/page-layout";
+
+const userInfo = {
+  name: "홍길동",
+  email: "example@email.com",
+  phone: "010-1234-5678",
+};
+
 export function MyPage() {
+  const handleChangeUserInfo = (userInfoPartial: Partial<typeof userInfo>) => {
+    alert(`유저 정보 변경! ${JSON.stringify(userInfoPartial)}`);
+  };
+
   return (
-    <>
-      <h1>DeMentor: Service</h1>
-      <h2>My Page</h2>
-      <div>
-        <h2>내 정보</h2>
-        <div className="flex gap-2">
-          <div className="bg-gray-100 p-4 rounded-lg">
-            <p>이름: 홍길동</p>
-            <p>이메일: example@email.com</p>
-          </div>
-        </div>
+    <PageLayout>
+      <div className="container mx-auto space-y-8 py-10 px-4">
+        <MyInfoSection
+          userInfo={userInfo}
+          onChangeUserInfo={handleChangeUserInfo}
+        />
       </div>
-    </>
+    </PageLayout>
   );
 }
