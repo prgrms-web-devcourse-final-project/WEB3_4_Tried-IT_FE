@@ -19,7 +19,7 @@ const Stub = createRoutesStub([
     Component: MockAvailableClassesPage,
   },
   {
-    path: ROUTE_PATH.APPLY_MENTOR,
+    path: ROUTE_PATH.MENTOR_APPLICATION,
     Component: MockApplyMentorPage,
   },
 ]);
