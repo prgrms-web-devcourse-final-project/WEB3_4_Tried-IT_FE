@@ -75,7 +75,7 @@ export function MyInfoSection({
         )}
       </div>
       <Card>
-        <CardContent className="pt-6">
+        <CardContent className="md:pt-6 ">
           <Form {...form}>
             <form className="grid grid-cols-1 md:grid-cols-2 md:items-start gap-6">
               <FormField
