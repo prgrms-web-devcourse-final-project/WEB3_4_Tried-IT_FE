@@ -1,31 +1,21 @@
+import MenteeRequests from "@/pages/mentor/components/mentee-requests";
+import MentorInfo from "@/pages/mentor/components/mentor-info";
+import MentoringPosts from "@/pages/mentor/components/mentoring-posts";
+import { PageLayout } from "@/shared/layouts/page-layout";
+import { Typography } from "@/shared/ui/typography";
+
 export function MentorDashboardPage() {
   return (
-    <>
-      <h1>DeMentor: Service</h1>
-      <h2>멘토 대시보드</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-bold mb-4">현재 수업</h3>
-          <div className="space-y-2">
-            <p>진행중인 수업: 2개</p>
-            <p>예정된 수업: 3개</p>
-          </div>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-bold mb-4">학생 현황</h3>
-          <div className="space-y-2">
-            <p>전체 학생: 15명</p>
-            <p>활성 학생: 12명</p>
-          </div>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-bold mb-4">수업 요청</h3>
-          <div className="space-y-2">
-            <p>새로운 요청: 3개</p>
-            <p>대기중인 요청: 2개</p>
-          </div>
-        </div>
+    <PageLayout>
+      <div className="container mx-auto py-6 space-y-8 px-4">
+        <Typography.H2>멘토 대시보드</Typography.H2>
+
+        <section className="container mx-auto space-y-8">
+          <MentorInfo />
+          <MentoringPosts />
+          <MenteeRequests />
+        </section>
       </div>
-    </>
+    </PageLayout>
   );
 }
