@@ -1,6 +1,6 @@
 import { DuplicateError } from "@/app/errors/duplicate.error";
 import { SignupForm } from "@/widgets/auth/signup-form";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createRoutesStub } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
@@ -69,9 +69,7 @@ describe("SignupForm", () => {
       fireEvent.change(nameInput, { target: { value: "test" } });
       fireEvent.change(nameInput, { target: { value: "" } });
 
-      waitFor(() => {
-        expect(screen.getByText("이름을 입력해주세요."));
-      });
+      expect(await screen.findByText("이름을 입력해주세요."));
     });
 
     test("닉네임 필드에 이미 존재하는 닉네임을 입력한 후에 중복 확인 버튼을 누르면 '이미 사용중인 닉네임입니다.' 메시지가 표시된다.", async () => {
@@ -120,12 +118,12 @@ describe("SignupForm", () => {
       // act
 
       fireEvent.change(emailInput, { target: { value: "test@test.com" } });
+
       fireEvent.change(emailInput, { target: { value: "" } });
 
       // assert
-      waitFor(() => {
-        expect(screen.getByText("이메일을 입력해주세요."));
-      });
+      expect(emailInput.value).toBe("");
+      expect(await screen.findByText("이메일을 입력해주세요."));
     });
 
     test("이메일 필드에 이미 존재하는 이메일을 입력한 후에 중복 확인 버튼을 누르면 '이미 사용중인 이메일입니다.' 메시지가 표시된다.", async () => {
@@ -177,9 +175,7 @@ describe("SignupForm", () => {
       fireEvent.change(passwordInput, { target: { value: "" } });
 
       // assert
-      waitFor(() => {
-        expect(screen.getByText("비밀번호를 입력해주세요."));
-      });
+      expect(await screen.findByText("비밀번호를 입력해주세요."));
     });
 
     test.each`
