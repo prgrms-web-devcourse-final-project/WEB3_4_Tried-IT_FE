@@ -84,7 +84,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
             )}
           />
           <Separator />
-          <Button className="w-full" type="submit">
+          <Button variant="gradient" className="w-full" type="submit">
             로그인
           </Button>
           <Button className="w-full" variant="outline" type="button" asChild>

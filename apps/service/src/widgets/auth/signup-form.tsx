@@ -228,7 +228,12 @@ export function SignupForm({
           />
 
           <Separator />
-          <Button className="w-full" type="submit" disabled={isSubmitDisabled}>
+          <Button
+            variant="gradient"
+            className="w-full"
+            type="submit"
+            disabled={isSubmitDisabled}
+          >
             회원가입
           </Button>
         </div>
