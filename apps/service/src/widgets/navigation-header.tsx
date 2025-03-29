@@ -33,7 +33,7 @@ export function NavigationHeader() {
               variant="outline"
               size="icon"
               onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-              className="ml-2 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors"
+              className="ml-2 rounded-full transition-colors hover:bg-black/80 dark:hover:bg-white/80"
               aria-label={
                 theme === "light" ? "다크 모드로 전환" : "라이트 모드로 전환"
               }
@@ -62,12 +62,13 @@ export function NavigationHeader() {
             <div className="flex gap-2">
               <NavigationMenuDesktop
                 to={ROUTE_PATH.AUTH.SIGNUP}
-                variant="default"
+                className="bg-gradient-to-br from-primary to-secondary transition-colors duration-500 hover:from-secondary hover:to-primary text-primary-foreground"
+                variant="secondary"
                 label="회원가입"
               />
               <NavigationMenuDesktop
                 to={ROUTE_PATH.AUTH.LOGIN}
-                variant="secondary"
+                variant="outline"
                 label="로그인"
               />
             </div>
@@ -99,12 +100,14 @@ export function NavigationHeader() {
                   <div className="flex flex-col gap-2 px-2">
                     <NavigationMenuMobile
                       to={ROUTE_PATH.AUTH.SIGNUP}
-                      variant="default"
+                      className="bg-gradient-to-br from-primary to-secondary transition-colors duration-500 hover:from-secondary hover:to-primary text-primary-foreground rounded-md"
+                      variant="secondary"
                       label="회원가입"
                     />
                     <NavigationMenuMobile
                       to={ROUTE_PATH.AUTH.LOGIN}
-                      variant="secondary"
+                      className="rounded-md"
+                      variant="outline"
                       label="로그인"
                     />
                   </div>
@@ -164,8 +167,8 @@ function NavigationMenuMobile({
   return (
     <Button
       className={cn(
-        "w-full justify-start py-4",
-        isActive && "bg-secondary/50 text-primary",
+        "w-full justify-start py-4 rounded-none",
+        isActive && "bg-primary/10",
         className
       )}
       variant={variant}
