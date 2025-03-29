@@ -44,7 +44,7 @@ test("화면상에 멘토링 신청하기 버튼이 나타난다.", () => {
   // assert
   const mainContent = screen.getByRole("main");
   expect(
-    within(mainContent).getByRole("button", {
+    within(mainContent).getAllByRole("button", {
       name: "멘토링 신청하기",
     })
   );
@@ -56,9 +56,9 @@ test("화면상에 멘토링 신청하기 버튼을 누르면, 멘토링 신청 
 
   // act
   const mainContent = screen.getByRole("main");
-  const button = within(mainContent).getByRole("button", {
+  const button = within(mainContent).getAllByRole("button", {
     name: "멘토링 신청하기",
-  });
+  })[0];
 
   fireEvent.click(button);
 
@@ -73,7 +73,7 @@ test("화면상에 멘토 지원하기 버튼이 나타난다.", () => {
   // assert
   const mainContent = screen.getByRole("main");
   expect(
-    within(mainContent).getByRole("button", {
+    within(mainContent).getAllByRole("button", {
       name: "멘토 지원하기",
     })
   );
@@ -85,9 +85,9 @@ test("화면상에 멘토 지원하기 버튼을 누르면, 멘토 지원 페이
 
   // act
   const mainContent = screen.getByRole("main");
-  const button = within(mainContent).getByRole("button", {
+  const button = within(mainContent).getAllByRole("button", {
     name: "멘토 지원하기",
-  });
+  })[1];
   fireEvent.click(button);
 
   // assert

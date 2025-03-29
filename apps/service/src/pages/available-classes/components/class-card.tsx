@@ -25,7 +25,7 @@ export function ClassCard({ entity, onClick }: ClassCardProps) {
   return (
     <Card
       className={cn(
-        "overflow-hidden border-0 rounded-lg shadow-accent shadow hover:shadow-md hover:-translate-y-1 transition-all duration-300 py-0",
+        "overflow-hidden border-0 rounded-lg shadow-black/20 dark:shadow-white/20 shadow hover:shadow-md hover:-translate-y-1 transition-all duration-300 py-0",
         onClick && "cursor-pointer"
       )}
       onClick={onClick}

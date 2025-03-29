@@ -8,13 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/shared/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/shared/ui/card";
+import { Card, CardContent } from "@/shared/ui/card";
 import {
   Form,
   FormControl,
@@ -121,18 +115,8 @@ export function MentorApplicationForm({
   };
 
   return (
-    <div className="container max-w-3xl mx-auto py-10 px-4">
+    <div className="container max-w-3xl mx-auto py-10 md:px-4">
       <Card className="border-none shadow-md">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-3xl font-bold text-center">
-            멘토 지원하기
-          </CardTitle>
-          <CardDescription className="text-center pt-2">
-            멘토링을 제공하고 싶으신 분들은 아래 양식을 작성해주세요.
-            <br />
-            관리자의 승인이 완료되면 멘토 활동을 시작할 수 있습니다.
-          </CardDescription>
-        </CardHeader>
         <CardContent>
           <Form {...form}>
             <form

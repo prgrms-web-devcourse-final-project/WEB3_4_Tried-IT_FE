@@ -1,4 +1,3 @@
-import { AspectRatio } from "@/shared/ui/aspect-ratio";
 import { Button } from "@/shared/ui/button";
 import { Typography } from "@/shared/ui/typography";
 import { Logo } from "@/widgets/logo";
@@ -11,9 +10,7 @@ export function HeroSection() {
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 items-center justify-items-center lg:px-8">
           <div className="flex justify-center w-full md:w-[360px] lg:w-[480px] order-1 lg:order-2">
-            <AspectRatio ratio={1 / 1} className="rounded-md overflow-hidden">
-              <img src="/hero-image.png" alt="hero-image" />
-            </AspectRatio>
+            <img src="/hero-image.png" alt="hero-image" />
           </div>
           <div className="flex flex-col order-2 lg:order-1">
             <div className="order-1">
@@ -30,12 +27,12 @@ export function HeroSection() {
             </div>
             <div className="order-3 flex flex-wrap gap-4 mt-8 lg:mt-12">
               <Link to={ROUTE_PATH.AVAILABLE_CLASSES}>
-                <Button variant="default" className="rounded-md px-6">
+                <Button size="lg" variant="secondary" className="font-bold">
                   멘토링 신청하기
                 </Button>
               </Link>
               <Link to={ROUTE_PATH.MENTOR_APPLICATION}>
-                <Button variant="secondary" className="rounded-md px-6">
+                <Button size="lg" variant="default" className="font-bold">
                   멘토 지원하기
                 </Button>
               </Link>
