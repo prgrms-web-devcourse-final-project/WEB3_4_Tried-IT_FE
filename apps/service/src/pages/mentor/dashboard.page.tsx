@@ -7,14 +7,14 @@ import { Typography } from "@/shared/ui/typography";
 export function MentorDashboardPage() {
   return (
     <PageLayout>
-      <div className="container mx-auto py-6 space-y-8">
+      <div className="container mx-auto py-6 space-y-8 px-4">
         <Typography.H2>멘토 대시보드</Typography.H2>
 
-        <div className="container mx-auto space-y-8">
+        <section className="container mx-auto space-y-8">
           <MentorInfo />
           <MentoringPosts />
           <MenteeRequests />
-        </div>
+        </section>
       </div>
     </PageLayout>
   );
