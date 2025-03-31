@@ -51,7 +51,7 @@ runs:
 
     - name: 빌드
       shell: bash
-      run: pnpm --filter ${{ inputs.app }} build
+      run: pnpm build --filter ${{ inputs.app }}
 
     - name: S3에 파일 업로드
       shell: bash
