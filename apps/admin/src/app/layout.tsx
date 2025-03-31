@@ -2,7 +2,12 @@ import { Route } from ".react-router/types/app/+types/root";
 import { PageNavigationDevtools } from "@/shared/dev-tools/page-navigation-devtools";
 import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
 
+import { ThemeProvider } from "@/app/theme-provider/theme-provider";
+import Footer from "@/widgets/footer";
+import { NavigationHeader } from "@/widgets/navigation-header";
+
 import "@/app/styles/index.css";
+import "@repo/design-system/styles.css";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -19,19 +24,23 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
-        <PageNavigationDevtools />
-      </body>
-    </html>
+    <ThemeProvider defaultTheme="system">
+      <html lang="en">
+        <head>
+          <meta charSet="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <Meta />
+          <Links />
+        </head>
+        <body>
+          <NavigationHeader />
+          <div className="flex-1 flex flex-col">{children}</div>
+          <Footer />
+          <ScrollRestoration />
+          <Scripts />
+          <PageNavigationDevtools />
+        </body>
+      </html>
+    </ThemeProvider>
   );
 }
