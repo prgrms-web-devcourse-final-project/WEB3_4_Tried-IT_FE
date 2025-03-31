@@ -1,8 +1,7 @@
 import { AvailableClasses } from "@/pages/available-classes/components/available-classes";
 import { ClassesFilterSelect } from "@/pages/available-classes/components/classes-filter-select";
 import { PageLayout } from "@/shared/layouts/page-layout";
-import { AspectRatio } from "@/shared/ui/aspect-ratio";
-import { Typography } from "@/shared/ui/typography";
+import { AspectRatio, Typography } from "@repo/ui";
 
 const jobs = [
   {

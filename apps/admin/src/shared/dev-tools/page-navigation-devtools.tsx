@@ -1,5 +1,5 @@
-import { Button } from "@/shared/ui/button";
 import { ROUTE_PATH } from "@app/routes";
+import { Button } from "@repo/ui";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 

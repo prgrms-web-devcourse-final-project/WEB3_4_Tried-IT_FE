@@ -1,7 +1,6 @@
-import { Button } from "@/shared/ui/button";
-import { Typography } from "@/shared/ui/typography";
 import { Logo } from "@/widgets/logo";
 import { ROUTE_PATH } from "@app/routes";
+import { Button, Typography } from "@repo/ui";
 import { Link } from "react-router";
 
 export function HeroSection() {

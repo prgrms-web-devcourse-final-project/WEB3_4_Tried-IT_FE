@@ -14,6 +14,14 @@ export default defineConfig({
       "@app": path.resolve(__dirname, "./app"),
     },
   },
+  optimizeDeps: {
+    include: ["@repo/ui", "@repo/design-system"],
+  },
+  build: {
+    commonjsOptions: {
+      include: [/@repo\/ui/, /repo\/design-system/, /node_modules/],
+    },
+  },
   test: {
     environment: "jsdom",
     passWithNoTests: true,

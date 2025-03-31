@@ -1,0 +1,131 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: hsl(180, 100%, 100%);
+  --foreground: hsl(246, 47%, 20%);
+
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(246, 47%, 20%);
+
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(246, 47%, 20%);
+
+  --primary: hsl(262, 83%, 58%); /* 보라 (grape purple) */
+  --primary-foreground: hsl(210, 40%, 98%);
+
+  --secondary: hsl(193, 57%, 63%);
+  --secondary-foreground: hsl(210, 40%, 98%);
+
+  --muted: hsl(260, 30%, 90%);
+  --muted-foreground: hsl(245, 15%, 40%);
+
+  --accent: hsl(262, 83%, 58%); /* 보라 (grape purple) */
+  --accent-foreground: hsl(210, 40%, 98%);
+
+  --highlight: hsl(318, 100%, 74%); /* 귀여운 핑크 포인트 */
+  --highlight-foreground: hsl(246, 47%, 20%);
+
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+
+  --border: hsl(260, 30%, 85%);
+  --input: hsl(260, 30%, 85%);
+  --ring: hsl(262, 83%, 58%);
+  --radius: 0.5rem;
+
+  --chart-1: hsl(262, 83%, 58%);
+  --chart-2: hsl(185, 50%, 60%);
+  --chart-3: hsl(45, 97%, 67%);
+  --chart-4: hsl(318, 100%, 74%);
+  --chart-5: hsl(271, 64%, 82%);
+}
+
+.dark {
+  --background: hsl(246, 47%, 12%);
+  --foreground: hsl(210, 40%, 98%);
+
+  --card: hsl(246, 47%, 14%);
+  --card-foreground: hsl(210, 40%, 98%);
+
+  --popover: hsl(246, 47%, 14%);
+  --popover-foreground: hsl(210, 40%, 98%);
+
+  --primary: hsl(262, 83%, 70%);
+  --primary-foreground: hsl(246, 47%, 14%);
+
+  --secondary: hsl(193, 47%, 53%);
+  --secondary-foreground: hsl(246, 47%, 14%);
+
+  --muted: hsl(246, 30%, 30%);
+  --muted-foreground: hsl(215, 20.2%, 65.1%);
+
+  --accent: hsl(262, 83%, 70%);
+  --accent-foreground: hsl(246, 47%, 14%);
+
+  --highlight: hsl(318, 100%, 74%);
+  --highlight-foreground: hsl(246, 47%, 14%);
+
+  --destructive: hsl(0, 62.8%, 51%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+
+  --border: hsl(246, 30%, 30%);
+  --input: hsl(246, 30%, 30%);
+  --ring: hsl(262, 83%, 70%);
+
+  --chart-1: hsl(262, 83%, 70%);
+  --chart-2: hsl(185, 50%, 60%);
+  --chart-3: hsl(45, 97%, 67%);
+  --chart-4: hsl(318, 100%, 74%);
+  --chart-5: hsl(271, 64%, 82%);
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+button {
+  cursor: pointer;
+}

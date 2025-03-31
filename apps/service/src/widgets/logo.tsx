@@ -1,5 +1,5 @@
-import { cn } from "@/shared/lib/utils";
-import { Typography } from "@/shared/ui/typography";
+import { Typography } from "@repo/ui";
+import { cn } from "@repo/utils/cn";
 
 export interface LogoProps {
   className?: string;

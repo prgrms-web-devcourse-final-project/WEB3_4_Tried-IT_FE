@@ -1,5 +1,5 @@
 import { ClassCard } from "@/pages/available-classes/components/class-card";
-import { TabsTrigger } from "@/shared/ui/tabs";
+import { TabsTrigger } from "@repo/ui";
 import { ComponentProps } from "react";
 
 const mentorings = Array.from(

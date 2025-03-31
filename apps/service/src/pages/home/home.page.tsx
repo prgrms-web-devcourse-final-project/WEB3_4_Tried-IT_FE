@@ -2,7 +2,7 @@ import { HeroSection } from "@/pages/home/components/hero-section";
 import { MenteeSection } from "@/pages/home/components/mentee-section";
 import { MentorSection } from "@/pages/home/components/mentor-section";
 import { PageLayout } from "@/shared/layouts/page-layout";
-import { Separator } from "@/shared/ui/separator";
+import { Separator } from "@repo/ui";
 
 export function HomePage() {
   return (

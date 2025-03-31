@@ -9,11 +9,16 @@
     "lint": {},
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": ["^build:dev"]
     },
     "test": {
       "cache": false,
       "persistent": true
+    },
+    "build:dev": {
+      "cache": false,
+      "dependsOn": ["^build:dev"]
     }
   }
 }

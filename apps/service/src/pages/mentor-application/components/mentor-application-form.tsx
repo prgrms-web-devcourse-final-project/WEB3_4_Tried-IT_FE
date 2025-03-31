@@ -7,9 +7,10 @@ import { Upload } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Button } from "@/shared/ui/button";
-import { Card, CardContent } from "@/shared/ui/card";
 import {
+  Button,
+  Card,
+  CardContent,
   Form,
   FormControl,
   FormDescription,
@@ -17,17 +18,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/shared/ui/form";
-import { Input } from "@/shared/ui/input";
-import {
+  Input,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/shared/ui/select";
-import { Textarea } from "@/shared/ui/textarea";
-import { Typography } from "@/shared/ui/typography";
+  Textarea,
+  Typography,
+} from "@repo/ui";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "이름은 2글자 이상이어야 합니다." }),

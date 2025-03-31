@@ -1,6 +1,14 @@
-import { Button } from "@/shared/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
-import { Table, TableBody, TableCell, TableRow } from "@/shared/ui/table";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from "@repo/ui";
 
 export default function MentorInfo() {
   const mentorInfo = {
