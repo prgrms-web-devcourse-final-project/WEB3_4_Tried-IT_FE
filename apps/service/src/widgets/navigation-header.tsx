@@ -1,8 +1,8 @@
 import { useTheme } from "@/app/theme-provider/theme-provider";
-import { cn } from "@/shared/lib/utils";
-import { Button } from "@/shared/ui/button";
-import { Separator } from "@/shared/ui/separator";
+import { ROUTE_PATH } from "@app/routes";
 import {
+  Button,
+  Separator,
   Sheet,
   SheetClose,
   SheetContent,
@@ -10,8 +10,8 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/shared/ui/sheet";
-import { ROUTE_PATH } from "@app/routes";
+} from "@repo/ui";
+import { cn } from "@repo/utils/cn";
 import { Menu, MoonIcon, SunIcon } from "lucide-react";
 import { ComponentProps } from "react";
 import { Link, useLocation } from "react-router";

@@ -1,7 +1,5 @@
-import { Button } from "@/shared/ui/button";
-import { Typography } from "@/shared/ui/typography";
 import { ROUTE_PATH } from "@app/routes";
-import { AspectRatio } from "@radix-ui/react-aspect-ratio";
+import { AspectRatio, Button, Typography } from "@repo/ui";
 import { Link } from "react-router";
 
 export function MenteeSection() {

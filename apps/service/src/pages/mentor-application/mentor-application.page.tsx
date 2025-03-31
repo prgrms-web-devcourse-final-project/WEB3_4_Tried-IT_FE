@@ -1,7 +1,6 @@
 import { MentorApplicationForm } from "@/pages/mentor-application/components/mentor-application-form";
 import { PageLayout } from "@/shared/layouts/page-layout";
-import { AspectRatio } from "@/shared/ui/aspect-ratio";
-import { Typography } from "@/shared/ui/typography";
+import { AspectRatio, Typography } from "@repo/ui";
 
 export function MentorApplicationPage() {
   const handleSubmit = (values: unknown) => {

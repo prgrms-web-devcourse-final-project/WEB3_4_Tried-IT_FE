@@ -1,13 +1,16 @@
-import { Button } from "@/shared/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from "@/shared/ui/table";
+} from "@repo/ui";
 
 export default function MentoringPosts() {
   // 실제 구현에서는 API에서 멘토링 글 목록을 가져올 것입니다

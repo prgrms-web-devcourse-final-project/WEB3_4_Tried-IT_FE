@@ -1,17 +1,17 @@
-import { Button } from "@/shared/ui/button";
-import { CustomPasswordInput } from "@/shared/ui/custom-password-input";
+import { ROUTE_PATH } from "@app/routes";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  Button,
+  CustomPasswordInput,
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/shared/ui/form";
-import { Input } from "@/shared/ui/input";
-import { Separator } from "@/shared/ui/separator";
-import { ROUTE_PATH } from "@app/routes";
-import { zodResolver } from "@hookform/resolvers/zod";
+  Input,
+  Separator,
+} from "@repo/ui";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import { z } from "zod";

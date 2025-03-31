@@ -1,11 +1,11 @@
-import { MultiSelect } from "@/shared/ui/multi-select";
 import {
+  MultiSelect,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/shared/ui/select";
+} from "@repo/ui";
 
 interface ClassesFilterSelectProps {
   jobs: { value: string; label: string }[];

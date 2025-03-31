@@ -1,7 +1,5 @@
-import { cn } from "@/shared/lib/utils";
-import { AspectRatio } from "@/shared/ui/aspect-ratio";
-import { Badge } from "@/shared/ui/badge";
-import { Card, CardContent } from "@/shared/ui/card";
+import { AspectRatio, Badge, Card, CardContent } from "@repo/ui";
+import { cn } from "@repo/utils/cn";
 
 export interface ClassCardProps {
   entity: {

@@ -1,11 +1,12 @@
 import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
 
 import { Route } from ".react-router/types/app/+types/root";
-import "@/app/styles/index.css";
 import { ThemeProvider } from "@/app/theme-provider/theme-provider";
 import { PageNavigationDevtools } from "@/shared/dev-tools/page-navigation-devtools";
 import Footer from "@/widgets/footer";
 import { NavigationHeader } from "@/widgets/navigation-header";
+
+import "@/app/styles/index.css";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
