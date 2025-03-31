@@ -3,4 +3,4 @@ export * from "./auth/login.page";
 export * from "./home.page";
 export * from "./inquery/inquery-chat.page";
 export * from "./inquery/inquery.page";
-export * from "./job-category.page";
+export * from "./job-category/job-category.page";
