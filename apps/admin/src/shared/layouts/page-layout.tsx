@@ -7,7 +7,7 @@ export interface PageLayoutProps {
 
 export function PageLayout({ children, className }: PageLayoutProps) {
   return (
-    <main className={cn("flex-1 bg-background p-4", className)}>
+    <main className={cn("flex-1 bg-background p-8", className)}>
       {children}
     </main>
   );
