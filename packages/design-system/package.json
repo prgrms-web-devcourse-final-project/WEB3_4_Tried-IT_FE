@@ -9,14 +9,11 @@
     "dist"
   ],
   "exports": {
-    ".": "./src/index.ts",
     "./theme.css": "./src/theme.css",
-    "./styles.css": "./dist/styles.css",
-    "./Button": "./src/Button.tsx"
+    "./styles.css": "./dist/styles.css"
   },
   "scripts": {
     "build": "tailwindcss -i ./src/styles.css -o ./dist/styles.css",
-    "lint": "eslint src/",
     "build:dev": "tailwindcss -i ./src/styles.css -o ./dist/styles.css --watch",
     "dev": "tailwindcss -i ./src/styles.css -o ./dist/styles.css --watch",
     "type-check": "tsc --noEmit"
