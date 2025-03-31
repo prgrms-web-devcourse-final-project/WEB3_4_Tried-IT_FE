@@ -14,6 +14,7 @@ export default [
   index("routes/home.tsx"),
   route(ROUTE_PATH.AUTH.LOGIN, "routes/auth/login.tsx"),
   route(ROUTE_PATH.APPLY_APPROVAL, "routes/apply-approval.tsx"),
-  route(ROUTE_PATH.INQUERY, "routes/inquery.tsx"),
+  route(ROUTE_PATH.INQUERY, "routes/inquiry/inquiry-home.tsx"),
+  route(ROUTE_PATH.INQUERY + "/:id", "routes/inquiry/inquiry-chat.tsx"),
   route(ROUTE_PATH.JOB_CATEGORY, "routes/job-category.tsx"),
 ] satisfies RouteConfig;
