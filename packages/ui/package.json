@@ -17,7 +17,8 @@
     "lint": "eslint src/",
     "build:dev": "tailwindcss -i ./src/styles.css -o ./dist/styles.css --watch",
     "dev": "tailwindcss -i ./src/styles.css -o ./dist/styles.css --watch",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "components": "pnpm dlx shadcn@latest add"
   },
   "peerDependencies": {
     "react": "^19.0.0",
@@ -42,6 +43,7 @@
     "@radix-ui/react-separator": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.2",
     "@radix-ui/react-tabs": "^1.1.3",
+    "@radix-ui/react-tooltip": "^1.1.8",
     "@repo/design-system": "workspace:*",
     "@repo/utils": "workspace:*",
     "@tailwindcss/cli": "^4.0.12",
