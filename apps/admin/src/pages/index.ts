@@ -1,4 +1,4 @@
-export * from "./apply-approval.page";
+export * from "./apply-approval/apply-approval.page";
 export * from "./auth/login.page";
 export * from "./home.page";
 export * from "./inquery.page";
