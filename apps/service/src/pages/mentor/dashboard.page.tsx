@@ -1,4 +1,4 @@
-import MenteeRequests from "@/pages/mentor/components/mentee-requests";
+import { MenteeRequests } from "@/pages/mentor/components/mentee-requests";
 import { MentorInfo } from "@/pages/mentor/components/mentor-info";
 import { MentoringPosts } from "@/pages/mentor/components/mentoring-posts";
 import { PageLayout } from "@/shared/layouts/page-layout";
