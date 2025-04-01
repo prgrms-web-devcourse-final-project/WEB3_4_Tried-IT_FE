@@ -9,6 +9,7 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  Skeleton,
   Typography,
 } from "@repo/ui";
 
@@ -16,6 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useGetUserInfo } from "../hooks/useGetUserInfo";
 
 const userInfoSchema = z.object({
   name: z
@@ -31,18 +33,19 @@ const userInfoSchema = z.object({
 type UserInfoFormData = z.infer<typeof userInfoSchema>;
 
 export interface MyInfoSectionProps {
-  userInfo: UserInfoFormData;
   onChangeUserInfo: (userInfo: Partial<UserInfoFormData>) => void;
 }
 
-export function MyInfoSection({
-  userInfo,
-  onChangeUserInfo,
-}: MyInfoSectionProps) {
+export function MyInfoSection({ onChangeUserInfo }: MyInfoSectionProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const { data: user } = useGetUserInfo();
 
   const form = useForm<UserInfoFormData>({
-    defaultValues: userInfo,
+    defaultValues: {
+      name: user.nickname,
+      email: user.email,
+      phone: "010-1234-5678", // TODO: API에서 전화번호 정보를 받아올 때 수정
+    },
     resolver: zodResolver(userInfoSchema),
     mode: "onChange",
   });
@@ -57,7 +60,11 @@ export function MyInfoSection({
   };
 
   const handleCancel = () => {
-    form.reset(userInfo);
+    form.reset({
+      name: user.nickname,
+      email: user.email,
+      phone: "010-1234-5678", // TODO: API에서 전화번호 정보를 받아올 때 수정
+    });
     setIsEditing(false);
   };
 
@@ -133,6 +140,84 @@ export function MyInfoSection({
                   </FormItem>
                 )}
               />
+              <FormItem>
+                <FormLabel>가입일</FormLabel>
+                <FormControl>
+                  <Input
+                    value={user.createdAt.fullDateTime}
+                    readOnly
+                    disabled
+                  />
+                </FormControl>
+              </FormItem>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+MyInfoSection.Skeleton = MyInfoSectionSkeleton;
+
+function MyInfoSectionSkeleton() {
+  const form = useForm();
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <Typography.H2>내 정보</Typography.H2>
+      </div>
+      <Card>
+        <CardContent className="md:pt-6 ">
+          <Form {...form}>
+            <form className="grid grid-cols-1 md:grid-cols-2 md:items-start gap-6">
+              <FormField
+                name="name"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <Skeleton className="bg-primary/10">
+                      <FormControl />
+                      <Input />
+                    </Skeleton>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="email"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <Skeleton className="bg-primary/10">
+                      <FormControl />
+                      <Input />
+                    </Skeleton>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="phone"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Phone</FormLabel>
+                    <Skeleton className="bg-primary/10">
+                      <FormControl />
+                      <Input />
+                    </Skeleton>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormItem>
+                <FormLabel>가입일</FormLabel>
+                <Skeleton className="bg-primary/10">
+                  <FormControl />
+                  <Input />
+                </Skeleton>
+              </FormItem>
             </form>
           </Form>
         </CardContent>
