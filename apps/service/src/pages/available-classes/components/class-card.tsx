@@ -1,25 +1,14 @@
+import { ClassModel } from "@/entities/model/class/class.model";
 import { AspectRatio, Badge, Card, CardContent } from "@repo/ui";
 import { cn } from "@repo/utils/cn";
 
 export interface ClassCardProps {
-  entity: {
-    image: string;
-    title: string;
-    description: string;
-    mentor: {
-      name: string;
-      job: string;
-      career: number;
-    };
-    stack: string;
-
-    price: number;
-  };
+  model: ClassModel;
   onClick?: () => void;
 }
 
-export function ClassCard({ entity, onClick }: ClassCardProps) {
-  const { image, title, description, mentor, stack, price } = entity;
+export function ClassCard({ model, onClick }: ClassCardProps) {
+  const { image, title, description, mentor, stack, price } = model;
   return (
     <Card
       className={cn(

@@ -2,6 +2,7 @@ import { AvailableClasses } from "@/pages/available-classes/components/available
 import { ClassesFilterSelect } from "@/pages/available-classes/components/classes-filter-select";
 import { PageLayout } from "@/shared/layouts/page-layout";
 import { AspectRatio, Typography } from "@repo/ui";
+import { Suspense } from "react";
 
 const jobs = [
   {
@@ -70,7 +71,14 @@ export function AvailableClassesPage() {
           initialOrder="popular"
           onFilterChange={() => {}}
         />
-        <AvailableClasses />
+        <Suspense fallback={<AvailableClasses.Skeleton />}>
+          <AvailableClasses
+            onClassCardClick={(id) => {
+              // TODO: Route To Detail Page. or Modal
+              alert(`${id} 클래스 상세 페이지로 이동`);
+            }}
+          />
+        </Suspense>
       </div>
     </PageLayout>
   );
