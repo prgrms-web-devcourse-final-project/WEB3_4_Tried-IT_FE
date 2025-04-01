@@ -1,12 +1,7 @@
 import { AppliedClassesSection } from "@/pages/my/components/applied-classes-section";
 import { MyInfoSection } from "@/pages/my/components/my-info-section";
 import { PageLayout } from "@/shared/layouts/page-layout";
-
-const userInfo = {
-  name: "홍길동",
-  email: "example@email.com",
-  phone: "010-1234-5678",
-};
+import { Suspense } from "react";
 
 const appliedClasses = [
   {
@@ -48,17 +43,20 @@ const appliedClasses = [
 ];
 
 export function MyPage() {
-  const handleChangeUserInfo = (userInfoPartial: Partial<typeof userInfo>) => {
+  const handleChangeUserInfo = (userInfoPartial: {
+    name?: string;
+    email?: string;
+    phone?: string;
+  }) => {
     alert(`유저 정보 변경! ${JSON.stringify(userInfoPartial)}`);
   };
 
   return (
     <PageLayout>
       <div className="container mx-auto space-y-8 py-10 px-4">
-        <MyInfoSection
-          userInfo={userInfo}
-          onChangeUserInfo={handleChangeUserInfo}
-        />
+        <Suspense fallback={<MyInfoSection.Skeleton />}>
+          <MyInfoSection onChangeUserInfo={handleChangeUserInfo} />
+        </Suspense>
         <AppliedClassesSection appliedClasses={appliedClasses} />
       </div>
     </PageLayout>
