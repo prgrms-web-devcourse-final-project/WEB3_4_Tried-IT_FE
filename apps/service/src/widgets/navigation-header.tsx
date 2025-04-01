@@ -1,4 +1,5 @@
 import { useTheme } from "@/app/theme-provider/theme-provider";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { ROUTE_PATH } from "@app/routes";
 import {
   Button,
@@ -18,6 +19,8 @@ import { Link, useLocation } from "react-router";
 
 export function NavigationHeader() {
   const { theme, setTheme } = useTheme();
+  const { logout, isAuthenticated } = useAuth();
+
   return (
     <>
       <NavigationHeaderPadding />
@@ -62,16 +65,27 @@ export function NavigationHeader() {
             </div>
             <Separator orientation="vertical" />
             <div className="flex gap-2">
-              <NavigationMenuDesktop
-                to={ROUTE_PATH.AUTH.SIGNUP}
-                variant="gradient"
-                label="회원가입"
-              />
-              <NavigationMenuDesktop
-                to={ROUTE_PATH.AUTH.LOGIN}
-                variant="outline"
-                label="로그인"
-              />
+              {isAuthenticated ? (
+                <>
+                  <NavigationMenuDesktop to={ROUTE_PATH.MY} label="내 정보" />
+                  <Button size="lg" variant="outline" onClick={logout}>
+                    로그아웃
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <NavigationMenuDesktop
+                    to={ROUTE_PATH.AUTH.SIGNUP}
+                    variant="gradient"
+                    label="회원가입"
+                  />
+                  <NavigationMenuDesktop
+                    to={ROUTE_PATH.AUTH.LOGIN}
+                    variant="outline"
+                    label="로그인"
+                  />
+                </>
+              )}
             </div>
           </div>
 
@@ -104,18 +118,34 @@ export function NavigationHeader() {
                   />
                   <Separator className="my-2" />
                   <div className="flex flex-col gap-2 px-2">
-                    <NavigationMenuMobile
-                      to={ROUTE_PATH.AUTH.SIGNUP}
-                      className="bg-gradient-to-br from-primary to-secondary transition-colors duration-500 hover:from-secondary hover:to-primary text-primary-foreground rounded-md"
-                      variant="secondary"
-                      label="회원가입"
-                    />
-                    <NavigationMenuMobile
-                      to={ROUTE_PATH.AUTH.LOGIN}
-                      className="rounded-md"
-                      variant="outline"
-                      label="로그인"
-                    />
+                    {isAuthenticated ? (
+                      <>
+                        <NavigationMenuMobile
+                          to={ROUTE_PATH.MY}
+                          className="rounded-md"
+                          variant="ghost"
+                          label="내 정보"
+                        />
+                        <Button onClick={logout} variant="ghost">
+                          로그아웃
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <NavigationMenuMobile
+                          to={ROUTE_PATH.AUTH.SIGNUP}
+                          className="bg-gradient-to-br from-primary to-secondary transition-colors duration-500 hover:from-secondary hover:to-primary text-primary-foreground rounded-md"
+                          variant="secondary"
+                          label="회원가입"
+                        />
+                        <NavigationMenuMobile
+                          to={ROUTE_PATH.AUTH.LOGIN}
+                          className="rounded-md"
+                          variant="outline"
+                          label="로그인"
+                        />
+                      </>
+                    )}
                   </div>
                 </div>
               </SheetContent>

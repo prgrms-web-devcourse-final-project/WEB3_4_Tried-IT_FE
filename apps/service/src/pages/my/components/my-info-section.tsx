@@ -42,8 +42,8 @@ export function MyInfoSection({ onChangeUserInfo }: MyInfoSectionProps) {
 
   const form = useForm<UserInfoFormData>({
     defaultValues: {
-      name: user.nickname,
-      email: user.email,
+      name: user?.nickname,
+      email: user?.email,
       phone: "010-1234-5678", // TODO: API에서 전화번호 정보를 받아올 때 수정
     },
     resolver: zodResolver(userInfoSchema),
@@ -61,8 +61,8 @@ export function MyInfoSection({ onChangeUserInfo }: MyInfoSectionProps) {
 
   const handleCancel = () => {
     form.reset({
-      name: user.nickname,
-      email: user.email,
+      name: user?.nickname,
+      email: user?.email,
       phone: "010-1234-5678", // TODO: API에서 전화번호 정보를 받아올 때 수정
     });
     setIsEditing(false);
@@ -144,7 +144,7 @@ export function MyInfoSection({ onChangeUserInfo }: MyInfoSectionProps) {
                 <FormLabel>가입일</FormLabel>
                 <FormControl>
                   <Input
-                    value={user.createdAt.fullDateTime}
+                    value={user?.createdAt.fullDateTime}
                     readOnly
                     disabled
                   />

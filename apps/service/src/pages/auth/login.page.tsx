@@ -1,10 +1,17 @@
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { PageLayout } from "@/shared/layouts/page-layout";
 import { LoginForm } from "@/widgets/auth/login-form";
 import { Logo } from "@/widgets/logo";
+import { ROUTE_PATH } from "@app/routes";
+import { useNavigate } from "react-router";
 
 export function LoginPage() {
-  const handleLogin = (email: string, password: string) => {
-    alert(`email: ${email}, password: ${password}`);
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogin = async (email: string, password: string) => {
+    await login(email, password);
+    navigate(ROUTE_PATH.HOME);
   };
 
   return (
