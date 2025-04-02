@@ -17,6 +17,7 @@
     "@radix-ui/react-slot": "^1.1.2",
     "@react-router/node": "^7.4.0",
     "@react-router/serve": "^7.4.0",
+    "@repo/api": "workspace:^",
     "@repo/design-system": "workspace:^",
     "@repo/ui": "workspace:^",
     "@repo/utils": "workspace:^",
@@ -31,8 +32,8 @@
     "tw-animate-css": "^1.2.4"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
     "@react-router/dev": "^7.4.0",
+    "@repo/eslint-config": "workspace:*",
     "@testing-library/react": "^16.2.0",
     "@types/node": "^22.13.14",
     "@types/react": "^19.0.10",
