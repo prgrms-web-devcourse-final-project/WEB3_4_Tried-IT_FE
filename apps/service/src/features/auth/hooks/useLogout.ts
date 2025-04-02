@@ -7,7 +7,6 @@ export function useLogout({
   onLogoutSuccess,
   onLogoutFailure,
 }: UseLogoutProps) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleLogout = async () => {
     try {
       //  TODO: 로그아웃 API 호출
