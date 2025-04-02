@@ -2,21 +2,21 @@ import { Model } from "@/entities/model/_interface/model.interface";
 import { DateFormatter } from "@/shared/date/date-formatter";
 
 export interface UserModelJson {
-  id: number;
+  id: string;
   email: string;
   nickname: string;
   createdAt: string;
 }
 
 export interface UserModelConstructorOptions {
-  id: number;
+  id: string;
   email: string;
   nickname: string;
   createdAt: string | Date;
 }
 
 export class UserModel implements Model<UserModelJson> {
-  readonly id: number;
+  readonly id: string;
   readonly email: string;
   readonly nickname: string;
   readonly createdAt: DateFormatter;
