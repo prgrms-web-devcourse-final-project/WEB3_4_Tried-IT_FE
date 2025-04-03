@@ -10,6 +10,7 @@ import {
   DialogTitle,
   Skeleton,
 } from "@repo/ui";
+import dayjs from "dayjs";
 import { Suspense, useState } from "react";
 import { ClassDetailsStep, MessageStep, ScheduleStep } from "./steps";
 
@@ -45,7 +46,7 @@ function ClassApplyModalContent({
 }: Omit<ClassApplyModalProps, "isOpen">) {
   const { data: classDetail } = useGetClassDetail(classId);
   const [currentStep, setCurrentStep] = useState<ClassBookingStep>("details");
-  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(dayjs());
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>();
   const [message, setMessage] = useState("");
 

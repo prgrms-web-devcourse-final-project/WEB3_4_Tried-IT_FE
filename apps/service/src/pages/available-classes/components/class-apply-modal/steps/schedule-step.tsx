@@ -1,12 +1,13 @@
 import { ScheduleModel } from "@/entities/model/schedule/schedule.model";
-import { Button, Typography } from "@repo/ui";
+import { Button, Calendar, Typography } from "@repo/ui";
+import dayjs from "dayjs";
 
 interface ScheduleStepProps {
   availableSchedules: ScheduleModel[];
   unavailableSchedules: ScheduleModel[];
-  selectedDate: string;
+  selectedDate: dayjs.Dayjs;
   selectedTimeSlot?: string;
-  onDateChange: (date: string) => void;
+  onDateChange: (date: dayjs.Dayjs) => void;
   onTimeSlotChange: (time: string) => void;
 }
 
@@ -19,17 +20,19 @@ export function ScheduleStep({
   onTimeSlotChange,
 }: ScheduleStepProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 flex gap-8">
       <div className="space-y-2">
         <label htmlFor="date" className="block text-sm font-medium">
           날짜 선택
         </label>
-        <input
+        <Calendar
+          mode="single"
           id="date"
-          type="date"
-          value={selectedDate}
-          onChange={(e) => onDateChange(e.target.value)}
-          className="w-full rounded-md border p-2"
+          animate
+          selected={selectedDate.toDate()}
+          dayButtonClassName="hover:bg-secondary/80 hover:text-secondary-foreground dark:hover:bg-secondary/80 dark:hover:text-secondary-foreground"
+          selectedClassName="[&>button]:bg-secondary [&>button]:text-secondary-foreground [&>button]:hover:bg-secondary [&>button]:hover:text-secondary-foreground"
+          onSelect={(date) => onDateChange(dayjs(date))}
         />
       </div>
       {selectedDate && (
