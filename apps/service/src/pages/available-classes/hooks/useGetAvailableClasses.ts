@@ -1,4 +1,4 @@
-import { ClassModel } from "@/entities/model/class/class.model";
+import { ClassListItemModel } from "@/entities/model/class/class-list-item.model";
 import { ModelCreator } from "@/entities/model/model-creator";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
@@ -26,7 +26,8 @@ export function useGetAvailableClasses() {
           resolve(classes);
         }, 1000);
       }),
-    select: (data) => data.map((item) => ModelCreator.create(ClassModel, item)),
+    select: (data) =>
+      data.map((item) => ModelCreator.create(ClassListItemModel, item)),
   });
 
   return query;

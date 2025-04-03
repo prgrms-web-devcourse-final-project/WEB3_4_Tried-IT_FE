@@ -1,9 +1,9 @@
-import { ClassModel } from "@/entities/model/class/class.model";
+import { ClassListItemModel } from "@/entities/model/class/class-list-item.model";
 import { AspectRatio, Badge, Card, CardContent } from "@repo/ui";
 import { cn } from "@repo/utils/cn";
 
 export interface ClassCardProps {
-  model: ClassModel;
+  model: ClassListItemModel;
   onClick?: () => void;
 }
 
