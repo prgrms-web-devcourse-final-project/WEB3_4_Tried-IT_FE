@@ -1,6 +1,6 @@
 import { Model } from "@/entities/model/_interface/model.interface";
 
-export interface ClassModelJson {
+export interface ClassListItemModelJson {
   id: number;
   title: string;
   price: number;
@@ -14,7 +14,7 @@ export interface ClassModelJson {
   image: string;
 }
 
-export interface ClassModelConstructorOptions {
+export interface ClassListItemModelConstructorOptions {
   id: number;
   title: string;
   price: number;
@@ -24,7 +24,7 @@ export interface ClassModelConstructorOptions {
   image: string;
 }
 
-export class ClassModel implements Model<ClassModelJson> {
+export class ClassListItemModel implements Model<ClassListItemModelJson> {
   readonly id: number;
   readonly title: string;
   readonly price: number;
@@ -33,7 +33,7 @@ export class ClassModel implements Model<ClassModelJson> {
   readonly stack: string;
   readonly image: string;
 
-  constructor(constructorOptions: ClassModelConstructorOptions) {
+  constructor(constructorOptions: ClassListItemModelConstructorOptions) {
     this.id = constructorOptions.id;
     this.title = constructorOptions.title;
     this.price = constructorOptions.price;
@@ -43,7 +43,7 @@ export class ClassModel implements Model<ClassModelJson> {
     this.image = constructorOptions.image;
   }
 
-  toJson(): ClassModelJson {
+  toJson(): ClassListItemModelJson {
     return {
       id: this.id,
       title: this.title,
