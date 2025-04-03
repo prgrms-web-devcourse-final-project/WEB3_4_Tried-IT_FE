@@ -4,16 +4,18 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 const MOCK_CLASS_DETAIL = {
   id: 1,
-  title: "React 개발 수업",
-  description: "React 개발 수업 설명",
+  title:
+    "A 멘토의 기가막힌 개발 수업! 수업 제목이 길어지면 어떻게 될까? 이것도 될까? 이것보다도 길어지면?",
+  description:
+    "극강의 개발 수업을 경험해보세요! 최대 10명의 학생이 참여할 수 있습니다. 무지하게 긴 설명을 쓰고 싶다면 이렇게 쓰면 됩니다. 무지하게 긴 설명을 쓰고 싶다면 이렇게 쓰면 됩니다.  무지하게 긴 설명을 쓰고 싶다면 이렇게 쓰면 됩니다.  ",
   price: 10000,
   mentor: {
-    name: "홍길동",
+    name: "A 멘토",
     job: "개발자",
     career: 10,
   },
   stack: "React",
-  image: "https://placehold.co/400x400?text=React",
+  image: "https://placehold.co/400x400?text=A",
   availableSchedules: [
     {
       date: "2025-04-03",
