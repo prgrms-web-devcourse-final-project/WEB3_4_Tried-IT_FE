@@ -51,12 +51,7 @@ export function AvailableClassesPage() {
           }}
         />
         <Suspense fallback={<AvailableClasses.Skeleton />}>
-          <AvailableClasses
-            onClassCardClick={(id) => {
-              // TODO: Route To Detail Page. or Modal
-              alert(`${id} 클래스 상세 페이지로 이동`);
-            }}
-          />
+          <AvailableClasses />
         </Suspense>
       </div>
     </PageLayout>

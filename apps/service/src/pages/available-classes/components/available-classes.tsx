@@ -1,14 +1,18 @@
+import { ClassApplyModal } from "@/pages/available-classes/components/class-apply-modal/class-apply-modal";
 import { ClassCard } from "@/pages/available-classes/components/class-card";
 import { useGetAvailableClasses } from "@/pages/available-classes/hooks/useGetAvailableClasses";
 import { Skeleton, TabsTrigger } from "@repo/ui";
+import { overlay } from "overlay-kit";
 import { ComponentProps } from "react";
 
-interface AvailableClassesProps {
-  onClassCardClick: (id: number) => void;
-}
-
-export function AvailableClasses({ onClassCardClick }: AvailableClassesProps) {
+export function AvailableClasses() {
   const { data: classes } = useGetAvailableClasses();
+
+  const handleClassCardClick = (classId: number) => {
+    overlay.open(({ isOpen, close }) => (
+      <ClassApplyModal isOpen={isOpen} onClose={close} classId={classId} />
+    ));
+  };
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
@@ -16,7 +20,7 @@ export function AvailableClasses({ onClassCardClick }: AvailableClassesProps) {
         <ClassCard
           key={index}
           model={classModel}
-          onClick={() => onClassCardClick(classModel.id)}
+          onClick={() => handleClassCardClick(classModel.id)}
         />
       ))}
     </div>
