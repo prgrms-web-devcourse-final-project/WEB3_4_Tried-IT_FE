@@ -25,6 +25,7 @@
     "dayjs": "^1.11.13",
     "isbot": "^5.1.25",
     "lucide-react": "^0.484.0",
+    "overlay-kit": "^1.7.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
