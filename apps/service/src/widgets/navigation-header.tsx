@@ -1,5 +1,5 @@
 import { useTheme } from "@/app/theme-provider/theme-provider";
-import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useAuth } from "@/features/auth/hooks/use-auth";
 import { ROUTE_PATH } from "@app/routes";
 import {
   Button,
