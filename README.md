@@ -33,6 +33,50 @@
 
 ## 개발 환경 설정
 
+### 로컬 환경 설정
+
+로컬 개발 환경에서 HTTPS와 커스텀 도메인을 사용하기 위해 다음 설정이 필요합니다.
+
+1. hosts 파일 설정
+
+   - macOS/Linux: `/etc/hosts`
+   - Windows: `C:\Windows\System32\drivers\etc\hosts`
+
+   다음 내용을 hosts 파일에 추가합니다:
+
+   ```
+   127.0.0.1 local.dementor.site
+   127.0.0.1 admin-local.dementor.site
+   ```
+
+2. 개발 서버 실행
+
+   ```bash
+   # 의존성 설치
+   pnpm install
+
+   # 개발 서버 실행
+   pnpm dev
+   ```
+
+3. 접속
+
+   - 서비스: https://local.dementor.site:5173
+   - 관리자: https://admin-local.dementor.site:5174
+
+   > ⚠️ 브라우저에서 "보안되지 않은 연결" 경고가 표시될 수 있습니다. 이는 개발 환경에서 자체 서명된 인증서를 사용하기 때문입니다. 개발 목적으로 "고급" > "계속 진행"을 선택하여 접속할 수 있습니다.
+
+## 기술 스택
+
+- **프론트엔드**: React 19, TypeScript
+- **빌드 도구**: Vite
+- **스타일링**: Tailwind CSS
+- **상태 관리**: TanStack Query
+- **폼 관리**: React Hook Form
+- **라우팅**: React Router
+- **타입 검증**: Zod
+- **테스트**: Vitest, Testing Library
+
 ```bash
 # 의존성 설치
 pnpm install
@@ -46,14 +90,3 @@ pnpm build
 # 테스트 실행
 pnpm test
 ```
-
-## 기술 스택
-
-- **프론트엔드**: React 19, TypeScript
-- **빌드 도구**: Vite
-- **스타일링**: Tailwind CSS
-- **상태 관리**: TanStack Query
-- **폼 관리**: React Hook Form
-- **라우팅**: React Router
-- **타입 검증**: Zod
-- **테스트**: Vitest, Testing Library
