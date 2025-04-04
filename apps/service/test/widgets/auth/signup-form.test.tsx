@@ -19,7 +19,7 @@ describe("SignupForm", () => {
         path: "/",
         Component: () => (
           <SignupForm
-            onValidateNameDuplicate={mockOnValidateNameDuplicate}
+            onValidateNicknameDuplicate={mockOnValidateNameDuplicate}
             onValidateEmailDuplicate={mockOnValidateEmailDuplicate}
             onValidateEmailAuth={mockOnValidateEmailAuth}
             onSubmit={mockOnSubmit}

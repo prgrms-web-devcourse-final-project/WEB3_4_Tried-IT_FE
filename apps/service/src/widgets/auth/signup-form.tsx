@@ -1,4 +1,5 @@
 import { DuplicateError } from "@/app/errors/duplicate.error";
+import { VerifyEmailModal } from "@/widgets/auth/verify-email-modal";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
@@ -12,6 +13,7 @@ import {
   Input,
   Separator,
 } from "@repo/ui";
+import { overlay } from "overlay-kit";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -26,6 +28,9 @@ const signupFormSchema = z
       .email({
         message: "이메일 형식이 올바르지 않습니다.",
       }),
+    verifyCode: z.string().min(1, {
+      message: "이메일 코드를 인증해주세요.",
+    }),
     password: z
       .string()
       .nonempty({
@@ -46,6 +51,9 @@ const signupFormSchema = z
     name: z.string().min(1, {
       message: "이름을 입력해주세요.",
     }),
+    nickname: z.string().min(1, {
+      message: "닉네임을 입력해주세요.",
+    }),
   })
   .superRefine((data, ctx) => {
     if (data.password !== data.confirmPassword) {
@@ -60,17 +68,22 @@ const signupFormSchema = z
 export type SignupFormData = z.infer<typeof signupFormSchema>;
 
 interface SignupFormProps {
-  onValidateNameDuplicate: (name: string) => Promise<void>;
+  onValidateNicknameDuplicate: (name: string) => Promise<void>;
   onValidateEmailDuplicate: (email: string) => Promise<void>;
   onValidateEmailAuth: (email: string) => Promise<void>;
+  onValidateEmailVerifyCode: (
+    email: string,
+    verifyCode: string
+  ) => Promise<void>;
   onSubmit: (email: string, password: string, name: string) => void;
 }
 
 // TODO: Validation 과정 구체화
 export function SignupForm({
-  onValidateNameDuplicate,
+  onValidateNicknameDuplicate,
   onValidateEmailDuplicate,
   onValidateEmailAuth,
+  onValidateEmailVerifyCode,
   onSubmit,
 }: SignupFormProps) {
   const [isValidating, setIsValidating] = useState(false);
@@ -80,6 +93,7 @@ export function SignupForm({
       password: "",
       confirmPassword: "",
       name: "",
+      nickname: "",
     },
     mode: "onChange",
     resolver: zodResolver(signupFormSchema),
@@ -101,7 +115,7 @@ export function SignupForm({
   const handleValidateNameDuplicate = async (name: string) => {
     try {
       setIsValidating(true);
-      await onValidateNameDuplicate(name);
+      await onValidateNicknameDuplicate(name);
     } catch (error) {
       if (error instanceof DuplicateError) {
         form.setError("name", { message: "이미 사용중인 닉네임입니다." });
@@ -132,6 +146,34 @@ export function SignupForm({
     try {
       setIsValidating(true);
       await onValidateEmailAuth(email);
+
+      const verifiedCode = await overlay.openAsync<string | null>(
+        ({ isOpen, close }) => (
+          <VerifyEmailModal
+            email={email}
+            isOpen={isOpen}
+            onClose={() => {
+              close(null);
+            }}
+            onVerifySuccess={(verifyCode) => {
+              close(verifyCode);
+            }}
+            onVerifyFailure={(error) => {
+              console.error(error);
+            }}
+            onValidateEmailVerifyCode={onValidateEmailVerifyCode}
+          />
+        ),
+        {
+          overlayId: "email-verify-code-input",
+        }
+      );
+
+      if (verifiedCode) {
+        form.setValue("verifyCode", verifiedCode);
+      } else {
+        form.setError("verifyCode", { message: "이메일 인증에 실패했습니다." });
+      }
     } catch (error) {
       console.error(error);
       form.setError("email", { message: "이메일 인증에 실패했습니다." });
@@ -149,25 +191,17 @@ export function SignupForm({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>닉네임</FormLabel>
+                <FormLabel>이름</FormLabel>
                 <div className="flex items-center gap-2">
                   <FormControl>
                     <Input type="text" {...field} />
                   </FormControl>
-                  <div>
-                    <Button
-                      variant="outline"
-                      type="button"
-                      onClick={() => handleValidateNameDuplicate(field.value)}
-                    >
-                      중복 확인
-                    </Button>
-                  </div>
                 </div>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="email"
@@ -176,7 +210,7 @@ export function SignupForm({
                 <FormLabel>이메일</FormLabel>
                 <div className="flex items-center gap-2">
                   <FormControl>
-                    <Input type="email" {...field} />
+                    <Input type="email" autoComplete="email" {...field} />
                   </FormControl>
 
                   <div className="flex items-center gap-2">
@@ -193,6 +227,30 @@ export function SignupForm({
                       onClick={() => handleValidateEmailAuth(field.value)}
                     >
                       이메일 인증
+                    </Button>
+                  </div>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="nickname"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>닉네임</FormLabel>
+                <div className="flex items-center gap-2">
+                  <FormControl>
+                    <Input type="text" {...field} />
+                  </FormControl>
+                  <div>
+                    <Button
+                      variant="outline"
+                      type="button"
+                      onClick={() => handleValidateNameDuplicate(field.value)}
+                    >
+                      중복 확인
                     </Button>
                   </div>
                 </div>

@@ -10,9 +10,10 @@ export function SignupPage() {
           <Logo className="text-center" />
         </div>
         <SignupForm
-          onValidateNameDuplicate={() => Promise.resolve()}
+          onValidateNicknameDuplicate={() => Promise.resolve()}
           onValidateEmailDuplicate={() => Promise.resolve()}
           onValidateEmailAuth={() => Promise.resolve()}
+          onValidateEmailVerifyCode={() => Promise.resolve()}
           onSubmit={() => {}}
         />
       </div>
