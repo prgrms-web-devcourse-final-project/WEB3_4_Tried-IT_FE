@@ -49,9 +49,7 @@ export function ScheduleStep({
               <Button
                 key={schedule.toJson().time}
                 variant={
-                  selectedTimeSlot === schedule.time
-                    ? "secondary"
-                    : "outlineSecondary"
+                  selectedTimeSlot === schedule.time ? "default" : "outline"
                 }
                 disabled={unavailableSchedules.some(
                   (unavailableSchedule) =>
