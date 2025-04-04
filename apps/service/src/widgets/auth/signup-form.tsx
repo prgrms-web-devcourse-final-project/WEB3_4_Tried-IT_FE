@@ -75,7 +75,7 @@ interface SignupFormProps {
     email: string,
     verifyCode: string
   ) => Promise<void>;
-  onSubmit: (email: string, password: string, name: string) => void;
+  onSubmit: (formData: SignupFormData) => Promise<void>;
 }
 
 // TODO: Validation 과정 구체화
@@ -109,7 +109,7 @@ export function SignupForm({
   }, [form.formState, isValidating]);
 
   const handleSubmit = (data: SignupFormData) => {
-    onSubmit(data.email, data.password, data.name);
+    onSubmit(data);
   };
 
   const handleValidateNameDuplicate = async (name: string) => {
