@@ -15,7 +15,7 @@ import {
   Separator,
 } from "@repo/ui";
 import { overlay } from "overlay-kit";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -29,6 +29,9 @@ const signupFormSchema = z
       .email({
         message: "이메일 형식이 올바르지 않습니다.",
       }),
+    emailDuplicateChecked: z.boolean().refine((val) => val === true, {
+      message: "이메일 중복 확인이 필요합니다.",
+    }),
     verifyCode: z.string().min(1, {
       message: "이메일 코드를 인증해주세요.",
     }),
@@ -54,6 +57,9 @@ const signupFormSchema = z
     }),
     nickname: z.string().min(1, {
       message: "닉네임을 입력해주세요.",
+    }),
+    nicknameDuplicateChecked: z.boolean().refine((val) => val === true, {
+      message: "닉네임 중복 확인이 필요합니다.",
     }),
   })
   .superRefine((data, ctx) => {
@@ -100,13 +106,27 @@ export function SignupForm({
     resolver: zodResolver(signupFormSchema),
   });
 
+  const watchedEmail = form.watch("email");
+  const watchedNickname = form.watch("nickname");
+
+  useEffect(() => {
+    form.setValue("emailDuplicateChecked", false);
+  }, [form, watchedEmail]);
+
+  useEffect(() => {
+    form.setValue("nicknameDuplicateChecked", false);
+  }, [form, watchedNickname]);
+
   const isSubmitDisabled = useMemo(() => {
-    return (
-      form.formState.isSubmitting ||
-      form.formState.isValidating ||
-      !form.formState.isValid ||
-      isValidating
-    );
+    // TODO 임시로 무조건 false
+
+    return false;
+    // return (
+    //   form.formState.isSubmitting ||
+    //   form.formState.isValidating ||
+    //   !form.formState.isValid ||
+    //   isValidating
+    // );
   }, [form.formState, isValidating]);
 
   const handleSubmit = (data: SignupFormData) => {
@@ -117,12 +137,16 @@ export function SignupForm({
     try {
       setIsValidating(true);
       await onValidateNicknameDuplicate(name);
+      form.clearErrors("nicknameDuplicateChecked");
+      form.setValue("nicknameDuplicateChecked", true);
     } catch (error) {
       if (error instanceof DuplicateError) {
-        form.setError("nickname", { message: "이미 사용중인 닉네임입니다." });
+        form.setError("nicknameDuplicateChecked", {
+          message: "이미 사용중인 닉네임입니다.",
+        });
       } else {
         console.error(error);
-        form.setError("nickname", {
+        form.setError("nicknameDuplicateChecked", {
           message: `알수 없는 에러: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
         });
       }
@@ -135,12 +159,16 @@ export function SignupForm({
     try {
       setIsValidating(true);
       await onValidateEmailDuplicate(email);
+      form.clearErrors("emailDuplicateChecked");
+      form.setValue("emailDuplicateChecked", true);
     } catch (error) {
       if (error instanceof DuplicateError) {
-        form.setError("email", { message: "이미 사용중인 이메일입니다." });
+        form.setError("emailDuplicateChecked", {
+          message: "이미 사용중인 이메일입니다.",
+        });
       } else {
         console.error(error);
-        form.setError("email", {
+        form.setError("emailDuplicateChecked", {
           message: `알수 없는 에러: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
         });
       }
@@ -237,7 +265,10 @@ export function SignupForm({
                     </Button>
                   </div>
                 </div>
-                <FormMessage />
+                <FormMessage>
+                  {form.formState.errors.emailDuplicateChecked &&
+                    form.formState.errors.emailDuplicateChecked.message}
+                </FormMessage>
               </FormItem>
             )}
           />
@@ -261,7 +292,10 @@ export function SignupForm({
                     </ButtonWithLoading>
                   </div>
                 </div>
-                <FormMessage />
+                <FormMessage>
+                  {form.formState.errors.nicknameDuplicateChecked &&
+                    form.formState.errors.nicknameDuplicateChecked.message}
+                </FormMessage>
               </FormItem>
             )}
           />
