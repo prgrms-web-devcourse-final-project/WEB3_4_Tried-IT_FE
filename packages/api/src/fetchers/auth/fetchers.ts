@@ -37,8 +37,8 @@ export const verifySignUpVerifyCode = generateServiceFetcher<
   void,
   { verifyEmail: boolean }
 >({
-  endpoint: "/api/signup/verifyCode",
-  method: "POST",
+  endpoint: "/api/signup/verifyEmail",
+  method: "GET",
 });
 
 export const validateNickname = generateServiceFetcher<
