@@ -1,3 +1,4 @@
+import { DuplicateError } from "@/app/errors/duplicate.error";
 import { SignupFormData } from "@/widgets/auth/signup-form";
 import { dementorApiFetchers } from "@repo/api";
 import { useMutation } from "@tanstack/react-query";
@@ -23,6 +24,11 @@ export function useSignup() {
         return dementorApiFetchers.auth.validateEmail({
           queryParam: { email },
         });
+      },
+      onSettled: (data) => {
+        if (data && !data?.data.isEmail) {
+          throw new DuplicateError("이메일이 중복되었습니다.");
+        }
       },
     });
 
@@ -61,8 +67,8 @@ export function useSignup() {
       });
     },
     onSettled: (data) => {
-      if (!data?.data.isNickname) {
-        throw new Error("닉네임이 중복되었습니다.");
+      if (data && !data?.data.isNickname) {
+        throw new DuplicateError("닉네임이 중복되었습니다.");
       }
     },
   });

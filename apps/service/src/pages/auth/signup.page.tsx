@@ -1,3 +1,4 @@
+import { handleError } from "@/app/error-handler/error-handler";
 import { useSignup } from "@/features/auth/hooks/use-signup/use-signup";
 import { PageLayout } from "@/shared/layouts/page-layout";
 import { SignupForm } from "@/widgets/auth/signup-form";
@@ -20,19 +21,44 @@ export function SignupPage() {
         </div>
         <SignupForm
           onValidateNicknameDuplicate={async (nickname) => {
-            await validateNickname(nickname);
+            try {
+              await validateNickname(nickname);
+            } catch (error) {
+              handleError(error);
+              throw error;
+            }
           }}
           onValidateEmailDuplicate={async (email) => {
-            await validateEmail(email);
+            try {
+              await validateEmail(email);
+            } catch (error) {
+              handleError(error);
+              throw error;
+            }
           }}
           onValidateEmailAuth={async (email) => {
-            await sendEmailVerifyCode(email);
+            try {
+              await sendEmailVerifyCode(email);
+            } catch (error) {
+              handleError(error);
+              throw error;
+            }
           }}
           onValidateEmailVerifyCode={async (email, verifyCode) => {
-            await verifyEmailVerifyCode({ email, verifyCode });
+            try {
+              await verifyEmailVerifyCode({ email, verifyCode });
+            } catch (error) {
+              handleError(error);
+              throw error;
+            }
           }}
           onSubmit={async (formData) => {
-            await signup(formData);
+            try {
+              await signup(formData);
+            } catch (error) {
+              handleError(error);
+              throw error;
+            }
           }}
         />
       </div>

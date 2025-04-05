@@ -10,6 +10,7 @@ import Footer from "@/widgets/footer";
 import { NavigationHeader } from "@/widgets/navigation-header";
 
 import "@/app/styles/index.css";
+import { Toaster } from "@repo/ui";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -47,6 +48,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <div className="flex-1 flex flex-col">{children}</div>
               <Footer />
               <PageNavigationDevtools />
+              <Toaster />
               <ScrollRestoration />
               <Scripts />
             </body>

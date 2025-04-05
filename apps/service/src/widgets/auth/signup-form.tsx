@@ -3,6 +3,7 @@ import { VerifyEmailModal } from "@/widgets/auth/verify-email-modal";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
+  ButtonWithLoading,
   CustomPasswordInput,
   Form,
   FormControl,
@@ -118,9 +119,12 @@ export function SignupForm({
       await onValidateNicknameDuplicate(name);
     } catch (error) {
       if (error instanceof DuplicateError) {
-        form.setError("name", { message: "이미 사용중인 닉네임입니다." });
+        form.setError("nickname", { message: "이미 사용중인 닉네임입니다." });
       } else {
         console.error(error);
+        form.setError("nickname", {
+          message: `알수 없는 에러: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
+        });
       }
     } finally {
       setIsValidating(false);
@@ -136,6 +140,9 @@ export function SignupForm({
         form.setError("email", { message: "이미 사용중인 이메일입니다." });
       } else {
         console.error(error);
+        form.setError("email", {
+          message: `알수 없는 에러: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
+        });
       }
     } finally {
       setIsValidating(false);
@@ -245,13 +252,13 @@ export function SignupForm({
                     <Input type="text" {...field} />
                   </FormControl>
                   <div>
-                    <Button
+                    <ButtonWithLoading
                       variant="outline"
                       type="button"
                       onClick={() => handleValidateNameDuplicate(field.value)}
                     >
                       중복 확인
-                    </Button>
+                    </ButtonWithLoading>
                   </div>
                 </div>
                 <FormMessage />
