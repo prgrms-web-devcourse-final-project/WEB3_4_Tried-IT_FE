@@ -1,4 +1,4 @@
-import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useAuth } from "@/features/auth/hooks/use-auth";
 import { PageLayout } from "@/shared/layouts/page-layout";
 import { LoginForm } from "@/widgets/auth/login-form";
 import { Logo } from "@/widgets/logo";

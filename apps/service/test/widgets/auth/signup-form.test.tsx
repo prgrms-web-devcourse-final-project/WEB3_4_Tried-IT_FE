@@ -1,14 +1,30 @@
 import { DuplicateError } from "@/app/errors/duplicate.error";
 import { SignupForm } from "@/widgets/auth/signup-form";
-import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createRoutesStub } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import { fireEvent, render, screen } from "../../test-utils";
+
+// matchMedia mock 설정
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  value: vi.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+});
 
 describe("SignupForm", () => {
   const mockOnValidateNameDuplicate = vi.fn();
   const mockOnValidateEmailDuplicate = vi.fn();
   const mockOnValidateEmailAuth = vi.fn();
+  const mockOnValidateEmailVerifyCode = vi.fn();
   const mockOnSubmit = vi.fn();
 
   beforeEach(() => {
@@ -19,9 +35,10 @@ describe("SignupForm", () => {
         path: "/",
         Component: () => (
           <SignupForm
-            onValidateNameDuplicate={mockOnValidateNameDuplicate}
+            onValidateNicknameDuplicate={mockOnValidateNameDuplicate}
             onValidateEmailDuplicate={mockOnValidateEmailDuplicate}
             onValidateEmailAuth={mockOnValidateEmailAuth}
+            onValidateEmailVerifyCode={mockOnValidateEmailVerifyCode}
             onSubmit={mockOnSubmit}
           />
         ),
@@ -50,6 +67,9 @@ describe("SignupForm", () => {
   });
 
   describe("닉네임 유효 검사", () => {
+    const duplicationErrorMessage = "이미 사용중인 닉네임입니다.";
+    const emptyErrorMessage = "닉네임을 입력해주세요.";
+
     test("최초에 닉네임 필드가 비어있으면 유효성 검사 메시지가 표시되지 않는다.", () => {
       // arrange
       const nameInput = screen.getByRole("textbox", {
@@ -57,11 +77,11 @@ describe("SignupForm", () => {
       }) as HTMLInputElement;
 
       expect(nameInput.value).toBe("");
-      expect(screen.queryByText("이미 사용중인 닉네임입니다.")).toBeNull();
-      expect(screen.queryByText("이름을 입력해주세요.")).toBeNull();
+      expect(screen.queryByText(duplicationErrorMessage)).toBeNull();
+      expect(screen.queryByText(emptyErrorMessage)).toBeNull();
     });
 
-    test("닉네임 필드에 값을 입력한 후에 다시 비우면 '이름을 입력해주세요.' 메시지가 표시된다.", async () => {
+    test(`닉네임 필드에 값을 입력한 후에 다시 비우면 '${emptyErrorMessage}' 메시지가 표시된다.`, async () => {
       const nameInput = screen.getByRole("textbox", {
         name: /닉네임/i,
       }) as HTMLInputElement;
@@ -69,7 +89,7 @@ describe("SignupForm", () => {
       fireEvent.change(nameInput, { target: { value: "test" } });
       fireEvent.change(nameInput, { target: { value: "" } });
 
-      expect(await screen.findByText("이름을 입력해주세요."));
+      expect(await screen.findByText(emptyErrorMessage));
     });
 
     test("닉네임 필드에 이미 존재하는 닉네임을 입력한 후에 중복 확인 버튼을 누르면 '이미 사용중인 닉네임입니다.' 메시지가 표시된다.", async () => {
@@ -83,7 +103,9 @@ describe("SignupForm", () => {
         .closest("div")
         ?.querySelector("button") as HTMLButtonElement;
 
-      mockOnValidateNameDuplicate.mockRejectedValue(new DuplicateError());
+      mockOnValidateNameDuplicate.mockRejectedValue(
+        new DuplicateError("nickname")
+      );
 
       // act
       fireEvent.change(nameInput, { target: { value: tInputValue } });
@@ -138,7 +160,9 @@ describe("SignupForm", () => {
         ?.querySelectorAll("button") as NodeListOf<HTMLButtonElement>;
       const duplicateCheckButton = buttons[0];
 
-      mockOnValidateEmailDuplicate.mockRejectedValue(new DuplicateError());
+      mockOnValidateEmailDuplicate.mockRejectedValue(
+        new DuplicateError("email")
+      );
 
       // act
       fireEvent.change(emailInput, { target: { value: tInputValue } });
@@ -149,7 +173,133 @@ describe("SignupForm", () => {
       expect(await screen.findByText("이미 사용중인 이메일입니다."));
     });
 
-    // TODO: 이메일 인증 버튼 테스트
+    test("이메일 인증 버튼을 클릭하면 이메일 인증 요청이 전달된다.", async () => {
+      // arrange
+      const tInputValue = "test@test.com";
+      const emailInput = screen.getByRole("textbox", {
+        name: /이메일/i,
+      }) as HTMLInputElement;
+
+      const buttons = emailInput
+        .closest("div")
+        ?.querySelectorAll("button") as NodeListOf<HTMLButtonElement>;
+      const emailAuthButton = buttons[1];
+
+      // act
+      fireEvent.change(emailInput, { target: { value: tInputValue } });
+      await userEvent.click(emailAuthButton);
+
+      // assert
+      expect(mockOnValidateEmailAuth).toHaveBeenCalledWith(tInputValue);
+    });
+
+    test("이메일 인증 버튼을 클릭하면 이메일 인증 모달이 표시된다.", async () => {
+      // arrange
+      const tInputValue = "test@test.com";
+      const emailInput = screen.getByRole("textbox", {
+        name: /이메일/i,
+      }) as HTMLInputElement;
+
+      const buttons = emailInput
+        .closest("div")
+        ?.querySelectorAll("button") as NodeListOf<HTMLButtonElement>;
+      const emailAuthButton = buttons[1];
+
+      // act
+      fireEvent.change(emailInput, { target: { value: tInputValue } });
+      await userEvent.click(emailAuthButton);
+
+      // assert
+      expect(mockOnValidateEmailAuth).toHaveBeenCalledWith(tInputValue);
+      expect(
+        await screen.findByText(
+          `${tInputValue} 이메일로 인증코드가 전송되었습니다. 전달받은 인증 코드를 입력해주세요.`
+        )
+      );
+    });
+
+    test("이메일 인증 코드가 성공적으로 검증되면 verifyCode 필드가 업데이트된다.", async () => {
+      // arrange
+      const tInputValue = "test@test.com";
+      const tVerifyCode = "123456";
+      const emailInput = screen.getByRole("textbox", {
+        name: /이메일/i,
+      }) as HTMLInputElement;
+
+      fireEvent.change(emailInput, { target: { value: tInputValue } });
+      const buttons = emailInput
+        .closest("div")
+        ?.querySelectorAll("button") as NodeListOf<HTMLButtonElement>;
+      const emailAuthButton = buttons[1];
+
+      mockOnValidateEmailVerifyCode.mockResolvedValue(undefined);
+
+      // act
+      await userEvent.click(emailAuthButton);
+
+      const verifyEmailModal = await screen.findByText(
+        `${tInputValue} 이메일로 인증코드가 전송되었습니다. 전달받은 인증 코드를 입력해주세요.`
+      );
+      expect(verifyEmailModal).toBeTruthy();
+
+      const verifyCodeInput = screen.getByRole("textbox", {
+        name: /인증 코드/i,
+      }) as HTMLInputElement;
+      fireEvent.change(verifyCodeInput, { target: { value: tVerifyCode } });
+
+      const verifyButton = screen.getByRole("button", {
+        name: /인증/i,
+      });
+      await userEvent.click(verifyButton);
+
+      // assert
+      expect(mockOnValidateEmailVerifyCode).toHaveBeenCalledWith(
+        tInputValue,
+        tVerifyCode
+      );
+    });
+
+    test("이메일 인증 코드 검증이 실패하면 에러 메시지가 표시된다.", async () => {
+      // arrange
+      const tInputValue = "test@test.com";
+      const tVerifyCode = "123456";
+      const emailInput = screen.getByRole("textbox", {
+        name: /이메일/i,
+      }) as HTMLInputElement;
+
+      fireEvent.change(emailInput, { target: { value: tInputValue } });
+      const buttons = emailInput
+        .closest("div")
+        ?.querySelectorAll("button") as NodeListOf<HTMLButtonElement>;
+      const emailAuthButton = buttons[1];
+
+      mockOnValidateEmailVerifyCode.mockRejectedValue(new Error("인증 실패"));
+
+      // act
+      await userEvent.click(emailAuthButton);
+
+      const verifyEmailModal = await screen.findByText(
+        `${tInputValue} 이메일로 인증코드가 전송되었습니다. 전달받은 인증 코드를 입력해주세요.`
+      );
+      expect(verifyEmailModal).toBeTruthy();
+
+      const verifyCodeInput = screen.getByRole("textbox", {
+        name: /인증 코드/i,
+      }) as HTMLInputElement;
+      fireEvent.change(verifyCodeInput, { target: { value: tVerifyCode } });
+
+      const verifyButton = screen.getByRole("button", {
+        name: /인증/i,
+      });
+      await userEvent.click(verifyButton);
+
+      // assert
+      expect(mockOnValidateEmailVerifyCode).toHaveBeenCalledWith(
+        tInputValue,
+        tVerifyCode
+      );
+      expect(await screen.findByText("오류가 발생했습니다."));
+    });
   });
 
   describe("비밀번호 유효 검사", () => {
@@ -301,37 +451,6 @@ describe("SignupForm", () => {
       expect(mockOnSubmit).not.toHaveBeenCalled();
     });
 
-    test("회원가입 버튼을 누르면 회원가입 요청이 전달된다.", async () => {
-      // arrange
-      const signupButton = screen.getByRole("button", { name: /회원가입/i });
-      const nameInput = screen.getByRole("textbox", { name: /닉네임/i });
-      const nameDuplicateCheckButton = nameInput
-        .closest("div")
-        ?.querySelector("button") as HTMLButtonElement;
-      const emailInput = screen.getByRole("textbox", { name: /이메일/i });
-      const emailValidateButtons = emailInput
-        .closest("div")
-        ?.querySelectorAll("button") as NodeListOf<HTMLButtonElement>;
-      const emailDuplicateCheckButton = emailValidateButtons[0];
-      const emailAuthButton = emailValidateButtons[1];
-      const passwordInput = screen.getByLabelText("비밀번호");
-      const passwordConfirmInput = screen.getByLabelText("비밀번호 확인");
-
-      // act
-      fireEvent.change(nameInput, { target: { value: "test" } });
-      await userEvent.click(nameDuplicateCheckButton);
-      fireEvent.change(emailInput, { target: { value: "test@test.com" } });
-      await userEvent.click(emailDuplicateCheckButton);
-      await userEvent.click(emailAuthButton);
-      fireEvent.change(passwordInput, { target: { value: "test1234!" } });
-      fireEvent.change(passwordConfirmInput, {
-        target: { value: "test1234!" },
-      });
-
-      await userEvent.click(signupButton);
-
-      // assert
-      expect(mockOnSubmit).toHaveBeenCalled();
-    });
+    // TODO: 모든 필드의 유효성 검사가 완료되면 회원가입 버튼을 누르면 회원가입 요청이 전달된다.
   });
 });

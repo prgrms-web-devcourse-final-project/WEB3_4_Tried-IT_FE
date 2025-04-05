@@ -31,9 +31,6 @@ export default defineConfig({
     },
     sourcemap: true,
   },
-  define: {
-    "process.env": process.env,
-  },
   resolve: {
     preserveSymlinks: true,
     alias: {

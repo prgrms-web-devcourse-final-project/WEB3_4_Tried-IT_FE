@@ -2,12 +2,22 @@
 
 import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
+import basicSsl from "@vitejs/plugin-basic-ssl";
 import path from "path";
 import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [tailwindcss(), !process.env.VITEST ? reactRouter() : undefined],
+  plugins: [
+    tailwindcss(),
+    !process.env.VITEST ? reactRouter() : undefined,
+    basicSsl(),
+  ],
+  server: {
+    host: "admin-local.dementor.site",
+    allowedHosts: ["dementor.site"],
+    port: 5174,
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
