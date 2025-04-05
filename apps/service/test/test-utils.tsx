@@ -1,7 +1,17 @@
+import { ThemeProvider } from "@/app/theme-provider/theme-provider";
+import { Toaster } from "@repo/ui";
 import { render } from "@testing-library/react";
+import { OverlayProvider } from "overlay-kit";
 
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
-  return <>{children}</>;
+  return (
+    <ThemeProvider>
+      <OverlayProvider>
+        {children}
+        <Toaster />
+      </OverlayProvider>
+    </ThemeProvider>
+  );
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
