@@ -11,7 +11,7 @@ export const getMyMemberInfo = generateServiceFetcher<
   void,
   ServerSuccessResponse<GetMyMemberInfoResponse>
 >({
-  endpoint: "/api/member/me",
+  endpoint: "/api/members/info",
   method: "GET",
 });
 
