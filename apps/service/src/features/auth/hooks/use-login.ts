@@ -10,7 +10,7 @@ export function useLogin({ onLoginSuccess, onLoginFailure }: UseLoginProps) {
   const handleLogin = async (email: string, password: string) => {
     try {
       await dementorApiFetchers.auth.login({
-        queryParam: {
+        body: {
           email,
           password,
         },

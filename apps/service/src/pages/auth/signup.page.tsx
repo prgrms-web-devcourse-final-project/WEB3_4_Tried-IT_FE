@@ -21,20 +21,10 @@ export function SignupPage() {
         </div>
         <SignupForm
           onValidateNicknameDuplicate={async (nickname) => {
-            try {
-              await validateNickname(nickname);
-            } catch (error) {
-              handleError(error);
-              throw error;
-            }
+            await validateNickname(nickname);
           }}
           onValidateEmailDuplicate={async (email) => {
-            try {
-              await validateEmail(email);
-            } catch (error) {
-              handleError(error);
-              throw error;
-            }
+            await validateEmail(email);
           }}
           onValidateEmailAuth={async (email) => {
             try {
