@@ -20,17 +20,7 @@ const loginFormSchema = z.object({
   email: z.string().email({
     message: "이메일 형식이 올바르지 않습니다.",
   }),
-  password: z
-    .string()
-    .min(8, {
-      message: "비밀번호는 8자 이상이어야 합니다.",
-    })
-    .max(16, {
-      message: "비밀번호는 16자 이하여야 합니다.",
-    })
-    .regex(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, {
-      message: "비밀번호는 영문, 숫자, 특수문자를 포함해야 합니다.",
-    }),
+  password: z.string().nonempty(),
 });
 
 export type LoginFormData = z.infer<typeof loginFormSchema>;
