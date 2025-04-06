@@ -7,7 +7,7 @@ export const signUp = generateServiceFetcher<
   SignUpRequest,
   ServerSuccessResponse<{ message: string }>
 >({
-  endpoint: "/api/signup",
+  endpoint: "/api/members",
   method: "POST",
 });
 
@@ -17,7 +17,7 @@ export const validateEmail = generateServiceFetcher<
   void,
   ServerSuccessResponse<{ isEmail: boolean }>
 >({
-  endpoint: "/api/signup/isEmail",
+  endpoint: "/api/members/isEmail",
   method: "GET",
 });
 
@@ -27,7 +27,7 @@ export const requestSignUpVerifyCode = generateServiceFetcher<
   void,
   null
 >({
-  endpoint: "/api/signup/verifyCode",
+  endpoint: "/api/members/verifyCode",
   method: "POST",
 });
 
@@ -37,7 +37,7 @@ export const verifySignUpVerifyCode = generateServiceFetcher<
   void,
   { verifyEmail: boolean }
 >({
-  endpoint: "/api/signup/verifyEmail",
+  endpoint: "/api/members/verifyEmail",
   method: "GET",
 });
 
@@ -47,7 +47,7 @@ export const validateNickname = generateServiceFetcher<
   void,
   ServerSuccessResponse<{ isNickname: boolean }>
 >({
-  endpoint: "/api/signup/isNickname",
+  endpoint: "/api/members/isNickname",
   method: "GET",
 });
 
@@ -57,7 +57,7 @@ export const login = generateServiceFetcher<
   void,
   null
 >({
-  endpoint: "/api/login",
+  endpoint: "/api/members/login",
   method: "POST",
 });
 
@@ -67,6 +67,6 @@ export const logout = generateServiceFetcher<
   void,
   { message: string }
 >({
-  endpoint: "/api/logout",
+  endpoint: "/api/members/logout",
   method: "POST",
 });
