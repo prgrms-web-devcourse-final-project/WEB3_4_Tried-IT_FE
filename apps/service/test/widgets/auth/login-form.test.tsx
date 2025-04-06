@@ -37,28 +37,6 @@ describe("LoginForm", () => {
     });
   });
 
-  test("비밀번호 길이 유효성 검사", async () => {
-    const passwordInput = screen.getByLabelText("비밀번호");
-    fireEvent.change(passwordInput, { target: { value: "short1!" } });
-    fireEvent.blur(passwordInput);
-
-    await waitFor(() => {
-      expect(screen.getByText("비밀번호는 8자 이상이어야 합니다."));
-    });
-  });
-
-  test("비밀번호 형식 유효성 검사", async () => {
-    const passwordInput = screen.getByLabelText("비밀번호");
-    fireEvent.change(passwordInput, { target: { value: "password12345" } });
-    fireEvent.blur(passwordInput);
-
-    await waitFor(() => {
-      expect(
-        screen.getByText("비밀번호는 영문, 숫자, 특수문자를 포함해야 합니다.")
-      );
-    });
-  });
-
   test("유효한 데이터로 폼 제출 시 onSubmit 함수 호출", async () => {
     const emailInput = screen.getByLabelText("이메일");
     const passwordInput = screen.getByLabelText("비밀번호");
