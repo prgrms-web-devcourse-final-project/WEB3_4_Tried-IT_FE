@@ -1,3 +1,5 @@
+import { dementorApiFetchers } from "@repo/api";
+
 export interface UseLogoutProps {
   onLogoutSuccess?: () => void;
   onLogoutFailure?: (error: Error) => void;
@@ -9,7 +11,7 @@ export function useLogout({
 }: UseLogoutProps) {
   const handleLogout = async () => {
     try {
-      //  TODO: 로그아웃 API 호출
+      await dementorApiFetchers.auth.logout();
       onLogoutSuccess?.();
     } catch (error) {
       if (error instanceof Error) {
