@@ -4,5 +4,9 @@
       "mode": "auto"
     }
   ],
+
+  "[handlebars]": {
+    "editor.formatOnSave": false
+  },
   "cSpell.words": ["applyments", "dementor", "mentee"]
 }
