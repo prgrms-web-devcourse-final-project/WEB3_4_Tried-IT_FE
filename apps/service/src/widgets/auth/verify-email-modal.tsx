@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  Button,
+  ButtonWithLoading,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -82,9 +82,13 @@ export function VerifyEmailModal({
                 </FormItem>
               )}
             />
-            <Button className="w-full" type="submit">
+            <ButtonWithLoading
+              className="w-full"
+              type="submit"
+              loading={form.formState.isSubmitting}
+            >
               인증
-            </Button>
+            </ButtonWithLoading>
           </form>
         </Form>
       </DialogContent>

@@ -15,7 +15,7 @@ export const validateEmail = generateServiceFetcher<
   void,
   { email: string },
   void,
-  ServerSuccessResponse<{ isEmail: boolean }>
+  ServerSuccessResponse<boolean>
 >({
   endpoint: "/api/members/isEmail",
   method: "GET",
@@ -45,7 +45,7 @@ export const validateNickname = generateServiceFetcher<
   void,
   { nickname: string },
   void,
-  ServerSuccessResponse<{ isNickname: boolean }>
+  ServerSuccessResponse<boolean>
 >({
   endpoint: "/api/members/isNickname",
   method: "GET",
@@ -53,8 +53,8 @@ export const validateNickname = generateServiceFetcher<
 
 export const login = generateServiceFetcher<
   void,
-  { email: string; password: string },
   void,
+  { email: string; password: string },
   null
 >({
   endpoint: "/api/members/login",

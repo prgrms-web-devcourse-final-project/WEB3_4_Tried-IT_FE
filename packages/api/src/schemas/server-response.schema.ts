@@ -1,7 +1,8 @@
 export type ServerSuccessResponse<T> = {
-  data: T;
+  code: string;
   message: string;
-  success: true;
+  data?: T;
+  isSuccess: boolean;
 };
 
 export type ServerErrorResponse<E = Record<string, unknown>> = {
@@ -14,8 +15,8 @@ export function isServerSuccessResponse<T>(
   response: unknown
 ): response is ServerSuccessResponse<T> {
   if (typeof response !== "object" || response === null) return false;
-  const { success } = response as ServerSuccessResponse<T>;
-  return !!success;
+  const { isSuccess } = response as ServerSuccessResponse<T>;
+  return isSuccess;
 }
 
 export function isServerErrorResponse(
