@@ -16,14 +16,23 @@ export function useGetUserInfo() {
         return null;
       }
     },
-    select: (data) =>
-      data &&
-      ModelCreator.create(UserModel, {
-        id: data.id,
-        createdAt: data.created_at,
-        email: data.email,
-        nickname: data.nickname,
-      }),
+    select: (data) => {
+      if (!data) {
+        return null;
+      }
+      if (!data.id || !data.created_at || !data.email || !data.nickname) {
+        throw new Error(`서버 응답이 예상과 다릅니다: ${JSON.stringify(data)}`);
+      }
+      return (
+        data &&
+        ModelCreator.create(UserModel, {
+          id: data.id.toString(),
+          createdAt: data.created_at,
+          email: data.email,
+          nickname: data.nickname,
+        })
+      );
+    },
   });
 
   return { ...query };

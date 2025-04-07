@@ -1,6 +1,6 @@
 import { AvailableClasses } from "@/pages/available-classes/components/available-classes";
 import { ClassesFilterSelect } from "@/pages/available-classes/components/classes-filter-select";
-import { useAvailableClassesFilter } from "@/pages/available-classes/hooks/useAvailableClassesFilter";
+import { useAvailableClassesFilter } from "@/pages/available-classes/hooks/use-available-classes-filter";
 import { MenteeTheme } from "@/shared/components/mentee-theme/mentee-theme";
 import { PageLayout } from "@/shared/layouts/page-layout";
 import { AspectRatio, Typography } from "@repo/ui";
@@ -52,7 +52,9 @@ export function AvailableClassesPage() {
           }}
         />
         <Suspense fallback={<AvailableClasses.Skeleton />}>
-          <AvailableClasses />
+          <AvailableClasses
+            jobIds={selectedJobCategories.map((category) => category.id)}
+          />
         </Suspense>
       </MenteeTheme>
     </PageLayout>

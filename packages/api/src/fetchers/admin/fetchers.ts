@@ -1,46 +1,33 @@
 import { generateServiceFetcher } from "@/fetchers/generate-service-fetcher";
 import {
-  MentorApplicationDetailResponse,
-  ServerSuccessResponse,
-} from "@/schemas";
+  AdminLoginRequest,
+  ApiResponseObject,
+  ApiResponseVoid,
+} from "@/swagger/schemas";
 
 export const login = generateServiceFetcher<
   void,
   void,
-  { email: string; password: string },
-  null
+  AdminLoginRequest,
+  ApiResponseVoid
 >({
   endpoint: "/api/admin/login",
   method: "POST",
 });
 
-export const logout = generateServiceFetcher<
-  void,
-  void,
-  void,
-  { message: string }
->({
-  endpoint: "/api/admin/logout",
-  method: "POST",
-});
-
-// TODO: API 명세 업데이트 예정
-export const getMentorApplicationDetail = generateServiceFetcher<
-  { id: string | number },
-  void,
-  void,
-  MentorApplicationDetailResponse
->({
-  endpoint: "/api/admin/mentor/{id}",
-  method: "GET",
-});
+export const logout = generateServiceFetcher<void, void, void, ApiResponseVoid>(
+  {
+    endpoint: "/api/admin/logout",
+    method: "POST",
+  }
+);
 
 // TODO: API 명세 업데이트 예정
 export const getMentorApplicationList = generateServiceFetcher<
   void,
   void,
   void,
-  ServerSuccessResponse<{ message: string }>
+  ApiResponseObject
 >({
   endpoint: "/api/admin/mentor",
   method: "GET",
@@ -51,7 +38,7 @@ export const approveMentorApplication = generateServiceFetcher<
   { id: string | number },
   void,
   void,
-  ServerSuccessResponse<{ message: string }>
+  ApiResponseObject
 >({
   endpoint: "/api/admin/mentor/{id}/approve",
   method: "POST",
@@ -62,7 +49,7 @@ export const rejectMentorApplication = generateServiceFetcher<
   { id: string | number },
   void,
   void,
-  ServerSuccessResponse<{ message: string }>
+  ApiResponseObject
 >({
   endpoint: "/api/admin/mentor/{id}/reject",
   method: "POST",
@@ -73,7 +60,7 @@ export const approveMentorInfoModification = generateServiceFetcher<
   { id: string | number },
   void,
   void,
-  ServerSuccessResponse<{ message: string }>
+  ApiResponseObject
 >({
   endpoint: "/api/admin/mentor/modify/{id}/approve",
   method: "POST",
@@ -84,7 +71,7 @@ export const rejectMentorInfoModification = generateServiceFetcher<
   { id: string | number },
   void,
   void,
-  ServerSuccessResponse<{ message: string }>
+  ApiResponseObject
 >({
   endpoint: "/api/admin/mentor/modify/{id}/reject",
   method: "POST",
@@ -95,7 +82,7 @@ export const getJobCategoryList = generateServiceFetcher<
   void,
   void,
   void,
-  ServerSuccessResponse<{ message: string }>
+  ApiResponseObject
 >({
   endpoint: "/api/admin/job",
   method: "GET",
@@ -106,7 +93,7 @@ export const postJobCategory = generateServiceFetcher<
   void,
   void,
   void,
-  ServerSuccessResponse<{ message: string }>
+  ApiResponseObject
 >({
   endpoint: "/api/admin/job",
   method: "POST",
@@ -117,7 +104,7 @@ export const putJobCategory = generateServiceFetcher<
   void,
   void,
   void,
-  ServerSuccessResponse<{ message: string }>
+  ApiResponseObject
 >({
   endpoint: "/api/admin/job/{id}",
   method: "PUT",
@@ -128,7 +115,7 @@ export const deleteJobCategory = generateServiceFetcher<
   { id: string | number },
   void,
   void,
-  ServerSuccessResponse<{ message: string }>
+  ApiResponseObject
 >({
   endpoint: "/api/admin/job/{id}",
   method: "DELETE",

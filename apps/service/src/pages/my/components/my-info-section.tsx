@@ -17,7 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useGetUserInfo } from "../hooks/useGetUserInfo";
+import { useGetUserInfo } from "../hooks/use-get-user-info";
 
 const userInfoSchema = z.object({
   name: z

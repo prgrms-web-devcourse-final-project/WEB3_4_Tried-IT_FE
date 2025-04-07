@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui";
 import { Suspense } from "react";
-import { useGetMentorInfo } from "../hooks/useGetMentorInfo";
+import { useGetMentorInfo } from "../hooks/use-get-mentor-info";
 import {
   MentorProfileSubSection,
   MentorProfileSubSectionSkeleton,

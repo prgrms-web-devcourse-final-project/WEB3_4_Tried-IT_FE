@@ -24,7 +24,7 @@ import {
   Typography,
 } from "@repo/ui";
 import { MoreHorizontal } from "lucide-react";
-import { useGetAppliedClasses } from "../hooks/useGetAppliedClasses";
+import { useGetAppliedClasses } from "../hooks/use-get-applied-classes";
 
 export function AppliedClassesSection() {
   const { data: appliedClasses } = useGetAppliedClasses();

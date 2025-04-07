@@ -1,0 +1,24 @@
+import type * as Enums from './enums';
+
+{{#each schemas}}
+{{#if this.description}}
+/**
+ * @description {{{this.description}}}
+ */
+{{/if}}
+{{#if this.properties}}
+export type {{{this.title}}} = {
+{{#each this.properties}}
+{{#if this.description}}
+/**
+ * @description {{{this.description}}}
+ */
+{{/if}}
+{{@key}}{{#if this.isRequiredField}}{{else}}?{{/if}}: {{{this.type}}};
+{{/each}}
+}
+{{else}}
+export type {{{this.title}}} = {{{this.type}}}
+{{/if}}
+
+{{/each}}

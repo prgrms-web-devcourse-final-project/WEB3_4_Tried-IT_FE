@@ -1,15 +1,14 @@
 import { generateServiceFetcher } from "@/fetchers/generate-service-fetcher";
 import {
-  GetMyMemberInfoResponse,
-  PutMyMemberInfoRequest,
-  ServerSuccessResponse,
-} from "@/schemas";
+  ApiResponseMemberInfoResponse,
+  ApiResponseVoid,
+} from "@/swagger/schemas";
 
 export const getMyMemberInfo = generateServiceFetcher<
   void,
   void,
   void,
-  ServerSuccessResponse<GetMyMemberInfoResponse>
+  ApiResponseMemberInfoResponse
 >({
   endpoint: "/api/members/info",
   method: "GET",
@@ -17,9 +16,9 @@ export const getMyMemberInfo = generateServiceFetcher<
 
 export const putMyMemberInfo = generateServiceFetcher<
   void,
+  { nickname: string },
   void,
-  PutMyMemberInfoRequest,
-  null
+  ApiResponseVoid
 >({
   endpoint: "/api/member/me",
   method: "PUT",

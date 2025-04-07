@@ -22,7 +22,7 @@ import {
   TableRow,
 } from "@repo/ui";
 import { Suspense } from "react";
-import { useGetMenteeRequests } from "../hooks/useGetMenteeRequests";
+import { useGetMenteeRequests } from "../hooks/use-get-mentee-requests";
 
 export function MenteeRequests() {
   return (

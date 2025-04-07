@@ -1,4 +1,4 @@
-import { useGetClassDetail } from "@/pages/available-classes/hooks/useGetClassDetail";
+import { useGetClassDetail } from "@/pages/available-classes/hooks/use-get-class-detail";
 import { MenteeTheme } from "@/shared/components/mentee-theme/mentee-theme";
 import { createTypedSwitch } from "@/shared/components/switch";
 import {

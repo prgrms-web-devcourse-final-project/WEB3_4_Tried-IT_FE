@@ -1,0 +1,24 @@
+{{#each enums}}
+
+export type {{{pascalCase @key}}} =  
+{{#each this}} 
+| '{{this}}'
+{{/each}}
+
+export const {{{pascalCase @key}}}Const = {
+{{#each this}} 
+  '{{this}}': '{{this}}',
+{{/each}}
+} as const
+
+export const is{{{pascalCase @key}}} = (value: unknown): value is {{{pascalCase @key}}} => {
+  if (typeof value !== "string") {
+    return false;
+  }
+
+  return Object.values({{{pascalCase @key}}}Const).includes(value as {{{pascalCase @key}}})
+}
+
+{{/each}}
+
+

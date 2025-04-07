@@ -1,16 +1,16 @@
 import {
-  AppliedClassListResponse,
-  ApplyClassRequest,
-  ApplyClassResponse,
-} from "../../schemas/schemas";
-import { ServerSuccessResponse } from "../../schemas/server-response.schema";
+  ApiResponseApplyIdResponse,
+  ApiResponseApplyPageResponse,
+  ApiResponseVoid,
+  ApplyCreateRequest,
+} from "@/swagger/schemas";
 import { generateServiceFetcher } from "../generate-service-fetcher";
 
 export const applyClass = generateServiceFetcher<
   void,
   void,
-  ApplyClassRequest,
-  ServerSuccessResponse<ApplyClassResponse>
+  ApplyCreateRequest,
+  ApiResponseApplyIdResponse
 >({
   endpoint: "/api/apply",
   method: "POST",
@@ -23,7 +23,7 @@ export const getAppliedClassList = generateServiceFetcher<
   void,
   { page: number; size: number },
   void,
-  ServerSuccessResponse<AppliedClassListResponse>
+  ApiResponseApplyPageResponse
 >({
   endpoint: "/api/apply",
   method: "GET",
@@ -33,7 +33,7 @@ export const cancelApplyClass = generateServiceFetcher<
   { classId: number },
   void,
   void,
-  ServerSuccessResponse<null>
+  ApiResponseVoid
 >({
   endpoint: "/api/apply/{classId}",
   method: "DELETE",

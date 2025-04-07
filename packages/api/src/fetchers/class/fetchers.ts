@@ -1,23 +1,23 @@
 import {
-  ClassDetailResponse,
-  ClassListResponse,
-  DeleteClassResponse,
-  PostClassRequest,
-  PutClassRequest,
-} from "../../schemas/schemas";
-import { ServerSuccessResponse } from "../../schemas/server-response.schema";
+  ApiResponseMentoringClassDetailResponse,
+  ApiResponseMentoringClassUpdateResponse,
+  ApiResponseObject,
+  ApiResponsePageMentoringClassFindResponse,
+  MentoringClassCreateRequest,
+  MentoringClassUpdateRequest,
+} from "@/swagger/schemas";
 import { generateServiceFetcher } from "../generate-service-fetcher";
 
 export const getClasses = generateServiceFetcher<
   void,
   {
-    job_id: string;
+    jobId?: string;
     page: number;
-    sort_by: "created_at" | "title";
-    order: "asc" | "desc";
+    size: number;
+    sort: ("createdAt" | "title")[];
   },
   void,
-  ServerSuccessResponse<ClassListResponse>
+  ApiResponsePageMentoringClassFindResponse
 >({
   endpoint: "/api/class",
   method: "GET",
@@ -29,7 +29,7 @@ export const getClassDetail = generateServiceFetcher<
   },
   void,
   void,
-  ServerSuccessResponse<ClassDetailResponse>
+  ApiResponseMentoringClassDetailResponse
 >({
   endpoint: "/api/class/{classId}",
   method: "GET",
@@ -38,8 +38,8 @@ export const getClassDetail = generateServiceFetcher<
 export const postClass = generateServiceFetcher<
   void,
   void,
-  PostClassRequest,
-  null
+  MentoringClassCreateRequest,
+  ApiResponseMentoringClassDetailResponse
 >({
   endpoint: "/api/class",
   method: "POST",
@@ -50,8 +50,8 @@ export const putClass = generateServiceFetcher<
     classId: string;
   },
   void,
-  PutClassRequest,
-  null
+  MentoringClassUpdateRequest,
+  ApiResponseMentoringClassUpdateResponse
 >({
   endpoint: "/api/class/{classId}",
   method: "PUT",
@@ -63,7 +63,7 @@ export const deleteClass = generateServiceFetcher<
   },
   void,
   void,
-  ServerSuccessResponse<DeleteClassResponse>
+  ApiResponseObject
 >({
   endpoint: "/api/class/{classId}",
   method: "DELETE",
