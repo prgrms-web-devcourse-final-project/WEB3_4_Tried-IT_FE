@@ -65,6 +65,7 @@ export interface FetcherGeneratorOptions {
   errorHandlerByCode?: {
     [statusCode: string]: (error: HTTPError) => void;
   };
+  validateResponse?: (response: unknown) => void | Promise<void>;
   errorHandler?: (error: HTTPError) => void;
   credentialMode?: RequestCredentials;
 }
@@ -81,6 +82,7 @@ export function generateFetcher<
   method = "GET",
   requestContentType = "json",
   responseContentType = "json",
+  validateResponse,
   errorHandlerByCode = {},
   errorHandler,
   credentialMode,
@@ -185,6 +187,10 @@ export function generateFetcher<
         case "blob":
           data = await res.blob();
           break;
+      }
+
+      if (validateResponse) {
+        await validateResponse(data);
       }
 
       return data;

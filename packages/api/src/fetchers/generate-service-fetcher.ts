@@ -9,5 +9,20 @@ export const generateServiceFetcher: typeof generateFetcher = (options) => {
     errorHandler: (error) => {
       throw ServiceError.byHTTPError(error);
     },
+    validateResponse: (response) => {
+      if (
+        typeof response === "object" &&
+        response !== null &&
+        "code" in response
+      ) {
+        if (parseInt(response.code as string) >= 400) {
+          const message =
+            "message" in response
+              ? (response.message as string)
+              : `Unknown Error ${JSON.stringify(response)}`;
+          throw ServiceError.byCode(response.code as string, message);
+        }
+      }
+    },
   });
 };
