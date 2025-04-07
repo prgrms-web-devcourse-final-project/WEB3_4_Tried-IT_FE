@@ -48,7 +48,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <div className="flex-1 flex flex-col">{children}</div>
               <Footer />
               <PageNavigationDevtools />
-              <Toaster />
+              <Toaster richColors />
               <ScrollRestoration />
               <Scripts />
             </body>

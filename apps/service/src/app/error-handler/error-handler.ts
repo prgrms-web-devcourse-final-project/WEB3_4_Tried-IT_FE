@@ -50,8 +50,12 @@ export const handleError = (error: unknown): void => {
   toast[config.type](config.getTitle(error), {
     description: React.createElement(
       "span",
-      { className: "text-sm text-muted-foreground" },
+      { className: "text-muted" },
       config.getMessage(error)
     ),
+    style: {
+      background: "var(--destructive)",
+      color: "var(--destructive-foreground)",
+    },
   });
 };
