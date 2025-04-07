@@ -1,31 +1,20 @@
-import { ApplyStatus } from "@/enums";
 import { ConflictingAppointmentError, FieldsError } from "@/errors";
+
+import { Status } from "@/swagger/enums";
 import {
-  AppliedMenteeListResponse,
-  GetMentorAvailableScheduleRequest,
-  GetMentorAvailableScheduleResponse,
-  GetMentorInfoModificationRequestListRequest,
-  GetMentorInfoModificationRequestListResponse,
-  HandleMentoringApplicationResponse,
-  MentorInfoResponse,
-  MentorRoleApplicationRequest,
-  PutMentorAvailableSchedulePathParams,
-  PutMentorAvailableScheduleRequest,
-  PutMentorAvailableScheduleResponse,
-  RegisteredClassListResponse,
-  RequestUpdateMentorInfoRequest,
-  RequestUpdateMentorInfoResponse,
-  UpdateMentoringScheduleRequest,
-  UpdateMentoringScheduleResponse,
-} from "../../schemas/schemas";
-import { ServerSuccessResponse } from "../../schemas/server-response.schema";
+  ApiResponseGetApplyMenteePageList,
+  ApiResponseMentorApplyStatusResponse,
+  ApiResponseObject,
+  MentorApplicationRequestDto,
+  MentorUpdateRequestDto,
+} from "@/swagger/schemas";
 import { generateServiceFetcher } from "../generate-service-fetcher";
 
 export const getRegisteredClassList = generateServiceFetcher<
   { memberId: string },
   void,
   void,
-  ServerSuccessResponse<RegisteredClassListResponse>
+  ApiResponseObject
 >({
   endpoint: "/api/mentor/class/{memberId}",
   method: "GET",
@@ -41,7 +30,7 @@ export const getAppliedMenteeList = generateServiceFetcher<
   void,
   { page?: number; size?: number },
   void,
-  ServerSuccessResponse<AppliedMenteeListResponse>
+  ApiResponseGetApplyMenteePageList
 >({
   endpoint: "/api/mentor/apply",
   method: "GET",
@@ -50,8 +39,8 @@ export const getAppliedMenteeList = generateServiceFetcher<
 export const handleMentoringApplication = generateServiceFetcher<
   { applyId: string | number },
   void,
-  { status: ApplyStatus },
-  ServerSuccessResponse<HandleMentoringApplicationResponse>
+  { status: Omit<Status, "PENDING"> },
+  ApiResponseMentorApplyStatusResponse
 >({
   endpoint: "/api/mentor/apply/{applyId}/status",
   method: "POST",
@@ -64,7 +53,7 @@ export const getMentorInfo = generateServiceFetcher<
   { memberId: string },
   void,
   void,
-  ServerSuccessResponse<MentorInfoResponse>
+  ApiResponseObject
 >({
   endpoint: "/api/mentor/{memberId}/info",
   method: "GET",
@@ -76,8 +65,8 @@ export const getMentorInfo = generateServiceFetcher<
 export const applyForMentorRole = generateServiceFetcher<
   void,
   void,
-  MentorRoleApplicationRequest,
-  ServerSuccessResponse<null>
+  MentorApplicationRequestDto,
+  ApiResponseObject
 >({
   endpoint: "/api/mentor",
   method: "POST",
@@ -97,8 +86,8 @@ export const applyForMentorRole = generateServiceFetcher<
 export const requestUpdateMentorInfo = generateServiceFetcher<
   { memberId: string },
   void,
-  RequestUpdateMentorInfoRequest,
-  ServerSuccessResponse<RequestUpdateMentorInfoResponse>
+  MentorUpdateRequestDto,
+  ApiResponseObject
 >({
   endpoint: "/api/mentor/{memberId}",
   method: "PUT",
@@ -106,9 +95,9 @@ export const requestUpdateMentorInfo = generateServiceFetcher<
 
 export const getMentorInfoModificationRequestList = generateServiceFetcher<
   { memberId: string },
-  GetMentorInfoModificationRequestListRequest,
+  { status: Status; page?: number; size?: number },
   void,
-  ServerSuccessResponse<GetMentorInfoModificationRequestListResponse>
+  ApiResponseObject
 >({
   endpoint: "/api/mentor/{memberId}/modification-request",
   method: "GET",
@@ -122,11 +111,12 @@ export const getMentorInfoModificationRequestList = generateServiceFetcher<
   },
 });
 
+// TODO: need update
 export const updateMentoringSchedule = generateServiceFetcher<
   { memberId: string },
   void,
-  UpdateMentoringScheduleRequest,
-  ServerSuccessResponse<UpdateMentoringScheduleResponse>
+  void,
+  ApiResponseObject
 >({
   endpoint: "/api/mentor/{memberId}/schedule",
   method: "PUT",
@@ -151,11 +141,12 @@ export const updateMentoringSchedule = generateServiceFetcher<
   },
 });
 
+// TODO: need update
 export const getMentorAvailableSchedule = generateServiceFetcher<
   { memberId: string },
-  GetMentorAvailableScheduleRequest,
   void,
-  ServerSuccessResponse<GetMentorAvailableScheduleResponse>
+  void,
+  ApiResponseObject
 >({
   endpoint: "/api/mentor/{memberId}/availability",
   method: "GET",
@@ -169,11 +160,12 @@ export const getMentorAvailableSchedule = generateServiceFetcher<
   },
 });
 
+// TODO: need update
 export const putMentorAvailableSchedule = generateServiceFetcher<
-  PutMentorAvailableSchedulePathParams,
   void,
-  PutMentorAvailableScheduleRequest,
-  ServerSuccessResponse<PutMentorAvailableScheduleResponse>
+  void,
+  void,
+  ApiResponseObject
 >({
   endpoint: "/api/mentor/{memberId}/availability/{yearMonthDay}",
   method: "PUT",

@@ -1,16 +1,15 @@
-import { ImageType } from "@/enums";
 import { FieldsError } from "@/errors";
 import { generateServiceFetcher } from "@/fetchers/generate-service-fetcher";
-import { ServerSuccessResponse, UploadFileResponse } from "@/schemas";
+import { ApiResponseObject, ApiResponseVoid } from "@/swagger/schemas";
 
 export const uploadFile = generateServiceFetcher<
   void,
   void,
   {
     file: File;
-    imageType: ImageType;
+    imageType: string;
   },
-  ServerSuccessResponse<UploadFileResponse>
+  ApiResponseObject
 >({
   endpoint: "/api/files/upload",
   method: "POST",
@@ -28,7 +27,7 @@ export const deleteFile = generateServiceFetcher<
   { fileId: string },
   void,
   void,
-  ServerSuccessResponse<null>
+  ApiResponseVoid
 >({
   endpoint: "/api/files/{fileId}",
   method: "DELETE",
