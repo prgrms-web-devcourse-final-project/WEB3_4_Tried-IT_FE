@@ -15,6 +15,8 @@ import {
   Input,
   Separator,
 } from "@repo/ui";
+import { cn } from "@repo/utils/cn";
+import { CheckIcon } from "lucide-react";
 import { overlay } from "overlay-kit";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -76,7 +78,6 @@ interface SignupFormProps {
   onSubmit: (formData: SignupFormData) => Promise<void>;
 }
 
-// TODO: Validation 과정 구체화
 export function SignupForm({
   onValidateNicknameDuplicate,
   onValidateEmailDuplicate,
@@ -115,6 +116,7 @@ export function SignupForm({
 
   useEffect(() => {
     form.setValue("emailDuplicateChecked", false);
+    form.setValue("verifyCode", "");
   }, [form, watchedEmail]);
 
   useEffect(() => {
@@ -125,22 +127,23 @@ export function SignupForm({
     // TODO 임시로 무조건 false
 
     return false;
-    // return (
-    //   form.formState.isSubmitting ||
-    //   form.formState.isValidating ||
-    //   !form.formState.isValid ||
-    //   isValidating
-    // );
   }, [form.formState, isValidating]);
 
   const handleSubmit = (data: SignupFormData) => {
     onSubmit(data);
   };
 
-  const handleValidateNameDuplicate = async (name: string) => {
+  const handleValidateNicknameDuplicate = async (nickname: string) => {
+    if (nickname.length === 0) {
+      form.setError("nickname", {
+        message: "닉네임을 입력해주세요.",
+      });
+      return;
+    }
+
     try {
       setIsValidating(true);
-      await onValidateNicknameDuplicate(name);
+      await onValidateNicknameDuplicate(nickname);
       form.clearErrors("nicknameDuplicateChecked");
       form.setValue("nicknameDuplicateChecked", true);
     } catch (error) {
@@ -160,6 +163,13 @@ export function SignupForm({
   };
 
   const handleValidateEmailDuplicate = async (email: string) => {
+    if (email.length === 0) {
+      form.setError("email", {
+        message: "이메일을 입력해주세요.",
+      });
+      return;
+    }
+
     try {
       setIsValidating(true);
       await onValidateEmailDuplicate(email);
@@ -182,6 +192,13 @@ export function SignupForm({
   };
 
   const handleValidateEmailAuth = async (email: string) => {
+    if (email.length === 0) {
+      form.setError("email", {
+        message: "이메일을 입력해주세요.",
+      });
+      return;
+    }
+
     try {
       setIsValidating(true);
       await onValidateEmailAuth(email);
@@ -244,29 +261,68 @@ export function SignupForm({
           <FormField
             control={form.control}
             name="email"
-            render={({ field }) => (
+            render={({ field: emailField }) => (
               <FormItem>
                 <FormLabel>이메일</FormLabel>
                 <div className="flex items-center gap-2">
                   <FormControl>
-                    <Input type="email" autoComplete="email" {...field} />
+                    <Input type="email" autoComplete="email" {...emailField} />
                   </FormControl>
 
                   <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      type="button"
-                      onClick={() => handleValidateEmailDuplicate(field.value)}
-                    >
-                      중복 확인
-                    </Button>
-                    <Button
-                      variant="outline"
-                      type="button"
-                      onClick={() => handleValidateEmailAuth(field.value)}
-                    >
-                      이메일 인증
-                    </Button>
+                    <FormField
+                      control={form.control}
+                      name="emailDuplicateChecked"
+                      render={({ field: duplicateCheckedField }) => (
+                        <ButtonWithLoading
+                          variant={
+                            duplicateCheckedField.value ? "ghost" : "outline"
+                          }
+                          type="button"
+                          disabled={duplicateCheckedField.value}
+                          className={cn(
+                            duplicateCheckedField.value && "text-success px-1",
+                            "disabled:opacity-100"
+                          )}
+                          onClick={() =>
+                            handleValidateEmailDuplicate(emailField.value)
+                          }
+                        >
+                          {duplicateCheckedField.value ? (
+                            <CheckIcon />
+                          ) : (
+                            "중복 확인"
+                          )}
+                        </ButtonWithLoading>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="verifyCode"
+                      render={({ field: verifyCodeField }) => (
+                        <ButtonWithLoading
+                          variant="outline"
+                          type="button"
+                          disabled={!!verifyCodeField.value}
+                          className={cn(
+                            verifyCodeField.value &&
+                              "text-success disabled:opacity-100"
+                          )}
+                          onClick={() =>
+                            handleValidateEmailAuth(emailField.value)
+                          }
+                        >
+                          {verifyCodeField.value ? (
+                            <div className="flex items-center gap-2">
+                              <CheckIcon />
+                              <span>인증 완료</span>
+                            </div>
+                          ) : (
+                            "이메일 인증"
+                          )}
+                        </ButtonWithLoading>
+                      )}
+                    />
                   </div>
                 </div>
                 <FormMessage>
@@ -279,22 +335,39 @@ export function SignupForm({
           <FormField
             control={form.control}
             name="nickname"
-            render={({ field }) => (
+            render={({ field: nicknameField }) => (
               <FormItem>
                 <FormLabel>닉네임</FormLabel>
                 <div className="flex items-center gap-2">
                   <FormControl>
-                    <Input type="text" {...field} />
+                    <Input type="text" {...nicknameField} />
                   </FormControl>
-                  <div>
-                    <ButtonWithLoading
-                      variant="outline"
-                      type="button"
-                      onClick={() => handleValidateNameDuplicate(field.value)}
-                    >
-                      중복 확인
-                    </ButtonWithLoading>
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name="nicknameDuplicateChecked"
+                    render={({ field: duplicateCheckedField }) => (
+                      <ButtonWithLoading
+                        variant={
+                          duplicateCheckedField.value ? "ghost" : "outline"
+                        }
+                        type="button"
+                        disabled={duplicateCheckedField.value}
+                        className={cn(
+                          duplicateCheckedField.value && "text-success px-1",
+                          "disabled:opacity-100"
+                        )}
+                        onClick={() =>
+                          handleValidateNicknameDuplicate(nicknameField.value)
+                        }
+                      >
+                        {duplicateCheckedField.value ? (
+                          <CheckIcon />
+                        ) : (
+                          "중복 확인"
+                        )}
+                      </ButtonWithLoading>
+                    )}
+                  />
                 </div>
                 <FormMessage>
                   {form.formState.errors.nicknameDuplicateChecked &&
