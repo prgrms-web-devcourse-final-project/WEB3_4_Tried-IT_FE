@@ -3,8 +3,11 @@ import { useSignup } from "@/features/auth/hooks/use-signup/use-signup";
 import { PageLayout } from "@/shared/layouts/page-layout";
 import { SignupForm } from "@/widgets/auth/signup-form";
 import { Logo } from "@/widgets/logo";
+import { ROUTE_PATH } from "@app/routes";
+import { useNavigate } from "react-router";
 
 export function SignupPage() {
+  const navigate = useNavigate();
   const {
     signup,
     validateEmail,
@@ -45,6 +48,7 @@ export function SignupPage() {
           onSubmit={async (formData) => {
             try {
               await signup(formData);
+              navigate(ROUTE_PATH.AUTH.SIGNUP_COMPLETE);
             } catch (error) {
               handleError(error);
               throw error;
