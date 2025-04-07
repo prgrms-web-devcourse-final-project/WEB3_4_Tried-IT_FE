@@ -52,7 +52,9 @@ export function AvailableClassesPage() {
           }}
         />
         <Suspense fallback={<AvailableClasses.Skeleton />}>
-          <AvailableClasses />
+          <AvailableClasses
+            jobIds={selectedJobCategories.map((category) => category.id)}
+          />
         </Suspense>
       </MenteeTheme>
     </PageLayout>

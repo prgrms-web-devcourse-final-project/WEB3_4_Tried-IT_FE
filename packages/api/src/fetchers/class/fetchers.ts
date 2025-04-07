@@ -11,10 +11,10 @@ import { generateServiceFetcher } from "../generate-service-fetcher";
 export const getClasses = generateServiceFetcher<
   void,
   {
-    jobId: string;
+    jobId?: string;
     page: number;
     size: number;
-    sort: ("created_at" | "title")[];
+    sort: ("createdAt" | "title")[];
   },
   void,
   ApiResponsePageMentoringClassFindResponse

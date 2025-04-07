@@ -1,12 +1,25 @@
-import { ClassApplyModal } from "@/pages/available-classes/components/class-apply-modal/class-apply-modal";
-import { ClassCard } from "@/pages/available-classes/components/class-card";
-import { useGetAvailableClasses } from "@/pages/available-classes/hooks/use-get-available-classes";
 import { Skeleton, TabsTrigger } from "@repo/ui";
 import { overlay } from "overlay-kit";
 import { ComponentProps } from "react";
 
-export function AvailableClasses() {
-  const { data: classes } = useGetAvailableClasses();
+import { ClassApplyModal } from "@/pages/available-classes/components/class-apply-modal/class-apply-modal";
+import { ClassCard } from "@/pages/available-classes/components/class-card";
+import { useGetAvailableClasses } from "@/pages/available-classes/hooks/use-get-available-classes";
+import { Pagination, usePagination } from "@/widgets/pagination";
+
+export interface AvailableClassesProps {
+  jobIds?: string[];
+}
+
+export function AvailableClasses({ jobIds }: AvailableClassesProps) {
+  const { page, size, setPage, setSize } = usePagination();
+  const {
+    data: { contents: classes, pagination },
+  } = useGetAvailableClasses({
+    page,
+    size,
+    jobIds,
+  });
 
   const handleClassCardClick = (classId: number) => {
     overlay.open(({ isOpen, close }) => (
@@ -15,14 +28,31 @@ export function AvailableClasses() {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
-      {classes.map((classModel, index) => (
-        <ClassCard
-          key={index}
-          model={classModel}
-          onClick={() => handleClassCardClick(classModel.id)}
+    <div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+        {classes.length === 0 && (
+          <div className="col-span-full my-20 md:my-40">
+            <div className="flex items-center justify-center h-full">
+              <p className="text-muted-foreground">등록된 수업이 없습니다.</p>
+            </div>
+          </div>
+        )}
+        {classes.map((classModel, index) => (
+          <ClassCard
+            key={index}
+            model={classModel}
+            onClick={() => handleClassCardClick(classModel.id)}
+          />
+        ))}
+      </div>
+
+      <div className="flex items-center justify-center py-4">
+        <Pagination
+          pagination={pagination}
+          onPageChange={setPage}
+          onSizeChange={setSize}
         />
-      ))}
+      </div>
     </div>
   );
 }
