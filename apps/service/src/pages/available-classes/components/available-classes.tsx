@@ -1,6 +1,6 @@
 import { ClassApplyModal } from "@/pages/available-classes/components/class-apply-modal/class-apply-modal";
 import { ClassCard } from "@/pages/available-classes/components/class-card";
-import { useGetAvailableClasses } from "@/pages/available-classes/hooks/useGetAvailableClasses";
+import { useGetAvailableClasses } from "@/pages/available-classes/hooks/use-get-available-classes";
 import { Skeleton, TabsTrigger } from "@repo/ui";
 import { overlay } from "overlay-kit";
 import { ComponentProps } from "react";

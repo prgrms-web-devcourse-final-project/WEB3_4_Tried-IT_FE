@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@repo/ui";
 import { Suspense } from "react";
-import { useGetMentoringPosts } from "../hooks/useGetMentoringPosts";
+import { useGetMentoringPosts } from "../hooks/use-get-mentoring-posts";
 
 export function MentoringPosts() {
   return (
