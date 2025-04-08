@@ -19,7 +19,7 @@ import { Link, useLocation } from "react-router";
 
 export function NavigationHeader() {
   const { theme, setTheme } = useTheme();
-  const { logout, isAuthenticated } = useAuth();
+  const { logout, isAuthenticated, isMentor } = useAuth();
 
   return (
     <>
@@ -52,11 +52,13 @@ export function NavigationHeader() {
 
           <div className="hidden md:flex items-center gap-2">
             <div className="flex gap-1">
-              <NavigationMenuDesktop
-                to={ROUTE_PATH.MENTOR_APPLICATION}
-                className="text-primary"
-                label="멘토 지원하기"
-              />
+              {!isMentor && (
+                <NavigationMenuDesktop
+                  to={ROUTE_PATH.MENTOR_APPLICATION}
+                  className="text-primary"
+                  label="멘토 지원하기"
+                />
+              )}
               <NavigationMenuDesktop
                 to={ROUTE_PATH.AVAILABLE_CLASSES}
                 className="text-secondary"
@@ -68,6 +70,13 @@ export function NavigationHeader() {
               {isAuthenticated ? (
                 <>
                   <NavigationMenuDesktop to={ROUTE_PATH.MY} label="내 정보" />
+                  {isMentor && (
+                    <NavigationMenuDesktop
+                      to={ROUTE_PATH.MENTOR.DASHBOARD}
+                      className="text-primary"
+                      label="멘토 대시보드"
+                    />
+                  )}
                   <Button size="lg" variant="outline" onClick={logout}>
                     로그아웃
                   </Button>
@@ -106,11 +115,13 @@ export function NavigationHeader() {
                 </SheetHeader>
                 <SheetDescription></SheetDescription>
                 <div className="flex flex-col">
-                  <NavigationMenuMobile
-                    to={ROUTE_PATH.MENTOR_APPLICATION}
-                    className="text-primary"
-                    label="멘토 지원하기"
-                  />
+                  {!isMentor && (
+                    <NavigationMenuMobile
+                      to={ROUTE_PATH.MENTOR_APPLICATION}
+                      className="text-primary"
+                      label="멘토 지원하기"
+                    />
+                  )}
                   <NavigationMenuMobile
                     to={ROUTE_PATH.AVAILABLE_CLASSES}
                     className="text-secondary hover:bg-secondary/80"
@@ -126,6 +137,13 @@ export function NavigationHeader() {
                           variant="ghost"
                           label="내 정보"
                         />
+                        {isMentor && (
+                          <NavigationMenuMobile
+                            to={ROUTE_PATH.MENTOR.DASHBOARD}
+                            className="text-primary"
+                            label="멘토 대시보드"
+                          />
+                        )}
                         <Button onClick={logout} variant="ghost">
                           로그아웃
                         </Button>

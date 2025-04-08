@@ -1,6 +1,7 @@
 import { handleError } from "@/app/error-handler/error-handler";
 import { useLogin } from "@/features/auth/hooks/use-login";
 import { useLogout } from "@/features/auth/hooks/use-logout";
+import { useGetMentorInfo } from "@/pages/mentor/hooks/use-get-mentor-info";
 import { useGetUserInfo } from "@/pages/my/hooks/use-get-user-info";
 import { ROUTE_PATH } from "@app/routes";
 import { BadRequestError } from "@repo/api";
@@ -12,7 +13,12 @@ export function useAuth() {
   const navigate = useNavigate();
 
   const { data: user, refetch } = useGetUserInfo();
+  const { data: mentor } = useGetMentorInfo({
+    memberId: user?.id,
+  });
+
   const isAuthenticated = useMemo(() => user !== null, [user]);
+  const isMentor = useMemo(() => mentor !== null, [mentor]);
 
   const { login } = useLogin({
     onLoginSuccess: () => {
@@ -39,5 +45,5 @@ export function useAuth() {
     },
   });
 
-  return { user, login, logout: handleLogout, isAuthenticated };
+  return { user, login, logout: handleLogout, isAuthenticated, isMentor };
 }

@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui";
+import { Card, CardContent, CardHeader, CardTitle, Typography } from "@repo/ui";
 import { Suspense } from "react";
 import { useGetMentorInfo } from "../hooks/use-get-mentor-info";
 import {
@@ -28,8 +28,18 @@ function MentorInfoContent() {
       </CardHeader>
       <CardContent>
         <div className="space-y-8">
-          <MentorProfileSubSection mentor={mentorInfo} />
-          <MentorStatsSubSection mentor={mentorInfo} />
+          {mentorInfo ? (
+            <>
+              <MentorProfileSubSection mentor={mentorInfo} />
+              <MentorStatsSubSection mentor={mentorInfo} />
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full">
+              <Typography.Small>
+                멘토 정보를 불러오는데 실패하였습니다.
+              </Typography.Small>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
