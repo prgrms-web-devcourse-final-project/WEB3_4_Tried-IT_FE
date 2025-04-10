@@ -127,7 +127,7 @@ export function SignupForm({
     // TODO 임시로 무조건 false
 
     return false;
-  }, [form.formState, isValidating]);
+  }, []);
 
   const handleSubmit = (data: SignupFormData) => {
     onSubmit(data);
