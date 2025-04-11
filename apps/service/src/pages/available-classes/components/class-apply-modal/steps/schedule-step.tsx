@@ -28,7 +28,6 @@ export function ScheduleStep({
         <Calendar
           mode="single"
           id="date"
-          animate
           selected={selectedDate.toDate()}
           disabled={(date) =>
             !schedules.some((schedule) => schedule.date.isSame(date, "day"))

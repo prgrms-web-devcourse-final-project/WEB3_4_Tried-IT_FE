@@ -1,4 +1,9 @@
 import {
+  Pagination as PaginationWidget,
+  usePagination,
+} from "@/widgets/pagination";
+import { StatusConst } from "@repo/api";
+import {
   Avatar,
   Badge,
   Button,
@@ -27,7 +32,13 @@ import { MoreHorizontal } from "lucide-react";
 import { useGetAppliedClasses } from "../hooks/use-get-applied-classes";
 
 export function AppliedClassesSection() {
-  const { data: appliedClasses } = useGetAppliedClasses();
+  const paginationProps = usePagination({
+    defaultPage: 1,
+    defaultSize: 10,
+  });
+  const {
+    data: { appliedClasses, pagination },
+  } = useGetAppliedClasses(paginationProps);
 
   return (
     <div className="space-y-4">
@@ -45,7 +56,7 @@ export function AppliedClassesSection() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {appliedClasses.map((session) => (
+                {appliedClasses?.map((session) => (
                   <TableRow key={session.id}>
                     <TableCell>
                       <div className="flex items-center gap-2">
@@ -65,9 +76,9 @@ export function AppliedClassesSection() {
                     <TableCell>
                       <Badge
                         variant={
-                          session.status === "진행중"
+                          session.status === StatusConst.APPROVED
                             ? "default"
-                            : session.status === "예약됨"
+                            : session.status === StatusConst.PENDING
                               ? "outline"
                               : "secondary"
                         }
@@ -110,19 +121,11 @@ export function AppliedClassesSection() {
             </Table>
 
             <div className="flex items-center justify-center py-4">
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious href="#" />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">1</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationNext href="#" />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
+              <PaginationWidget
+                pagination={pagination}
+                onPageChange={paginationProps.setPage}
+                onSizeChange={paginationProps.setSize}
+              />
             </div>
           </div>
         </CardContent>

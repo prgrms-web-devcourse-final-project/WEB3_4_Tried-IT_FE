@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import { PageLayout } from "@/shared/layouts/page-layout";
 import {
   Badge,
@@ -16,165 +14,47 @@ import {
   Typography,
 } from "@repo/ui";
 
-import { Applicant, ApplyItem } from "./components/apply-item";
-
-const MOCK_MODIFICATION_REQUEST_COUNT = 4;
-const MOCK_APPROVAL_REQUEST_COUNT = 6;
+import { toast } from "@repo/ui";
+import { ApplyItem } from "./components/apply-item";
+import { useApprovalRequests } from "./hooks/use-approval-requests";
 
 export function ApplyApprovalPage() {
-  const [requests, setRequests] = useState<Applicant[]>([
-    {
-      id: 1,
-      type: "profile",
-      category: "modification",
-      title: "멤버 정보 수정",
-      description: "멤버 ? 님이 정보 처리 수정 요청을 하셨습니다.",
-      timestamp: "2025-03-21 12:46",
-      mentor: {
-        name: "김모호",
-      },
-    },
-    {
-      id: 2,
-      type: "blank",
-      category: "approval",
-      title: "멤버 승인",
-      description: "? 님이 멤버 신청을 하셨습니다.",
-      timestamp: "2025-03-21 12:46",
-      mentor: {
-        name: "이모호",
-      },
-    },
-    {
-      id: 3,
-      type: "blank",
-      category: "approval",
-      title: "멤버 승인",
-      description: "? 님이 멤버 신청을 하셨습니다.",
-      timestamp: "2025-03-21 12:46",
-      mentor: {
-        name: "박모호",
-      },
-    },
-    {
-      id: 4,
-      type: "profile",
-      category: "modification",
-      title: "멤버 정보 수정",
-      description: "멤버 ? 님이 정보 처리 수정 요청을 하셨습니다.",
-      timestamp: "2025-03-21 12:46",
-      mentor: {
-        name: "최모호",
-      },
-    },
-    {
-      id: 5,
-      type: "blank",
-      category: "approval",
-      title: "멤버 승인",
-      description: "? 님이 멤버 신청을 하셨습니다.",
-      timestamp: "2025-03-21 12:46",
-      mentor: {
-        name: "정모호",
-      },
-    },
-    {
-      id: 6,
-      type: "profile",
-      category: "modification",
-      title: "멤버 정보 수정",
-      description: "멤버 ? 님이 정보 처리 수정 요청을 하셨습니다.",
-      timestamp: "2025-03-21 12:46",
-      mentor: {
-        name: "김모호",
-      },
-    },
-    {
-      id: 7,
-      type: "blank",
-      category: "approval",
-      title: "멤버 승인",
-      description: "? 님이 멤버 신청을 하셨습니다.",
-      timestamp: "2025-03-21 12:46",
-      mentor: {
-        name: "이모호",
-      },
-    },
-    {
-      id: 8,
-      type: "blank",
-      category: "approval",
-      title: "멤버 승인",
-      description: "? 님이 멤버 신청을 하셨습니다.",
-      timestamp: "2025-03-21 12:46",
-      mentor: {
-        name: "박모호",
-      },
-    },
-    {
-      id: 9,
-      type: "profile",
-      category: "modification",
-      title: "멤버 정보 수정",
-      description: "멤버 ? 님이 정보 처리 수정 요청을 하셨습니다.",
-      timestamp: "2025-03-21 12:46",
-      mentor: {
-        name: "최모호",
-      },
-    },
-    {
-      id: 10,
-      type: "blank",
-      category: "approval",
-      title: "멤버 승인",
-      description: "? 님이 멤버 신청을 하셨습니다.",
-      timestamp: "2025-03-21 12:46",
-      mentor: {
-        name: "정모호",
-      },
-    },
-    {
-      id: 11,
-      type: "blank",
-      category: "approval",
-      title: "멤버 승인",
-      description: "? 님이 멤버 신청을 하셨습니다.",
-      timestamp: "2025-03-21 12:46",
-      mentor: {
-        name: "김모호",
-      },
-    },
-  ]);
+  const { requests, approveRequest, rejectRequest } = useApprovalRequests();
 
-  const handleApprove = (id: number) => {
-    setRequests(
-      requests.map((request) =>
-        request.id === id ? { ...request, approved: true } : request
-      )
+  const handleApprove = (id: number, category: "modification" | "approval") => {
+    approveRequest(
+      { id, category },
+      {
+        onSuccess: () => {
+          toast.success("승인되었습니다.");
+        },
+        onError: () => {
+          toast.error("승인 처리 중 오류가 발생했습니다.");
+        },
+      }
     );
   };
 
-  const handleReject = (id: number) => {
-    setRequests(
-      requests.map((request) =>
-        request.id === id ? { ...request, approved: false } : request
-      )
+  const handleReject = (id: number, category: "modification" | "approval") => {
+    rejectRequest(
+      { id, category },
+      {
+        onSuccess: () => {
+          toast.success("거절되었습니다.");
+        },
+        onError: () => {
+          toast.error("거절 처리 중 오류가 발생했습니다.");
+        },
+      }
     );
   };
 
-  const filteredRequests = requests.filter(
+  const modificationRequests = requests.filter(
     (request) => request.category === "modification"
   );
-
-  const totalPages = Math.ceil(filteredRequests.length / 5);
-  const paginationItems: (number | string)[] = Array.from(
-    { length: Math.min(totalPages, 5) },
-    (_, i) => i + 1
+  const approvalRequests = requests.filter(
+    (request) => request.category === "approval"
   );
-  if (totalPages > 5) {
-    paginationItems.push("...");
-    paginationItems.push(totalPages);
-  }
 
   return (
     <PageLayout className="max-h-dvh overflow-y-auto">
@@ -186,17 +66,17 @@ export function ApplyApprovalPage() {
         <TabsList className="mb-6">
           <TabsTrigger value="modification" className="relative">
             멤버 정보 수정
-            {MOCK_MODIFICATION_REQUEST_COUNT > 0 && (
+            {modificationRequests.length > 0 && (
               <Badge className="absolute z-10 -top-3 -right-3 w-5 h-5 rounded-full text-xs">
-                {MOCK_MODIFICATION_REQUEST_COUNT}
+                {modificationRequests.length}
               </Badge>
             )}
           </TabsTrigger>
           <TabsTrigger value="approval" className="relative">
             멤버 승인
-            {MOCK_APPROVAL_REQUEST_COUNT > 0 && (
+            {approvalRequests.length > 0 && (
               <Badge className="absolute z-10 -top-3 -right-3 w-5 h-5 rounded-full text-xs">
-                {MOCK_APPROVAL_REQUEST_COUNT}
+                {approvalRequests.length}
               </Badge>
             )}
           </TabsTrigger>
@@ -204,31 +84,27 @@ export function ApplyApprovalPage() {
 
         <TabsContent value="modification">
           <div className="space-y-4">
-            {requests
-              .filter((request) => request.category === "modification")
-              .map((request) => (
-                <ApplyItem
-                  key={request.id}
-                  applicant={request}
-                  onApprove={handleApprove}
-                  onReject={handleReject}
-                />
-              ))}
+            {modificationRequests.map((request) => (
+              <ApplyItem
+                key={request.id}
+                applicant={request}
+                onApprove={() => handleApprove(request.id, "modification")}
+                onReject={() => handleReject(request.id, "modification")}
+              />
+            ))}
           </div>
         </TabsContent>
 
         <TabsContent value="approval">
           <div className="space-y-4">
-            {requests
-              .filter((request) => request.category === "approval")
-              .map((request) => (
-                <ApplyItem
-                  key={request.id}
-                  applicant={request}
-                  onApprove={handleApprove}
-                  onReject={handleReject}
-                />
-              ))}
+            {approvalRequests.map((request) => (
+              <ApplyItem
+                key={request.id}
+                applicant={request}
+                onApprove={() => handleApprove(request.id, "approval")}
+                onReject={() => handleReject(request.id, "approval")}
+              />
+            ))}
           </div>
         </TabsContent>
       </Tabs>

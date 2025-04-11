@@ -1,3 +1,5 @@
+import { handleError } from "@/app/error-handler/error-handler";
+import { useApplyClass } from "@/pages/available-classes/hooks/use-apply-class";
 import { useGetClassDetail } from "@/pages/available-classes/hooks/use-get-class-detail";
 import { MenteeTheme } from "@/shared/components/mentee-theme/mentee-theme";
 import { createTypedSwitch } from "@/shared/components/switch";
@@ -10,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
   Skeleton,
+  toast,
 } from "@repo/ui";
 import dayjs from "dayjs";
 import { Suspense, useState } from "react";
@@ -24,6 +27,13 @@ interface ClassApplyModalProps {
 }
 
 const StepSwitch = createTypedSwitch<ClassBookingStep>();
+
+export type ApplyClassFormValues = {
+  classId: number;
+  date: dayjs.Dayjs;
+  timeSlot: string;
+  message: string;
+};
 
 export function ClassApplyModal({
   isOpen,
@@ -48,6 +58,7 @@ function ClassApplyModalContent({
   onClose,
 }: Omit<ClassApplyModalProps, "isOpen">) {
   const { data: classDetail } = useGetClassDetail(classId);
+  const { mutateAsync: applyClass } = useApplyClass();
   const [currentStep, setCurrentStep] = useState<ClassBookingStep>("details");
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(dayjs());
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>();
@@ -63,16 +74,24 @@ function ClassApplyModalContent({
     else if (currentStep === "message") setCurrentStep("schedule");
   };
 
-  const handleSubmit = () => {
-    // TODO: 멘토링 신청 API 호출
-    const payload = {
+  const handleSubmit = async () => {
+    if (!selectedTimeSlot) {
+      toast.error("시간을 선택해주세요");
+      return;
+    }
+    const payload: ApplyClassFormValues = {
       classId: classDetail.id,
       date: selectedDate,
       timeSlot: selectedTimeSlot,
       message,
     };
-    alert(`TODO: 멘토링 신청: ${JSON.stringify(payload)}`);
-    onClose();
+    try {
+      await applyClass(payload);
+      toast.success("멘토링 신청이 완료되었습니다.");
+      onClose();
+    } catch (e) {
+      handleError(e);
+    }
   };
 
   return (

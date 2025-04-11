@@ -24,22 +24,22 @@ export const uploadFile = generateServiceFetcher<
 });
 
 export const deleteFile = generateServiceFetcher<
-  { fileId: string },
+  { attachmentId: string },
   void,
   void,
   ApiResponseVoid
 >({
-  endpoint: "/api/files/{fileId}",
+  endpoint: "/api/files/{attachmentId}",
   method: "DELETE",
 });
 
 export const downloadFile = generateServiceFetcher<
-  { fileId: string },
+  { attachmentId: string },
   void,
   void,
   Blob
 >({
-  endpoint: "/api/files/{fileId}/download",
+  endpoint: "/api/files/{attachmentId}/download",
   method: "GET",
   responseContentType: "blob",
 });

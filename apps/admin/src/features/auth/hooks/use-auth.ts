@@ -8,7 +8,7 @@ import { useMemo } from "react";
 import { useNavigate } from "react-router";
 export function useAuth() {
   const navigate = useNavigate();
-  const { data: mentorApplicant } = useGetMentorApplicant({
+  const { data: mentorApplicant, refetch } = useGetMentorApplicant({
     page: 1,
     size: 10,
   });
@@ -19,6 +19,7 @@ export function useAuth() {
 
   const { login } = useLogin({
     onLoginSuccess: () => {
+      refetch();
       navigate(ROUTE_PATH.HOME);
     },
     onLoginFailure: (error) => {
@@ -32,6 +33,7 @@ export function useAuth() {
   });
   const { logout: handleLogout } = useLogout({
     onLogoutSuccess: () => {
+      refetch();
       navigate(ROUTE_PATH.HOME);
     },
     onLogoutFailure: (error) => {

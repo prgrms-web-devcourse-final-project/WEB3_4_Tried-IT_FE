@@ -1,5 +1,6 @@
 import { Model } from "@/entities/model/_interface/model.interface";
 import { DateFormatter } from "@/shared/date/date-formatter";
+import { Status } from "@repo/api";
 
 export interface AppliedClassModelJson {
   id: number;
@@ -7,7 +8,7 @@ export interface AppliedClassModelJson {
     name: string;
   };
   inquiry: string;
-  status: "진행중" | "예약됨" | "대기중" | "거절됨";
+  status: Status;
   schedule: string;
 }
 
@@ -17,7 +18,7 @@ export interface AppliedClassModelConstructorOptions {
     name: string;
   };
   inquiry: string;
-  status: "진행중" | "예약됨" | "대기중" | "거절됨";
+  status: Status;
   schedule: string | Date;
 }
 
@@ -27,7 +28,7 @@ export class AppliedClassModel implements Model<AppliedClassModelJson> {
     name: string;
   };
   readonly inquiry: string;
-  readonly status: "진행중" | "예약됨" | "대기중" | "거절됨";
+  readonly status: Status;
   readonly scheduleFormatter: DateFormatter;
 
   constructor(constructorOptions: AppliedClassModelConstructorOptions) {
@@ -36,6 +37,19 @@ export class AppliedClassModel implements Model<AppliedClassModelJson> {
     this.inquiry = constructorOptions.inquiry;
     this.status = constructorOptions.status;
     this.scheduleFormatter = new DateFormatter(constructorOptions.schedule);
+  }
+
+  get statusLabel() {
+    switch (this.status) {
+      case "PENDING":
+        return "대기중";
+      case "APPROVED":
+        return "진행중";
+      case "REJECTED":
+        return "거절됨";
+      default:
+        return "예약됨";
+    }
   }
 
   toJson(): AppliedClassModelJson {

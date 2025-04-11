@@ -21,10 +21,10 @@ export class ScheduleModel implements Model<ScheduleModelJson> {
   readonly date: dayjs.Dayjs;
 
   constructor(constructorOptions: ScheduleModelConstructorOptions) {
-    this.date = dayjs(
-      `${constructorOptions.date} ${constructorOptions.time}`,
-      "YYYY-MM-DD HH:mm"
-    );
+    const [hour, minute] = constructorOptions.time.split(":");
+    this.date = dayjs(constructorOptions.date)
+      .set("hour", parseInt(hour))
+      .set("minute", parseInt(minute));
   }
 
   get time() {
