@@ -3,6 +3,7 @@ import { ConflictingAppointmentError, FieldsError } from "@/errors";
 import { Status } from "@/swagger/enums";
 import {
   ApiResponseGetApplyMenteePageList,
+  ApiResponseListMyMentoringResponse,
   ApiResponseMentorApplyStatusResponse,
   ApiResponseObject,
 } from "@/swagger/schemas";
@@ -12,7 +13,7 @@ export const getRegisteredClassList = generateServiceFetcher<
   { memberId: string },
   void,
   void,
-  ApiResponseObject
+  ApiResponseListMyMentoringResponse
 >({
   endpoint: "/api/mentor/class/{memberId}",
   method: "GET",

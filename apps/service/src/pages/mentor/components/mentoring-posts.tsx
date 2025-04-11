@@ -1,3 +1,4 @@
+import { useAuth } from "@/features/auth/hooks/use-auth";
 import {
   Badge,
   Button,
@@ -26,7 +27,10 @@ export function MentoringPosts() {
 }
 
 function MentoringPostsContent() {
-  const { data: mentoringPosts } = useGetMentoringPosts();
+  const { user } = useAuth();
+  const { data: mentoringPosts } = useGetMentoringPosts({
+    memberId: user?.id,
+  });
 
   return (
     <Card>
@@ -41,12 +45,11 @@ function MentoringPostsContent() {
                 <TableHead className="w-[200px]">제목</TableHead>
                 <TableHead>기술 스택</TableHead>
                 <TableHead className="w-[150px]">가격</TableHead>
-                <TableHead className="w-[100px]">신청자 수</TableHead>
                 <TableHead className="text-right w-[150px]">관리</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mentoringPosts.map((post) => (
+              {mentoringPosts?.map((post) => (
                 <TableRow key={post.classId}>
                   <TableCell>
                     <Typography.P className="font-medium">
@@ -63,7 +66,6 @@ function MentoringPostsContent() {
                     </div>
                   </TableCell>
                   <TableCell>{post.formattedPrice}</TableCell>
-                  <TableCell>{post.menteeCount}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button size="sm" variant="outline">
@@ -102,7 +104,7 @@ function MentoringPostsSkeleton() {
                 <TableHead className="w-[200px]">제목</TableHead>
                 <TableHead>기술 스택</TableHead>
                 <TableHead className="w-[150px]">가격</TableHead>
-                <TableHead className="w-[100px]">신청자 수</TableHead>
+
                 <TableHead className="text-right w-[150px]">관리</TableHead>
               </TableRow>
             </TableHeader>
@@ -121,9 +123,6 @@ function MentoringPostsSkeleton() {
                   </TableCell>
                   <TableCell>
                     <Skeleton className="h-5 w-24 bg-primary/10" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-5 w-8 bg-primary/10" />
                   </TableCell>
                   <TableCell className="text-right"></TableCell>
                 </TableRow>
