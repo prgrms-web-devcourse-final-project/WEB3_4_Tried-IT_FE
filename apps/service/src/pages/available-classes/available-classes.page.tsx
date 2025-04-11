@@ -75,7 +75,7 @@ export function AvailableClassesPage() {
             </Typography.P>
           </div>
           <ClassesFilterSelect
-            jobs={jobCategories}
+            jobs={jobCategories ?? []}
             orders={classListOrders}
             initialJobs={selectedJobCategories}
             initialOrder={selectedClassListOrder}
