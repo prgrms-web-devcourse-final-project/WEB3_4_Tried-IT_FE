@@ -7,6 +7,7 @@ import { Upload } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { useGetJobCategories } from "@/pages/available-classes/hooks/use-get-job-categories";
 import {
   Button,
   Card,
@@ -32,6 +33,11 @@ const formSchema = z.object({
   name: z.string().min(2, { message: "이름은 2글자 이상이어야 합니다." }),
   position: z.string({ required_error: "직무를 선택해주세요." }),
   email: z.string().email({ message: "유효한 이메일 주소를 입력해주세요." }),
+  phoneNumber: z
+    .string()
+    .regex(/^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/, {
+      message: "유효한 핸드폰 번호를 입력해주세요.",
+    }),
   experience: z.number(),
   company: z.string().min(1, { message: "현재 기업을 입력해주세요." }),
   githubLink: z
@@ -55,8 +61,10 @@ const formSchema = z.object({
     .optional(),
 });
 
+export type MentorApplicationFormValues = z.infer<typeof formSchema>;
+
 interface MentorApplicationFormProps {
-  onSubmit: (values: z.infer<typeof formSchema>) => void;
+  onSubmit: (values: MentorApplicationFormValues) => void;
 }
 
 const MAX_ATTACHMENTS = 5;
@@ -65,12 +73,15 @@ const MAX_ATTACHMENT_SIZE_MB = 5;
 export function MentorApplicationForm({
   onSubmit,
 }: MentorApplicationFormProps) {
+  const { data: jobCategories } = useGetJobCategories();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       email: "",
       position: "",
+      phoneNumber: "",
       experience: 1,
       company: "",
       githubLink: "",
@@ -153,22 +164,11 @@ export function MentorApplicationForm({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="frontend">
-                            프론트엔드 개발자
-                          </SelectItem>
-                          <SelectItem value="backend">백엔드 개발자</SelectItem>
-                          <SelectItem value="fullstack">
-                            풀스택 개발자
-                          </SelectItem>
-                          <SelectItem value="mobile">모바일 개발자</SelectItem>
-                          <SelectItem value="devops">
-                            DevOps 엔지니어
-                          </SelectItem>
-                          <SelectItem value="designer">
-                            UI/UX 디자이너
-                          </SelectItem>
-                          <SelectItem value="pm">프로덕트 매니저</SelectItem>
-                          <SelectItem value="other">기타</SelectItem>
+                          {jobCategories?.map((category) => (
+                            <SelectItem key={category.id} value={category.id}>
+                              {category.label}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -198,6 +198,27 @@ export function MentorApplicationForm({
                 )}
               />
 
+              <FormField
+                control={form.control}
+                name="phoneNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>연락처</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="tel"
+                        placeholder="010-1234-5678"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      멘티와의 연락에 사용될 핸드폰 번호입니다.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <div className="grid gap-6 md:grid-cols-2">
                 <FormField
                   control={form.control}
@@ -207,7 +228,13 @@ export function MentorApplicationForm({
                       <FormLabel>경력</FormLabel>
                       <div className="flex items-center gap-2">
                         <FormControl>
-                          <Input type="number" min="0" {...field} />
+                          <Input
+                            type="number"
+                            min="0"
+                            onChange={(e) => {
+                              field.onChange(Number(e.target.value));
+                            }}
+                          />
                         </FormControl>
                         <Typography.Small className="text-muted-foreground shrink-0">
                           년차

@@ -1,10 +1,33 @@
-import { MentorApplicationForm } from "@/pages/mentor-application/components/mentor-application-form";
+import { useAuth } from "@/features/auth/hooks/use-auth";
+import {
+  MentorApplicationForm,
+  MentorApplicationFormValues,
+} from "@/pages/mentor-application/components/mentor-application-form";
+import { usePostMentorApplication } from "@/pages/mentor-application/hooks/use-post-mentor-application";
 import { PageLayout } from "@/shared/layouts/page-layout";
-import { AspectRatio, Typography } from "@repo/ui";
+import { ROUTE_PATH } from "@app/routes";
+import { AspectRatio, toast, Typography } from "@repo/ui";
+import { useNavigate } from "react-router";
 
 export function MentorApplicationPage() {
-  const handleSubmit = (values: unknown) => {
-    alert(JSON.stringify(values));
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { postMentorApplication } = usePostMentorApplication({
+    memberId: user?.id,
+  });
+
+  const handleSubmit = async (values: MentorApplicationFormValues) => {
+    try {
+      await postMentorApplication(values);
+      toast.success(
+        "멘토 지원에 성공했습니다. 관리자의 승인이 완료되면 멘토 활동을 시작할 수 있습니다."
+      );
+      navigate(ROUTE_PATH.HOME);
+    } catch (e) {
+      toast.error("멘토 지원에 실패했습니다.", {
+        description: e instanceof Error ? e.message : JSON.stringify(e),
+      });
+    }
   };
 
   return (
