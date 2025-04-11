@@ -1,3 +1,4 @@
+import { useAuth } from "@/features/auth/hooks/use-auth";
 import { Card, CardContent, CardHeader, CardTitle, Typography } from "@repo/ui";
 import { Suspense } from "react";
 import { useGetMentorInfo } from "../hooks/use-get-mentor-info";
@@ -19,7 +20,10 @@ export function MentorInfo() {
 }
 
 function MentorInfoContent() {
-  const { data: mentorInfo } = useGetMentorInfo();
+  const { user } = useAuth();
+  const { data: mentorInfo } = useGetMentorInfo({
+    memberId: user?.id,
+  });
 
   return (
     <Card>

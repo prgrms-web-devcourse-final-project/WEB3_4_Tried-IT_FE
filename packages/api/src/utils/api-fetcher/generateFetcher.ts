@@ -130,7 +130,10 @@ export function generateFetcher<
     if (requestContentType === "form-data") {
       const formData = new FormData();
       Object.keys(body).forEach((key) => {
-        formData.append(key, body[key]);
+        formData.append(
+          key,
+          typeof body[key] === "object" ? JSON.stringify(body[key]) : body[key]
+        );
       });
       return formData;
     }

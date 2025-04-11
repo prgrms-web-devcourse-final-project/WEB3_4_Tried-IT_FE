@@ -3,6 +3,7 @@ import { ConflictingAppointmentError, FieldsError } from "@/errors";
 import { Status } from "@/swagger/enums";
 import {
   ApiResponseGetApplyMenteePageList,
+  ApiResponseListMyMentoringResponse,
   ApiResponseMentorApplyStatusResponse,
   ApiResponseObject,
 } from "@/swagger/schemas";
@@ -12,7 +13,7 @@ export const getRegisteredClassList = generateServiceFetcher<
   { memberId: string },
   void,
   void,
-  ApiResponseObject
+  ApiResponseListMyMentoringResponse
 >({
   endpoint: "/api/mentor/class/{memberId}",
   method: "GET",
@@ -51,7 +52,24 @@ export const getMentorInfo = generateServiceFetcher<
   { memberId: string },
   void,
   void,
-  ApiResponseObject
+  {
+    isSuccess: boolean;
+    code: string;
+    message: string;
+    data: {
+      memberId: number;
+      name: string;
+      jobName: string;
+      career: number;
+      phone: string;
+      email: string;
+      currentCompany: string;
+      introduction: string;
+      totalClasses: number;
+      pendingRequests: number;
+      completedSessions: number;
+    };
+  }
 >({
   endpoint: "/api/mentor/{memberId}/info",
   method: "GET",
@@ -73,7 +91,7 @@ export const applyForMentorRole = generateServiceFetcher<
       introduction: string;
       email: string;
       attachmentId: number[];
-      career: 3;
+      career: number;
     };
     files: File[];
   },

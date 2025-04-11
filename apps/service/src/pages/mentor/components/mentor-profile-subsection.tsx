@@ -1,7 +1,6 @@
 import { MentorModel } from "@/entities/model/mentor/mentor.model";
 import {
   Avatar,
-  Badge,
   Button,
   Skeleton,
   Table,
@@ -50,18 +49,7 @@ export function MentorProfileSubSection({
               <TableCell className="font-semibold">현재 직장</TableCell>
               <TableCell>{mentor.currentCompany}</TableCell>
             </TableRow>
-            <TableRow>
-              <TableCell className="font-semibold">기술 스택</TableCell>
-              <TableCell>
-                <div className="flex flex-wrap gap-2">
-                  {mentor.stackArray.map((tech) => (
-                    <Badge key={tech} variant="secondary">
-                      {tech}
-                    </Badge>
-                  ))}
-                </div>
-              </TableCell>
-            </TableRow>
+
             <TableRow>
               <TableCell className="font-semibold">소개</TableCell>
               <TableCell>{mentor.introduction}</TableCell>
@@ -94,16 +82,7 @@ export function MentorProfileSubSectionSkeleton() {
             {Array.from({ length: 6 }).map((_, index) => (
               <TableRow key={index}>
                 <TableCell className="font-semibold w-24">
-                  {
-                    [
-                      "직무",
-                      "경력",
-                      "현재 직장",
-                      "기술 스택",
-                      "소개",
-                      "추천 대상",
-                    ][index]
-                  }
+                  {["직무", "경력", "현재 직장", "소개", "추천 대상"][index]}
                 </TableCell>
                 <TableCell>
                   {index === 3 ? (
