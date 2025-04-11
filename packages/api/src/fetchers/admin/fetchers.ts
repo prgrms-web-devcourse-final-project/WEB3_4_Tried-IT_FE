@@ -4,6 +4,7 @@ import {
   ApiResponseApplymentApprovalResponse,
   ApiResponseApplymentDetailResponse,
   ApiResponseApplymentRejectResponse,
+  ApiResponseListJobFindResponse,
   ApiResponseObject,
   ApiResponsePageApplymentResponse,
   ApiResponseVoid,
@@ -93,12 +94,11 @@ export const rejectMentorInfoModification = generateServiceFetcher<
   method: "POST",
 });
 
-// TODO: API 명세 업데이트 예정
 export const getJobCategoryList = generateServiceFetcher<
   void,
   void,
   void,
-  ApiResponseObject
+  ApiResponseListJobFindResponse
 >({
   endpoint: "/api/admin/job",
   method: "GET",

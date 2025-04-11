@@ -91,7 +91,7 @@ export const applyForMentorRole = generateServiceFetcher<
       introduction: string;
       email: string;
       attachmentId: number[];
-      career: 3;
+      career: number;
     };
     files: File[];
   },
