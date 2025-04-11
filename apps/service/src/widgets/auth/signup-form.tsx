@@ -18,7 +18,7 @@ import {
 import { cn } from "@repo/utils/cn";
 import { CheckIcon } from "lucide-react";
 import { overlay } from "overlay-kit";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -85,7 +85,6 @@ export function SignupForm({
   onValidateEmailVerifyCode,
   onSubmit,
 }: SignupFormProps) {
-  const [isValidating, setIsValidating] = useState(false);
   const form = useForm({
     defaultValues: {
       email: "",
@@ -142,7 +141,6 @@ export function SignupForm({
     }
 
     try {
-      setIsValidating(true);
       await onValidateNicknameDuplicate(nickname);
       form.clearErrors("nicknameDuplicateChecked");
       form.setValue("nicknameDuplicateChecked", true);
@@ -157,8 +155,6 @@ export function SignupForm({
           message: `알수 없는 에러: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
         });
       }
-    } finally {
-      setIsValidating(false);
     }
   };
 
@@ -171,7 +167,6 @@ export function SignupForm({
     }
 
     try {
-      setIsValidating(true);
       await onValidateEmailDuplicate(email);
       form.clearErrors("emailDuplicateChecked");
       form.setValue("emailDuplicateChecked", true);
@@ -186,8 +181,6 @@ export function SignupForm({
           message: `알수 없는 에러: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
         });
       }
-    } finally {
-      setIsValidating(false);
     }
   };
 
@@ -200,7 +193,6 @@ export function SignupForm({
     }
 
     try {
-      setIsValidating(true);
       await onValidateEmailAuth(email);
 
       const verifiedCode = await overlay.openAsync<string | null>(
@@ -233,8 +225,6 @@ export function SignupForm({
     } catch (error) {
       console.error(error);
       form.setError("email", { message: "이메일 인증에 실패했습니다." });
-    } finally {
-      setIsValidating(false);
     }
   };
 
