@@ -5,8 +5,10 @@ import {
   ApiResponseApplymentDetailResponse,
   ApiResponseApplymentRejectResponse,
   ApiResponseListJobFindResponse,
+  ApiResponseMentorEditUpdateRenewalResponse,
   ApiResponseObject,
   ApiResponsePageApplymentResponse,
+  ApiResponsePageMentorEditFindAllRenewalResponse,
   ApiResponseVoid,
   ApplymentRejectRequest,
   JobCreaeteRequest,
@@ -82,7 +84,7 @@ export const getMentorApplicationList = generateServiceFetcher<
   void,
   ApiResponsePageApplymentResponse
 >({
-  endpoint: "/api/admin/mentor",
+  endpoint: "/api/admin/mentor/applyment",
   method: "GET",
 });
 
@@ -116,24 +118,35 @@ export const rejectMentorApplication = generateServiceFetcher<
   method: "PUT",
 });
 
-// TODO: API 명세 업데이트 예정
 export const approveMentorInfoModification = generateServiceFetcher<
   { id: string | number },
   void,
   void,
-  ApiResponseObject
+  ApiResponseMentorEditUpdateRenewalResponse
 >({
-  endpoint: "/api/admin/mentor/modify/{id}/approve",
+  endpoint: "/api/admain/mentor/modify/{id}/approve",
   method: "POST",
 });
 
-// TODO: API 명세 업데이트 예정
 export const rejectMentorInfoModification = generateServiceFetcher<
   { id: string | number },
   void,
   void,
-  ApiResponseObject
+  ApiResponseMentorEditUpdateRenewalResponse
 >({
-  endpoint: "/api/admin/mentor/modify/{id}/reject",
+  endpoint: "/api/admain/mentor/modify/{id}/reject",
   method: "POST",
+});
+
+export const getMentorInfoModificationList = generateServiceFetcher<
+  void,
+  {
+    page: number;
+    size: number;
+  },
+  void,
+  ApiResponsePageMentorEditFindAllRenewalResponse
+>({
+  endpoint: "/api/admain/mentor/modifyList",
+  method: "GET",
 });
