@@ -1,6 +1,7 @@
 import {
   ApiResponseApplyIdResponse,
   ApiResponseApplyPageResponse,
+  ApiResponseApplyScheduleResponse,
   ApiResponseVoid,
   ApplyCreateRequest,
 } from "@/swagger/schemas";
@@ -37,4 +38,17 @@ export const cancelApplyClass = generateServiceFetcher<
 >({
   endpoint: "/api/apply/{applyId}",
   method: "DELETE",
+});
+
+/**
+ * @description startDate: YYYYMMDD, endDate: YYYYMMDD
+ */
+export const getClassAppliedScheduleList = generateServiceFetcher<
+  { classId: number },
+  { startDate: string; endDate: string },
+  void,
+  ApiResponseApplyScheduleResponse
+>({
+  endpoint: "/api/apply/schedules/{classId}",
+  method: "GET",
 });
