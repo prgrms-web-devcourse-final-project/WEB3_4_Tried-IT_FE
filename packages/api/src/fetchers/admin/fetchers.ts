@@ -1,8 +1,13 @@
 import { generateServiceFetcher } from "@/fetchers/generate-service-fetcher";
 import {
   AdminLoginRequest,
+  ApiResponseApplymentApprovalResponse,
+  ApiResponseApplymentDetailResponse,
+  ApiResponseApplymentRejectResponse,
   ApiResponseObject,
+  ApiResponsePageApplymentResponse,
   ApiResponseVoid,
+  ApplymentRejectRequest,
 } from "@/swagger/schemas";
 
 export const login = generateServiceFetcher<
@@ -22,37 +27,48 @@ export const logout = generateServiceFetcher<void, void, void, ApiResponseVoid>(
   }
 );
 
-// TODO: API 명세 업데이트 예정
 export const getMentorApplicationList = generateServiceFetcher<
   void,
+  {
+    page: number;
+    size: number;
+    sort: "id,desc";
+  },
   void,
-  void,
-  ApiResponseObject
+  ApiResponsePageApplymentResponse
 >({
   endpoint: "/api/admin/mentor",
   method: "GET",
 });
 
-// TODO: API 명세 업데이트 예정
+export const getMentorApplicationDetail = generateServiceFetcher<
+  { id: string | number },
+  void,
+  void,
+  ApiResponseApplymentDetailResponse
+>({
+  endpoint: "/api/admin/mentor/applyment/{id}",
+  method: "GET",
+});
+
 export const approveMentorApplication = generateServiceFetcher<
   { id: string | number },
   void,
   void,
-  ApiResponseObject
+  ApiResponseApplymentApprovalResponse
 >({
-  endpoint: "/api/admin/mentor/{id}/approve",
+  endpoint: "/api/admin/mentor/applyment/{id}",
   method: "POST",
 });
 
-// TODO: API 명세 업데이트 예정
 export const rejectMentorApplication = generateServiceFetcher<
   { id: string | number },
   void,
-  void,
-  ApiResponseObject
+  ApplymentRejectRequest,
+  ApiResponseApplymentRejectResponse
 >({
-  endpoint: "/api/admin/mentor/{id}/reject",
-  method: "POST",
+  endpoint: "/api/admin/mentor/applyment/{id}/reject",
+  method: "PUT",
 });
 
 // TODO: API 명세 업데이트 예정
