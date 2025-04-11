@@ -9,7 +9,51 @@ import {
   ApiResponsePageApplymentResponse,
   ApiResponseVoid,
   ApplymentRejectRequest,
+  JobCreaeteRequest,
+  JobCreateResponse,
+  JobUpdateRequest,
+  JobUpdateResponse,
 } from "@/swagger/schemas";
+
+export const putJobCategory = generateServiceFetcher<
+  { jobId: number },
+  void,
+  JobUpdateRequest,
+  JobUpdateResponse
+>({
+  endpoint: "/api/admin/job/{jobId}",
+  method: "PUT",
+});
+
+export const deleteJobCategory = generateServiceFetcher<
+  { jobId: number },
+  void,
+  void,
+  ApiResponseObject
+>({
+  endpoint: "/api/admin/job/{jobId}",
+  method: "DELETE",
+});
+
+export const getJobCategoryList = generateServiceFetcher<
+  void,
+  void,
+  void,
+  ApiResponseListJobFindResponse
+>({
+  endpoint: "/api/admin/job",
+  method: "GET",
+});
+
+export const postJobCategory = generateServiceFetcher<
+  void,
+  void,
+  JobCreaeteRequest,
+  JobCreateResponse
+>({
+  endpoint: "/api/admin/job",
+  method: "POST",
+});
 
 export const login = generateServiceFetcher<
   void,
@@ -92,47 +136,4 @@ export const rejectMentorInfoModification = generateServiceFetcher<
 >({
   endpoint: "/api/admin/mentor/modify/{id}/reject",
   method: "POST",
-});
-
-export const getJobCategoryList = generateServiceFetcher<
-  void,
-  void,
-  void,
-  ApiResponseListJobFindResponse
->({
-  endpoint: "/api/admin/job",
-  method: "GET",
-});
-
-// TODO: API 명세 업데이트 예정
-export const postJobCategory = generateServiceFetcher<
-  void,
-  void,
-  void,
-  ApiResponseObject
->({
-  endpoint: "/api/admin/job",
-  method: "POST",
-});
-
-// TODO: API 명세 업데이트 예정
-export const putJobCategory = generateServiceFetcher<
-  void,
-  void,
-  void,
-  ApiResponseObject
->({
-  endpoint: "/api/admin/job/{id}",
-  method: "PUT",
-});
-
-// TODO: API 명세 업데이트 예정
-export const deleteJobCategory = generateServiceFetcher<
-  { id: string | number },
-  void,
-  void,
-  ApiResponseObject
->({
-  endpoint: "/api/admin/job/{id}",
-  method: "DELETE",
 });

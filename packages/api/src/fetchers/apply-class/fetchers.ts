@@ -30,11 +30,11 @@ export const getAppliedClassList = generateServiceFetcher<
 });
 
 export const cancelApplyClass = generateServiceFetcher<
-  { classId: number },
+  { applyId: number },
   void,
   void,
   ApiResponseVoid
 >({
-  endpoint: "/api/apply/{classId}",
+  endpoint: "/api/apply/{applyId}",
   method: "DELETE",
 });
