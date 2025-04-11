@@ -1,5 +1,4 @@
 import { Route } from ".react-router/types/app/+types/root";
-import { PageNavigationDevtools } from "@/shared/dev-tools/page-navigation-devtools";
 import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
 
 import { ThemeProvider } from "@/app/theme-provider/theme-provider";
@@ -50,7 +49,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <Footer />
             <ScrollRestoration />
             <Scripts />
-            <PageNavigationDevtools />
           </body>
         </html>
       </ThemeProvider>
