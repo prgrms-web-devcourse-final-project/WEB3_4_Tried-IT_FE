@@ -5,8 +5,6 @@ import {
   ApiResponseGetApplyMenteePageList,
   ApiResponseMentorApplyStatusResponse,
   ApiResponseObject,
-  MentorApplicationRequestDto,
-  MentorUpdateRequestDto,
 } from "@/swagger/schemas";
 import { generateServiceFetcher } from "../generate-service-fetcher";
 
@@ -65,11 +63,25 @@ export const getMentorInfo = generateServiceFetcher<
 export const applyForMentorRole = generateServiceFetcher<
   void,
   void,
-  MentorApplicationRequestDto,
+  {
+    mentorApplyData: {
+      currentCompany: string;
+      name: string;
+      phone: string;
+      memberId: number;
+      jobId: number;
+      introduction: string;
+      email: string;
+      attachmentId: number[];
+      career: 3;
+    };
+    files: File[];
+  },
   ApiResponseObject
 >({
   endpoint: "/api/mentor",
   method: "POST",
+  requestContentType: "form-data",
   errorHandlerByCode: {
     "400": (error) => {
       if (FieldsError.isFieldsErrorBody(error.body)) {
@@ -86,7 +98,16 @@ export const applyForMentorRole = generateServiceFetcher<
 export const requestUpdateMentorInfo = generateServiceFetcher<
   { memberId: string },
   void,
-  MentorUpdateRequestDto,
+  {
+    mentorUpdateData: {
+      jobId: number;
+      career: 3;
+      currentCompany: string;
+      introduction: string;
+      attachmentId: number[];
+    };
+    files: File[];
+  },
   ApiResponseObject
 >({
   endpoint: "/api/mentor/{memberId}",
