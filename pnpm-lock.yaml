@@ -50,6 +50,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.71.1
         version: 5.71.1(react@19.0.0)
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
       isbot:
         specifier: ^5.1.25
         version: 5.1.25
