@@ -51,7 +51,24 @@ export const getMentorInfo = generateServiceFetcher<
   { memberId: string },
   void,
   void,
-  ApiResponseObject
+  {
+    isSuccess: boolean;
+    code: string;
+    message: string;
+    data: {
+      memberId: number;
+      name: string;
+      jobName: string;
+      career: number;
+      phone: string;
+      email: string;
+      currentCompany: string;
+      introduction: string;
+      totalClasses: number;
+      pendingRequests: number;
+      completedSessions: number;
+    };
+  }
 >({
   endpoint: "/api/mentor/{memberId}/info",
   method: "GET",

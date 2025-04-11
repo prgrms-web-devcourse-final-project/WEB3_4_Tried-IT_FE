@@ -1,3 +1,5 @@
+import { MentorModel } from "@/entities/model/mentor/mentor.model";
+import { ModelCreator } from "@/entities/model/model-creator";
 import { dementorApiFetchers } from "@repo/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
@@ -24,9 +26,25 @@ export function useGetMentorInfo({ memberId }: UseGetMentorInfoProps = {}) {
         return null;
       }
     },
-    select: () => {
-      // TODO: API 완성시 구현
-      return null;
+    select: (data) => {
+      if (!data) {
+        return null;
+      }
+      return ModelCreator.create(MentorModel, {
+        bestFor: "",
+        career: data.career,
+        memberId: data.memberId,
+        name: data.name,
+        job: data.jobName,
+        completedSessions: data.completedSessions,
+        currentCompany: data.currentCompany,
+        introduction: data.introduction,
+        isApproved: true,
+        pendingRequests: data.pendingRequests,
+        phone: data.phone,
+        stack: "",
+        totalClasses: data.totalClasses,
+      });
     },
   });
 
