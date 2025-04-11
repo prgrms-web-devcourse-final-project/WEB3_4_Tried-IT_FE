@@ -7,7 +7,6 @@ export interface MentorModelJson {
   career: number;
   phone: string;
   currentCompany: string;
-  stack: string;
   introduction: string;
   bestFor: string;
   isApproved: boolean;
@@ -23,7 +22,6 @@ export interface MentorModelConstructorOptions {
   career: number;
   phone: string;
   currentCompany: string;
-  stack: string;
   introduction: string;
   bestFor: string;
   isApproved: boolean;
@@ -39,7 +37,6 @@ export class MentorModel implements Model<MentorModelJson> {
   readonly career: number;
   readonly phone: string;
   readonly currentCompany: string;
-  readonly stack: string;
   readonly introduction: string;
   readonly bestFor: string;
   readonly isApproved: boolean;
@@ -54,7 +51,6 @@ export class MentorModel implements Model<MentorModelJson> {
     this.career = constructorOptions.career;
     this.phone = constructorOptions.phone;
     this.currentCompany = constructorOptions.currentCompany;
-    this.stack = constructorOptions.stack;
     this.introduction = constructorOptions.introduction;
     this.bestFor = constructorOptions.bestFor;
     this.isApproved = constructorOptions.isApproved;
@@ -71,7 +67,6 @@ export class MentorModel implements Model<MentorModelJson> {
       career: this.career,
       phone: this.phone,
       currentCompany: this.currentCompany,
-      stack: this.stack,
       introduction: this.introduction,
       bestFor: this.bestFor,
       isApproved: this.isApproved,
@@ -86,13 +81,6 @@ export class MentorModel implements Model<MentorModelJson> {
    */
   get careerText(): string {
     return `${this.career}년`;
-  }
-
-  /**
-   * 기술 스택을 배열로 반환합니다.
-   */
-  get stackArray(): string[] {
-    return this.stack.split(",").map((s) => s.trim());
   }
 
   /**

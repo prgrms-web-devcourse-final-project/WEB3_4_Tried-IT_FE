@@ -42,7 +42,6 @@ export function useGetMentorInfo({ memberId }: UseGetMentorInfoProps = {}) {
         isApproved: true,
         pendingRequests: data.pendingRequests,
         phone: data.phone,
-        stack: "",
         totalClasses: data.totalClasses,
       });
     },
