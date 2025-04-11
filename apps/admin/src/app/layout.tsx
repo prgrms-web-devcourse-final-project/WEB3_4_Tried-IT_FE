@@ -10,6 +10,7 @@ import { SidebarProvider } from "@repo/ui";
 
 import "@/app/styles/index.css";
 import "@repo/design-system/styles.css";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -24,28 +25,35 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
+const queryClient = new QueryClient();
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider defaultTheme="system">
-      <html lang="en">
-        <head>
-          <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <Meta />
-          <Links />
-        </head>
-        <body>
-          {/* <NavigationHeader /> */}
-          <SidebarProvider open={true}>
-            <AppSidebar />
-            <div className="flex-1 flex flex-col">{children}</div>
-          </SidebarProvider>
-          <Footer />
-          <ScrollRestoration />
-          <Scripts />
-          <PageNavigationDevtools />
-        </body>
-      </html>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider defaultTheme="system">
+        <html lang="en">
+          <head>
+            <meta charSet="utf-8" />
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1"
+            />
+            <Meta />
+            <Links />
+          </head>
+          <body>
+            {/* <NavigationHeader /> */}
+            <SidebarProvider open={true}>
+              <AppSidebar />
+              <div className="flex-1 flex flex-col">{children}</div>
+            </SidebarProvider>
+            <Footer />
+            <ScrollRestoration />
+            <Scripts />
+            <PageNavigationDevtools />
+          </body>
+        </html>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
