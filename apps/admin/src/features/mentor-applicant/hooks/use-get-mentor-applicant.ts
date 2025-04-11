@@ -1,5 +1,5 @@
 import { dementorApiFetchers } from "@repo/api";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 export interface UseGetMentorApplicantProps {
   page: number;

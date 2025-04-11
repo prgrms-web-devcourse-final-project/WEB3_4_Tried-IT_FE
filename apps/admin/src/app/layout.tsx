@@ -9,7 +9,7 @@ import { SidebarProvider } from "@repo/ui";
 
 import "@/app/styles/index.css";
 import "@repo/design-system/styles.css";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
