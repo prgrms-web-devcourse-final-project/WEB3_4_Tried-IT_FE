@@ -1,5 +1,6 @@
 import {
   Button,
+  ButtonWithLoading,
   Card,
   CardContent,
   Form,
@@ -25,15 +26,12 @@ const userInfoSchema = z.object({
     .min(2, { message: "이름은 2자 이상이어야 합니다." })
     .max(10, { message: "이름은 20자 이하여야 합니다." }),
   email: z.string().email({ message: "올바른 이메일 형식이 아닙니다." }),
-  phone: z.string().regex(/^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/, {
-    message: "올바른 전화번호 형식이 아닙니다.",
-  }),
 });
 
-type UserInfoFormData = z.infer<typeof userInfoSchema>;
+export type UserInfoFormData = z.infer<typeof userInfoSchema>;
 
 export interface MyInfoSectionProps {
-  onChangeUserInfo: (userInfo: Partial<UserInfoFormData>) => void;
+  onChangeUserInfo: (userInfo: Pick<UserInfoFormData, "name">) => Promise<void>;
 }
 
 export function MyInfoSection({ onChangeUserInfo }: MyInfoSectionProps) {
@@ -44,18 +42,25 @@ export function MyInfoSection({ onChangeUserInfo }: MyInfoSectionProps) {
     defaultValues: {
       name: user?.nickname,
       email: user?.email,
-      phone: "010-1234-5678", // TODO: API에서 전화번호 정보를 받아올 때 수정
     },
     resolver: zodResolver(userInfoSchema),
     mode: "onChange",
   });
 
+  const hasValuesChanged = (data: UserInfoFormData) => {
+    return data.name !== form.formState.defaultValues?.name;
+  };
+
   const handleEdit = () => {
     setIsEditing(true);
   };
 
-  const handleConfirm = (data: UserInfoFormData) => {
-    onChangeUserInfo(data);
+  const handleConfirm = async (data: UserInfoFormData) => {
+    if (!hasValuesChanged(data)) {
+      setIsEditing(false);
+      return;
+    }
+    await onChangeUserInfo(data);
     setIsEditing(false);
   };
 
@@ -63,7 +68,6 @@ export function MyInfoSection({ onChangeUserInfo }: MyInfoSectionProps) {
     form.reset({
       name: user?.nickname,
       email: user?.email,
-      phone: "010-1234-5678", // TODO: API에서 전화번호 정보를 받아올 때 수정
     });
     setIsEditing(false);
   };
@@ -79,7 +83,12 @@ export function MyInfoSection({ onChangeUserInfo }: MyInfoSectionProps) {
             <Button variant="outline" onClick={handleCancel}>
               취소
             </Button>
-            <Button onClick={form.handleSubmit(handleConfirm)}>확인</Button>
+            <ButtonWithLoading
+              onClick={form.handleSubmit(handleConfirm)}
+              loading={form.formState.isSubmitting}
+            >
+              확인
+            </ButtonWithLoading>
           </div>
         )}
       </div>
@@ -117,24 +126,6 @@ export function MyInfoSection({ onChangeUserInfo }: MyInfoSectionProps) {
                     {isEditing && (
                       <Typography.Small className="text-muted-foreground/50 pl-2">
                         이메일은 현재 변경 불가능합니다.
-                      </Typography.Small>
-                    )}
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone</FormLabel>
-                    <FormControl>
-                      <Input {...field} readOnly disabled />
-                    </FormControl>
-                    <FormMessage />
-                    {isEditing && (
-                      <Typography.Small className="text-muted-foreground/50 pl-2">
-                        전화번호는 현재 변경 불가능합니다.
                       </Typography.Small>
                     )}
                   </FormItem>
@@ -190,19 +181,6 @@ function MyInfoSectionSkeleton() {
                 render={() => (
                   <FormItem>
                     <FormLabel>Email</FormLabel>
-                    <Skeleton className="bg-primary/10">
-                      <FormControl />
-                      <Input />
-                    </Skeleton>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="phone"
-                render={() => (
-                  <FormItem>
-                    <FormLabel>Phone</FormLabel>
                     <Skeleton className="bg-primary/10">
                       <FormControl />
                       <Input />

@@ -20,6 +20,6 @@ export const putMyMemberInfo = generateServiceFetcher<
   void,
   ApiResponseVoid
 >({
-  endpoint: "/api/member/me",
+  endpoint: "/api/members/info",
   method: "PUT",
 });
