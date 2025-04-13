@@ -21,7 +21,7 @@ export interface ClassListItemModelConstructorOptions {
   description: string;
   mentor: { name: string; job: string; career: number };
   stack: string;
-  image: string;
+  image?: string;
 }
 
 export class ClassListItemModel implements Model<ClassListItemModelJson> {
@@ -40,7 +40,7 @@ export class ClassListItemModel implements Model<ClassListItemModelJson> {
     this.description = constructorOptions.description;
     this.mentor = constructorOptions.mentor;
     this.stack = constructorOptions.stack;
-    this.image = constructorOptions.image;
+    this.image = constructorOptions.image ?? "/mentor-character.png";
   }
 
   toJson(): ClassListItemModelJson {

@@ -39,7 +39,6 @@ export function useGetAvailableClasses(options: UseGetAvailableClassesOptions) {
         ModelCreator.create(ClassListItemModel, {
           id: item.classId ?? 0,
           description: item.content ?? "",
-          image: "",
           mentor: {
             career: item.mentor?.career ?? 0,
             job: item.mentor?.job ?? "",
