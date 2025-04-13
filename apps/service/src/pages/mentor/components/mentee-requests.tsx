@@ -7,6 +7,7 @@ import {
   AvatarFallback,
   AvatarImage,
   Badge,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -27,6 +28,7 @@ import {
 } from "@repo/ui";
 import { Suspense } from "react";
 import { useGetMenteeRequests } from "../hooks/use-get-mentee-requests";
+import { MenteeRequestDialog } from "./mentee-request-dialog";
 
 export function MenteeRequests() {
   return (
@@ -82,15 +84,27 @@ function MenteeRequestsContent() {
                   <TableCell>{request.inquiry}</TableCell>
                   <TableCell className="text-center">
                     <Badge
-                      variant={request.isApproved ? "outline" : "secondary"}
+                      variant={
+                        request.isApproved
+                          ? "default"
+                          : request.isRejected
+                            ? "destructive"
+                            : "secondary"
+                      }
+                      className={request.isApproved ? "bg-green-500" : ""}
                     >
                       {request.statusText}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-center">
-                    <Badge variant="outline" className="cursor-pointer">
-                      관리
-                    </Badge>
+                    <MenteeRequestDialog
+                      menteeRequest={request}
+                      trigger={
+                        <Button variant="outline" className="cursor-pointer">
+                          관리
+                        </Button>
+                      }
+                    />
                   </TableCell>
                 </TableRow>
               ))}

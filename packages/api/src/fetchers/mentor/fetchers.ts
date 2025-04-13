@@ -42,7 +42,7 @@ export const handleMentoringApplication = generateServiceFetcher<
   ApiResponseMentorApplyStatusResponse
 >({
   endpoint: "/api/mentor/apply/{applyId}/status",
-  method: "POST",
+  method: "PUT",
 });
 
 /**
