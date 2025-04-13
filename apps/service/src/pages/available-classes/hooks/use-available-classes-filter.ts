@@ -1,7 +1,7 @@
 import { ClassListOrderModel } from "@/entities/model/class/class-list-order.model";
 import { JobCategoryModel } from "@/entities/model/class/job-category.model";
+import { useGetJobCategories } from "@/features/job/hooks/use-get-job-categories";
 import { useGetClassListOrders } from "@/pages/available-classes/hooks/use-get-class-list-orders";
-import { useGetJobCategories } from "@/pages/available-classes/hooks/use-get-job-categories";
 import { useState } from "react";
 
 export function useAvailableClassesFilter() {

@@ -118,16 +118,17 @@ export const requestUpdateMentorInfo = generateServiceFetcher<
   {
     mentorUpdateData: {
       jobId: number;
-      career: 3;
+      career: number;
       currentCompany: string;
       introduction: string;
     };
-    files: File[];
+    files?: File[];
   },
   ApiResponseObject
 >({
   endpoint: "/api/mentor/{memberId}",
   method: "PUT",
+  requestContentType: "form-data",
 });
 
 export const getMentorInfoModificationRequestList = generateServiceFetcher<

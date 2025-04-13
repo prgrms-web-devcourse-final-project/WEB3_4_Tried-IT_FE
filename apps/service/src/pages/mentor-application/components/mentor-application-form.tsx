@@ -7,7 +7,7 @@ import { Upload } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { useGetJobCategories } from "@/pages/available-classes/hooks/use-get-job-categories";
+import { useGetJobCategories } from "@/features/job/hooks/use-get-job-categories";
 import {
   Button,
   Card,

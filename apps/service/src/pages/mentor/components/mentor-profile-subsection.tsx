@@ -9,6 +9,7 @@ import {
   TableRow,
   Typography,
 } from "@repo/ui";
+import { MentorProfileEditDialog } from "./mentor-profile-edit-dialog";
 
 interface MentorProfileSubSectionProps {
   mentor: MentorModel;
@@ -20,7 +21,10 @@ export function MentorProfileSubSection({
   return (
     <div className="relative">
       <div className="absolute top-0 right-0">
-        <Button variant="outline">수정</Button>
+        <MentorProfileEditDialog
+          mentor={mentor}
+          trigger={<Button variant="outline">수정</Button>}
+        />
       </div>
       <h3 className="text-lg font-medium mb-4">멘토정보</h3>
       <div className="rounded-md p-4">
@@ -54,10 +58,6 @@ export function MentorProfileSubSection({
               <TableCell className="font-semibold">소개</TableCell>
               <TableCell>{mentor.introduction}</TableCell>
             </TableRow>
-            <TableRow>
-              <TableCell className="font-semibold">추천 대상</TableCell>
-              <TableCell>{mentor.bestFor}</TableCell>
-            </TableRow>
           </TableBody>
         </Table>
       </div>
@@ -82,7 +82,7 @@ export function MentorProfileSubSectionSkeleton() {
             {Array.from({ length: 6 }).map((_, index) => (
               <TableRow key={index}>
                 <TableCell className="font-semibold w-24">
-                  {["직무", "경력", "현재 직장", "소개", "추천 대상"][index]}
+                  {["직무", "경력", "현재 직장", "소개"][index]}
                 </TableCell>
                 <TableCell>
                   {index === 3 ? (
