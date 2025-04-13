@@ -83,7 +83,7 @@ export function AppliedClassesSection() {
                               : "secondary"
                         }
                       >
-                        {session.status}
+                        {session.statusLabel}
                       </Badge>
                     </TableCell>
                     <TableCell>

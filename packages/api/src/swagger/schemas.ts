@@ -5,7 +5,6 @@ export type MentorEditProposalRequest = {
   career?: number;
   currentCompany?: string;
   introduction?: string;
-  attachmentId?: Array<number>;
 };
 
 export type ApiResponseObject = {
@@ -211,7 +210,6 @@ export type MentorApplyProposalRequestDto = {
   career: number;
   currentCompany?: string;
   introduction: string;
-  attachmentId?: Array<number>;
 };
 
 export type SignupRequest = {

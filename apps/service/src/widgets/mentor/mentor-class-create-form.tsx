@@ -42,7 +42,7 @@ const formSchema = z.object({
   ),
   schedule: z.array(
     z.object({
-      dateOfWeek: z.enum([
+      dayOfWeek: z.enum([
         DayOfWeekConst.MONDAY,
         DayOfWeekConst.TUESDAY,
         DayOfWeekConst.WEDNESDAY,
@@ -109,7 +109,7 @@ export function MentorClassCreateForm({
         (option) =>
           !currentSchedules.some(
             (schedule) =>
-              schedule.dateOfWeek === day && schedule.time === option.value
+              schedule.dayOfWeek === day && schedule.time === option.value
           )
       );
       return {
@@ -130,7 +130,7 @@ export function MentorClassCreateForm({
     form.setValue("schedule", [
       ...currentSchedules,
       {
-        dateOfWeek: firstAvailableSlot.day,
+        dayOfWeek: firstAvailableSlot.day,
         time: firstAvailableSlot.availableTimes[0].value,
       },
     ]);
@@ -161,7 +161,7 @@ export function MentorClassCreateForm({
     return schedules.some(
       (schedule, index) =>
         index !== currentIndex &&
-        schedule.dateOfWeek === dateOfWeek &&
+        schedule.dayOfWeek === dateOfWeek &&
         schedule.time === time
     );
   };
@@ -265,7 +265,7 @@ export function MentorClassCreateForm({
                     <div key={index} className="flex gap-2">
                       <FormField
                         control={form.control}
-                        name={`schedule.${index}.dateOfWeek`}
+                        name={`schedule.${index}.dayOfWeek`}
                         render={({ field }) => (
                           <FormItem className="">
                             <FormControl>
@@ -329,7 +329,7 @@ export function MentorClassCreateForm({
                                   {timeOptions.map((option) => {
                                     const isDisabled = isTimeSlotTaken(
                                       form.getValues(
-                                        `schedule.${index}.dateOfWeek`
+                                        `schedule.${index}.dayOfWeek`
                                       ),
                                       option.value,
                                       index

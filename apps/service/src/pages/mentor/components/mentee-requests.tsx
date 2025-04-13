@@ -1,8 +1,13 @@
 import {
+  Pagination as PaginationWidget,
+  usePagination,
+} from "@/widgets/pagination";
+import {
   Avatar,
   AvatarFallback,
   AvatarImage,
   Badge,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -23,6 +28,7 @@ import {
 } from "@repo/ui";
 import { Suspense } from "react";
 import { useGetMenteeRequests } from "../hooks/use-get-mentee-requests";
+import { MenteeRequestDialog } from "./mentee-request-dialog";
 
 export function MenteeRequests() {
   return (
@@ -33,7 +39,10 @@ export function MenteeRequests() {
 }
 
 function MenteeRequestsContent() {
-  const { data: menteeRequests } = useGetMenteeRequests();
+  const { size, page, setPage, setSize } = usePagination();
+  const {
+    data: { applyments, pagination },
+  } = useGetMenteeRequests(page, size);
 
   return (
     <Card>
@@ -53,7 +62,7 @@ function MenteeRequestsContent() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {menteeRequests.map((request) => (
+              {applyments.map((request) => (
                 <TableRow key={request.applymentId}>
                   <TableCell>
                     {request.scheduleFormatter.fullDateTime}
@@ -75,15 +84,27 @@ function MenteeRequestsContent() {
                   <TableCell>{request.inquiry}</TableCell>
                   <TableCell className="text-center">
                     <Badge
-                      variant={request.isApproved ? "outline" : "secondary"}
+                      variant={
+                        request.isApproved
+                          ? "default"
+                          : request.isRejected
+                            ? "destructive"
+                            : "secondary"
+                      }
+                      className={request.isApproved ? "bg-green-500" : ""}
                     >
                       {request.statusText}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-center">
-                    <Badge variant="outline" className="cursor-pointer">
-                      관리
-                    </Badge>
+                    <MenteeRequestDialog
+                      menteeRequest={request}
+                      trigger={
+                        <Button variant="outline" className="cursor-pointer">
+                          관리
+                        </Button>
+                      }
+                    />
                   </TableCell>
                 </TableRow>
               ))}
@@ -91,19 +112,11 @@ function MenteeRequestsContent() {
           </Table>
 
           <div className="flex items-center justify-center py-4">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious href="#" />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">1</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext href="#" />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+            <PaginationWidget
+              pagination={pagination}
+              onPageChange={setPage}
+              onSizeChange={setSize}
+            />
           </div>
         </div>
       </CardContent>
