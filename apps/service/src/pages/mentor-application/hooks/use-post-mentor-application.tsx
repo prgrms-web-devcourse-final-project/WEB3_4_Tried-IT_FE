@@ -17,7 +17,6 @@ export function usePostMentorApplication({
       return dementorApiFetchers.mentor.applyForMentorRole({
         body: {
           mentorApplyData: {
-            attachmentId: data.attachments?.map((a) => Number(a.id)) ?? [],
             career: data.experience,
             currentCompany: data.company,
             email: data.email,
@@ -27,7 +26,7 @@ export function usePostMentorApplication({
             name: data.name,
             phone: data.phoneNumber,
           },
-          files: [],
+          files: data.attachments,
         },
       });
     },

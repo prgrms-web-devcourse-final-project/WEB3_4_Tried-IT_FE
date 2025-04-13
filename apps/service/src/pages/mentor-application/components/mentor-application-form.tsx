@@ -40,25 +40,10 @@ const formSchema = z.object({
     }),
   experience: z.number(),
   company: z.string().min(1, { message: "현재 기업을 입력해주세요." }),
-  githubLink: z
-    .string()
-    .url({ message: "유효한 URL을 입력해주세요." })
-    .optional()
-    .or(z.literal("")),
   introduction: z
     .string()
     .min(10, { message: "자기소개는 10글자 이상이어야 합니다." }),
-  targetAudience: z
-    .string()
-    .min(10, { message: "대상 설명은 10글자 이상이어야 합니다." }),
-  attachments: z
-    .array(
-      z.object({
-        id: z.string(),
-        name: z.string(),
-      })
-    )
-    .optional(),
+  attachments: z.array(z.instanceof(File)),
 });
 
 export type MentorApplicationFormValues = z.infer<typeof formSchema>;
@@ -84,9 +69,7 @@ export function MentorApplicationForm({
       phoneNumber: "",
       experience: 1,
       company: "",
-      githubLink: "",
       introduction: "",
-      targetAudience: "",
     },
   });
 
@@ -104,8 +87,6 @@ export function MentorApplicationForm({
       return;
     }
 
-    console.log([...files]);
-
     if (
       [...files].some(
         (file) => file.size > MAX_ATTACHMENT_SIZE_MB * 1024 * 1024
@@ -115,13 +96,7 @@ export function MentorApplicationForm({
       return;
     }
 
-    // TODO: 파일 업로드 API 호출 후 업로드 된 파일의 ID를 받아오는 로직 추가
-    const uploadedFiles = [...files].map((file, index) => ({
-      id: index.toString(),
-      name: file.name,
-    }));
-
-    form.setValue("attachments", uploadedFiles);
+    form.setValue("attachments", [...files]);
   };
 
   return (
@@ -260,27 +235,6 @@ export function MentorApplicationForm({
                 />
               </div>
 
-              <FormField
-                control={form.control}
-                name="githubLink"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>깃허브 링크</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="https://github.com/username"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      선택 사항입니다. 포트폴리오나 프로젝트를 공유하고 싶다면
-                      입력해주세요.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               <div>
                 <FormLabel htmlFor="certificate">경력증명서</FormLabel>
                 <div className="mt-1">
@@ -326,24 +280,6 @@ export function MentorApplicationForm({
                     <FormControl>
                       <Textarea
                         placeholder="자신의 경험, 전문 분야, 멘토링 스타일 등을 소개해주세요."
-                        className="min-h-[120px]"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="targetAudience"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>이런 분들에게 좋아요</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="어떤 멘티들에게 도움을 줄 수 있는지 설명해주세요."
                         className="min-h-[120px]"
                         {...field}
                       />

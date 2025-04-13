@@ -83,15 +83,14 @@ export const applyForMentorRole = generateServiceFetcher<
   void,
   {
     mentorApplyData: {
-      currentCompany: string;
-      name: string;
-      phone: string;
       memberId: number;
+      name: string;
       jobId: number;
-      introduction: string;
+      phone: string;
       email: string;
-      attachmentId: number[];
       career: number;
+      currentCompany: string;
+      introduction: string;
     };
     files: File[];
   },
@@ -122,7 +121,6 @@ export const requestUpdateMentorInfo = generateServiceFetcher<
       career: 3;
       currentCompany: string;
       introduction: string;
-      attachmentId: number[];
     };
     files: File[];
   },
