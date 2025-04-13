@@ -1,58 +1,57 @@
 import { MenteeRequestStatus } from "@/entities/model/mentee-request/mentee-request-status.enum";
 import { MenteeRequestModel } from "@/entities/model/mentee-request/mentee-request.model";
 import { ModelCreator } from "@/entities/model/model-creator";
+import { PaginationModel } from "@/entities/model/pagination/pagination.model";
+import { dementorApiFetchers } from "@repo/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-const MOCK_MENTEE_REQUESTS = [
-  {
-    applyment_id: 1,
-    class_id: 1,
-    member_id: 1,
-    nickname: "John Doe",
-    status: MenteeRequestStatus.PENDING,
-    inquiry: "React 상태 관리에 대해 질문이 있습니다",
-    schedule: "2023-05-10T14:00:00+09:00",
-  },
-  {
-    applyment_id: 2,
-    class_id: 1,
-    member_id: 2,
-    nickname: "Jane Doe",
-    status: MenteeRequestStatus.APPROVED,
-    inquiry: "프론트엔드 개발자 커리어 상담",
-    schedule: "2023-05-12T15:30:00+09:00",
-  },
-  {
-    applyment_id: 3,
-    class_id: 1,
-    member_id: 3,
-    nickname: "Kim Smith",
-    status: MenteeRequestStatus.PENDING,
-    inquiry: "Next.js 프로젝트 구조에 대한 조언",
-    schedule: "2023-05-15T10:00:00+09:00",
-  },
-];
-
-export function useGetMenteeRequests() {
+export function useGetMenteeRequests(page: number = 1, size: number = 10) {
   const query = useSuspenseQuery({
-    queryKey: ["mentee-requests"],
+    queryKey: ["mentee-requests", page, size],
     queryFn: () =>
-      new Promise<typeof MOCK_MENTEE_REQUESTS>((resolve) =>
-        resolve(MOCK_MENTEE_REQUESTS)
-      ),
-    select: (data) =>
-      data.map((item) =>
-        ModelCreator.create(MenteeRequestModel, {
-          applymentId: item.applyment_id,
-          classId: item.class_id,
-          memberId: item.member_id,
-          nickname: item.nickname,
-          status: item.status,
-          inquiry: item.inquiry,
-          schedule: item.schedule,
-        })
-      ),
+      dementorApiFetchers.mentor.getAppliedMenteeList({
+        queryParam: { page, size },
+      }),
+    select: (response) => {
+      const data = response.data;
+      const applyments =
+        data?.applyments?.map((item) =>
+          ModelCreator.create(MenteeRequestModel, {
+            applymentId: item.applyId ?? 0,
+            classId: item.classId ?? 0,
+            memberId: item.memberId ?? 0,
+            nickname: item.nickname ?? "",
+            status: convertStatus(item.status),
+            inquiry: item.inquiry ?? "",
+            schedule: item.schedule ?? "",
+          })
+        ) || [];
+      const pagination = ModelCreator.create(PaginationModel, {
+        page: data?.pagination?.page ?? 1,
+        size: data?.pagination?.size ?? 10,
+        totalElements: data?.pagination?.total_elements ?? 0,
+        totalPages: data?.pagination?.total_pages ?? 1,
+      });
+      return {
+        applyments,
+        pagination,
+      };
+    },
   });
 
   return query;
+}
+
+// API Status 타입을 MenteeRequestStatus로 변환
+function convertStatus(status?: string): MenteeRequestStatus {
+  if (!status) return MenteeRequestStatus.PENDING;
+
+  switch (status) {
+    case "APPROVED":
+      return MenteeRequestStatus.APPROVED;
+    case "REJECTED":
+      return MenteeRequestStatus.REJECTED;
+    default:
+      return MenteeRequestStatus.PENDING;
+  }
 }

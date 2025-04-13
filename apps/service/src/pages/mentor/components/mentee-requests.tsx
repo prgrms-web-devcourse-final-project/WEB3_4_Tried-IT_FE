@@ -1,4 +1,8 @@
 import {
+  Pagination as PaginationWidget,
+  usePagination,
+} from "@/widgets/pagination";
+import {
   Avatar,
   AvatarFallback,
   AvatarImage,
@@ -33,7 +37,10 @@ export function MenteeRequests() {
 }
 
 function MenteeRequestsContent() {
-  const { data: menteeRequests } = useGetMenteeRequests();
+  const { size, page, setPage, setSize } = usePagination();
+  const {
+    data: { applyments, pagination },
+  } = useGetMenteeRequests(page, size);
 
   return (
     <Card>
@@ -53,7 +60,7 @@ function MenteeRequestsContent() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {menteeRequests.map((request) => (
+              {applyments.map((request) => (
                 <TableRow key={request.applymentId}>
                   <TableCell>
                     {request.scheduleFormatter.fullDateTime}
@@ -91,19 +98,11 @@ function MenteeRequestsContent() {
           </Table>
 
           <div className="flex items-center justify-center py-4">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious href="#" />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">1</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext href="#" />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+            <PaginationWidget
+              pagination={pagination}
+              onPageChange={setPage}
+              onSizeChange={setSize}
+            />
           </div>
         </div>
       </CardContent>
