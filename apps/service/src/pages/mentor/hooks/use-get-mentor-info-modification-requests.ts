@@ -20,6 +20,11 @@ export interface ModificationRequest {
     currentCompany?: ModificationRequestField;
     introduction?: ModificationRequestField;
     jobId?: ModificationRequestField;
+    attachments?: {
+      attachmentId?: number;
+      fileName?: string;
+      fileUrl?: string;
+    }[];
   };
 }
 
@@ -74,14 +79,19 @@ export function useGetMentorInfoModificationRequests({
       const { data } = response;
 
       const requests = data.modificationRequests.map((request) => ({
-        requestId: request.requestId,
+        requestId: request.proposalId,
         status: request.status,
-        requestDate: new DateFormatter(request.requestDate),
+        requestDate: new DateFormatter(request.createdAt),
         modifiedFields: {
           career: request.modifiedFields.career,
           currentCompany: request.modifiedFields.currentCompany,
           introduction: request.modifiedFields.introduction,
           jobId: request.modifiedFields.jobId,
+          attachments: Array.isArray(request.attachments)
+            ? request.attachments.length > 0
+              ? request.attachments
+              : null
+            : null,
         },
       }));
 

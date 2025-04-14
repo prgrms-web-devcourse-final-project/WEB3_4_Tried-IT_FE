@@ -6,6 +6,7 @@ import {
   ApiResponseListMyMentoringResponse,
   ApiResponseMentorApplyStatusResponse,
   ApiResponseObject,
+  AttachmentInfo,
 } from "@/swagger/schemas";
 import { generateServiceFetcher } from "../generate-service-fetcher";
 
@@ -141,9 +142,9 @@ export const getMentorInfoModificationRequestList = generateServiceFetcher<
     message: string;
     data?: {
       modificationRequests: {
-        requestId: number;
+        proposalId: number;
         status: Status;
-        requestDate: string;
+        createdAt: string;
         modifiedFields: {
           career?: {
             before: number;
@@ -162,6 +163,7 @@ export const getMentorInfoModificationRequestList = generateServiceFetcher<
             after: number;
           };
         };
+        attachments: AttachmentInfo[];
       }[];
       pagination: {
         page: number;

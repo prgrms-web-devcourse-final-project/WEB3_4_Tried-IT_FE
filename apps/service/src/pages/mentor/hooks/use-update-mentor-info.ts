@@ -20,6 +20,7 @@ export function useUpdateMentorInfo() {
       career,
       currentCompany,
       introduction,
+      files,
     }: UpdateMentorInfoParams) => {
       return dementorApiFetchers.mentor.requestUpdateMentorInfo({
         pathParams: {
@@ -32,6 +33,7 @@ export function useUpdateMentorInfo() {
             currentCompany,
             introduction,
           },
+          files,
         },
       });
     },

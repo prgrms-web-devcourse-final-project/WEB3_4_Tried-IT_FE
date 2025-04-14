@@ -58,6 +58,35 @@ export function ApplyDetailModal({
     }
   };
 
+  const handleDownload = async (fileUrl: string, fileName: string) => {
+    try {
+      const fullUrl = `${import.meta.env.VITE_API_URL}${fileUrl}`;
+      const response = await fetch(fullUrl, {
+        method: "GET",
+        credentials: "include", // 쿠키를 포함하여 요청
+      });
+
+      if (!response.ok) {
+        throw new Error("파일 다운로드에 실패했습니다.");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+
+      // 리소스 정리
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("파일 다운로드 오류:", error);
+      alert("파일 다운로드에 실패했습니다.");
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto min-w-[90vw]">
@@ -152,6 +181,41 @@ export function ApplyDetailModal({
                     </p>
                   )}
                 </div>
+              </div>
+            </div>
+
+            <div className="md:col-span-2 space-y-3">
+              <h3 className="text-sm font-semibold text-gray-500">첨부파일</h3>
+              <div className="border rounded-md p-5">
+                {applicationDetail.attachments &&
+                applicationDetail.attachments.length > 0 ? (
+                  <div className="space-y-2">
+                    {applicationDetail.attachments.map((attachment, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between border-b pb-2 last:border-0"
+                      >
+                        <span className="text-sm">
+                          {attachment.fileName || "파일명 없음"}
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            handleDownload(
+                              attachment.fileUrl ?? "",
+                              attachment.fileName || `file-${index}`
+                            )
+                          }
+                        >
+                          다운로드
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500">첨부파일이 없습니다.</p>
+                )}
               </div>
             </div>
           </div>
