@@ -9,6 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@repo/ui";
+import { useState } from "react";
+import { ApplyDetailModal } from "./apply-detail-modal";
 
 interface ApplyItemProps {
   applicant: ApprovalRequestModel;
@@ -17,7 +19,19 @@ interface ApplyItemProps {
 }
 
 export function ApplyItem({ applicant, onApprove, onReject }: ApplyItemProps) {
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const isPending = applicant.status === StatusConst.PENDING;
+  const isApprovalCategory = applicant.category === "approval";
+
+  // 상세 보기 모달 열기
+  const handleOpenDetailModal = () => {
+    setIsDetailModalOpen(true);
+  };
+
+  // 상세 보기 모달 닫기
+  const handleCloseDetailModal = () => {
+    setIsDetailModalOpen(false);
+  };
 
   // 상태에 따른 배지 스타일 설정
   const getStatusBadge = () => {
@@ -53,32 +67,53 @@ export function ApplyItem({ applicant, onApprove, onReject }: ApplyItemProps) {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex justify-between items-center">
-          <CardTitle>{applicant.title}</CardTitle>
-          {!isPending && getStatusBadge()}
-        </div>
-        <CardDescription>{applicant.description}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="flex justify-between items-center">
-          <div>
-            <p className="text-sm text-gray-500">
-              {applicant.formattedCreatedAt}
-            </p>
-            <p className="text-sm font-medium">{applicant.mentor.name}</p>
+    <>
+      <Card>
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <CardTitle>{applicant.title}</CardTitle>
+            {!isPending && getStatusBadge()}
           </div>
-          {isPending && (
-            <div className="flex gap-2 items-center">
-              <Button variant="outline" onClick={onReject}>
-                거절
-              </Button>
-              <Button onClick={onApprove}>승인</Button>
+          <CardDescription>{applicant.description}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-sm text-gray-500">
+                {applicant.formattedCreatedAt}
+              </p>
+              <p className="text-sm font-medium">{applicant.mentor.name}</p>
             </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+            <div className="flex gap-2 items-center">
+              {isApprovalCategory && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleOpenDetailModal}
+                >
+                  상세 보기
+                </Button>
+              )}
+              {isPending && (
+                <>
+                  <Button variant="outline" onClick={onReject}>
+                    거절
+                  </Button>
+                  <Button onClick={onApprove}>승인</Button>
+                </>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {isApprovalCategory && (
+        <ApplyDetailModal
+          isOpen={isDetailModalOpen}
+          onClose={handleCloseDetailModal}
+          applymentId={applicant.memberId}
+        />
+      )}
+    </>
   );
 }

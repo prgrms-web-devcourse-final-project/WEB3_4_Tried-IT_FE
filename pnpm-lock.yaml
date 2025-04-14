@@ -50,6 +50,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.71.1
         version: 5.71.1(react@19.0.0)
+      '@uiw/react-md-editor':
+        specifier: ^4.0.5
+        version: 4.0.5(@types/react@19.0.12)(react-dom@19.0.0)(react@19.0.0)
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
