@@ -88,9 +88,7 @@ export function MentorClassCreateForm({
     await onSubmit(values);
   }
 
-  useEffect(() => {
-    console.log("submitting", form.formState.isSubmitting);
-  }, [form.formState.isSubmitting]);
+  useEffect(() => {}, [form.formState.isSubmitting]);
 
   const handleAddSchedule = () => {
     const currentSchedules = form.getValues("schedule");

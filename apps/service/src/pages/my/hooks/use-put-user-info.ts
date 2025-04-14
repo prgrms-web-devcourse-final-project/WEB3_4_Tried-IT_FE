@@ -28,7 +28,6 @@ export function usePutUserInfo() {
       return { previousData };
     },
     onError: (_, __, context) => {
-      console.log("onError", context);
       queryClient.setQueryData(["user-info"], context?.previousData);
     },
   });

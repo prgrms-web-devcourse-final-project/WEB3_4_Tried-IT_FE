@@ -26,7 +26,6 @@ export function usePostJobCategories() {
             ReturnType<typeof dementorApiFetchers.admin.getJobCategoryList>
           >
         ) => {
-          console.log("old", old);
           return [
             ...(old.data ?? []),
             ModelCreator.create(JobCategoryModel, {
