@@ -17,6 +17,8 @@ import {
 } from "@repo/ui";
 import { Suspense } from "react";
 import { useGetMentoringPosts } from "../hooks/use-get-mentoring-posts";
+import { MentoringPostDeleteDialog } from "./mentoring-post-delete-dialog";
+import { MentoringPostEditDialog } from "./mentoring-post-edit-dialog";
 
 export function MentoringPosts() {
   return (
@@ -68,20 +70,46 @@ function MentoringPostsContent() {
                   <TableCell>{post.formattedPrice}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
-                      <Button size="sm" variant="outline">
-                        수정
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="text-destructive"
-                      >
-                        삭제
-                      </Button>
+                      <MentoringPostEditDialog
+                        post={post}
+                        trigger={
+                          <Button size="sm" variant="outline">
+                            수정
+                          </Button>
+                        }
+                      />
+                      <MentoringPostDeleteDialog
+                        post={post}
+                        trigger={
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-destructive"
+                          >
+                            삭제
+                          </Button>
+                        }
+                      />
                     </div>
                   </TableCell>
                 </TableRow>
               ))}
+
+              {/* 멘토링 포스트가 없는 경우 */}
+              {(!mentoringPosts || mentoringPosts.length === 0) && (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center py-10">
+                    <div className="flex flex-col items-center">
+                      <Typography.P className="text-muted-foreground mb-2">
+                        등록된 멘토링 글이 없습니다
+                      </Typography.P>
+                      <Typography.Small className="text-muted-foreground/70">
+                        멘토링 글을 등록하여 멘티들에게 멘토링을 제공해보세요
+                      </Typography.Small>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </div>
@@ -124,7 +152,12 @@ function MentoringPostsSkeleton() {
                   <TableCell>
                     <Skeleton className="h-5 w-24 bg-primary/10" />
                   </TableCell>
-                  <TableCell className="text-right"></TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-2">
+                      <Skeleton className="h-8 w-16 bg-primary/10" />
+                      <Skeleton className="h-8 w-16 bg-primary/10" />
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

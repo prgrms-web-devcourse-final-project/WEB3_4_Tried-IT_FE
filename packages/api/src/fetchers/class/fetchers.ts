@@ -67,4 +67,5 @@ export const deleteClass = generateServiceFetcher<
 >({
   endpoint: "/api/class/{classId}",
   method: "DELETE",
+  responseContentType: "text",
 });
