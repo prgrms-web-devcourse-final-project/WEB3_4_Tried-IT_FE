@@ -1,3 +1,4 @@
+import { AppliedClassModel } from "@/entities/model/applied-class/applied-class.model";
 import {
   Pagination as PaginationWidget,
   usePagination,
@@ -29,7 +30,9 @@ import {
   Typography,
 } from "@repo/ui";
 import { MoreHorizontal } from "lucide-react";
+import { overlay } from "overlay-kit";
 import { useGetAppliedClasses } from "../hooks/use-get-applied-classes";
+import { CancelAppliedClassDialog } from "./cancel-applied-class-dialog";
 
 export function AppliedClassesSection() {
   const paginationProps = usePagination({
@@ -39,6 +42,16 @@ export function AppliedClassesSection() {
   const {
     data: { appliedClasses, pagination },
   } = useGetAppliedClasses(paginationProps);
+
+  const handleOpenCancelDialog = (appliedClass: AppliedClassModel) => {
+    overlay.open(({ isOpen, close }) => (
+      <CancelAppliedClassDialog
+        appliedClass={appliedClass}
+        isOpen={isOpen}
+        onOpenChange={close}
+      />
+    ));
+  };
 
   return (
     <div className="space-y-4">
@@ -90,10 +103,7 @@ export function AppliedClassesSection() {
                       {session.scheduleFormatter.fullDateTime}
                     </TableCell>
                     <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button variant="outline" size="sm">
-                          수정
-                        </Button>
+                      {session.status === StatusConst.PENDING && (
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button
@@ -106,17 +116,34 @@ export function AppliedClassesSection() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem>상세 보기</DropdownMenuItem>
-                            <DropdownMenuItem>일정 변경</DropdownMenuItem>
-                            <DropdownMenuItem className="text-destructive">
+                            <DropdownMenuItem
+                              className="text-destructive"
+                              onClick={() => handleOpenCancelDialog(session)}
+                            >
                               취소하기
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
-                      </div>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
+
+                {/* 멘토링 신청이 없는 경우 */}
+                {(!appliedClasses || appliedClasses.length === 0) && (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-10">
+                      <div className="flex flex-col items-center">
+                        <Typography.P className="text-muted-foreground mb-2">
+                          신청한 멘토링이 없습니다
+                        </Typography.P>
+                        <Typography.Small className="text-muted-foreground/70">
+                          멘토링을 신청하여 멘토에게 배움의 기회를 가져보세요
+                        </Typography.Small>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
 
@@ -150,6 +177,7 @@ function AppliedClassesSectionSkeleton() {
                   <TableHead className="w-1/2">문의</TableHead>
                   <TableHead className="w-1/8">상태</TableHead>
                   <TableHead className="w-1/8">예약일</TableHead>
+                  <TableHead className="w-1/8 text-right">관리</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
