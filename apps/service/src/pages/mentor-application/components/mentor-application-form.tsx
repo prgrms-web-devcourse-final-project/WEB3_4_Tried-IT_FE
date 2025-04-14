@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { useGetJobCategories } from "@/features/job/hooks/use-get-job-categories";
+import { MarkdownEditor } from "@/widgets/markdown-editor";
 import {
   Button,
   Card,
@@ -25,7 +26,6 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Textarea,
   Typography,
 } from "@repo/ui";
 
@@ -277,11 +277,15 @@ export function MentorApplicationForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>나를 소개하는 글</FormLabel>
+                    <FormDescription>
+                      제목(#), 링크, 이미지 등의 마크다운 문법을 사용할 수
+                      있습니다. 이미지는 드래그앤드롭으로도 추가할 수 있습니다.
+                    </FormDescription>
                     <FormControl>
-                      <Textarea
-                        placeholder="자신의 경험, 전문 분야, 멘토링 스타일 등을 소개해주세요."
-                        className="min-h-[120px]"
-                        {...field}
+                      <MarkdownEditor
+                        value={field.value}
+                        onChange={field.onChange}
+                        height={200}
                       />
                     </FormControl>
                     <FormMessage />
