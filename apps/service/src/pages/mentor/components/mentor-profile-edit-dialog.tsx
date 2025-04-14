@@ -2,6 +2,7 @@ import { JobCategoryModel } from "@/entities/model/class/job-category.model";
 import { MentorModel } from "@/entities/model/mentor/mentor.model";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { useGetJobCategories } from "@/features/job/hooks/use-get-job-categories";
+import { MarkdownEditor } from "@/widgets/markdown-editor";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
@@ -25,7 +26,6 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Textarea,
 } from "@repo/ui";
 import { CheckCircle, Loader2, XCircle } from "lucide-react";
 import { useState } from "react";
@@ -236,17 +236,21 @@ export function MentorProfileEditDialog({
               control={form.control}
               name="introduction"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="col-span-2">
                   <FormLabel>소개</FormLabel>
                   <FormControl>
-                    <Textarea
-                      {...field}
-                      className="min-h-32"
-                      disabled={isSubmitting}
-                    />
+                    <div className="min-h-[250px]">
+                      <MarkdownEditor
+                        value={field.value}
+                        onChange={field.onChange}
+                        height={200}
+                        visibleDragbar={false}
+                      />
+                    </div>
                   </FormControl>
                   <FormDescription>
-                    멘티들에게 보여질 자기소개와 경력사항을 작성하세요.
+                    멘티들에게 보여질 자기소개와 경력사항을 작성하세요. 마크다운
+                    문법을 사용하여 서식을 꾸밀 수 있습니다.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

@@ -2,6 +2,11 @@ import { MentorModel } from "@/entities/model/mentor/mentor.model";
 import {
   Avatar,
   Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
   Skeleton,
   Table,
   TableBody,
@@ -9,6 +14,9 @@ import {
   TableRow,
   Typography,
 } from "@repo/ui";
+import MDEditor from "@uiw/react-md-editor";
+import { BookOpen } from "lucide-react";
+import { useState } from "react";
 import { MentorProfileEditDialog } from "./mentor-profile-edit-dialog";
 
 interface MentorProfileSubSectionProps {
@@ -18,6 +26,8 @@ interface MentorProfileSubSectionProps {
 export function MentorProfileSubSection({
   mentor,
 }: MentorProfileSubSectionProps) {
+  const [isIntroDialogOpen, setIsIntroDialogOpen] = useState(false);
+
   return (
     <div className="relative">
       <div className="absolute top-0 right-0">
@@ -56,7 +66,41 @@ export function MentorProfileSubSection({
 
             <TableRow>
               <TableCell className="font-semibold">소개</TableCell>
-              <TableCell>{mentor.introduction}</TableCell>
+              <TableCell>
+                <Dialog
+                  open={isIntroDialogOpen}
+                  onOpenChange={setIsIntroDialogOpen}
+                >
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-2"
+                    >
+                      <BookOpen className="h-4 w-4" />
+                      자세히 보기
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl">
+                    <DialogHeader>
+                      <DialogTitle>멘토 소개</DialogTitle>
+                    </DialogHeader>
+                    <div className="mt-4 max-h-[70vh] overflow-y-auto">
+                      <div
+                        data-color-mode="light"
+                        className="p-4 bg-white rounded-md"
+                      >
+                        <MDEditor.Markdown source={mentor.introduction} />
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+                {/* 간략한 소개 미리보기 (100자 제한) */}
+                <Typography.Muted className="mt-2 line-clamp-2">
+                  {mentor.introduction.replace(/[#*`]/g, "").substring(0, 100)}
+                  {mentor.introduction.length > 100 ? "..." : ""}
+                </Typography.Muted>
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
