@@ -12,7 +12,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   Form,
   FormControl,
   FormDescription,
@@ -26,15 +25,21 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  toast,
 } from "@repo/ui";
-import { CheckCircle, Loader2, XCircle } from "lucide-react";
-import { useState } from "react";
+import { Loader2, Trash2, Upload } from "lucide-react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   UpdateMentorInfoParams,
   useUpdateMentorInfo,
 } from "../hooks/use-update-mentor-info";
+
+// 최대 첨부파일 수와 크기 제한
+const MAX_ATTACHMENTS = 5;
+const MAX_ATTACHMENT_SIZE_MB = 10;
+const MAX_ATTACHMENT_SIZE_BYTES = MAX_ATTACHMENT_SIZE_MB * 1024 * 1024;
 
 const mentorInfoFormSchema = z.object({
   jobId: z.coerce.number().min(1, { message: "직무를 선택해주세요." }),
@@ -43,25 +48,24 @@ const mentorInfoFormSchema = z.object({
   introduction: z
     .string()
     .min(10, { message: "소개는 최소 10자 이상이어야 합니다." }),
+  attachments: z.array(z.instanceof(File)).optional(),
 });
 
 type MentorInfoFormData = z.infer<typeof mentorInfoFormSchema>;
 
 interface MentorProfileEditDialogProps {
   mentor: MentorModel;
-  trigger: React.ReactNode;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 export function MentorProfileEditDialog({
   mentor,
-  trigger,
+  isOpen,
+  onClose,
 }: MentorProfileEditDialogProps) {
-  const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [result, setResult] = useState<{
-    success: boolean;
-    message: string;
-  } | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const { data: jobCategories = [] } = useGetJobCategories();
   const updateMentorInfo = useUpdateMentorInfo();
   const { user } = useAuth();
@@ -73,6 +77,7 @@ export function MentorProfileEditDialog({
       career: mentor.career,
       currentCompany: mentor.currentCompany,
       introduction: mentor.introduction,
+      attachments: [],
     },
   });
 
@@ -82,36 +87,81 @@ export function MentorProfileEditDialog({
     return parseInt(job?.id ?? "0");
   }
 
+  // 파일 선택 핸들러
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const newFiles: File[] = [];
+    let errorMessage = "";
+
+    // 파일 수 및 크기 검증
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+
+      // 파일 크기 검증
+      if (file.size > MAX_ATTACHMENT_SIZE_BYTES) {
+        errorMessage = `파일 크기는 최대 ${MAX_ATTACHMENT_SIZE_MB}MB까지 가능합니다.`;
+        continue;
+      }
+
+      // 최대 파일 수 검증
+      if (selectedFiles.length + newFiles.length >= MAX_ATTACHMENTS) {
+        errorMessage = `첨부파일은 최대 ${MAX_ATTACHMENTS}개까지 가능합니다.`;
+        break;
+      }
+
+      newFiles.push(file);
+    }
+
+    if (errorMessage) {
+      alert(errorMessage);
+    }
+
+    if (newFiles.length > 0) {
+      const updatedFiles = [...selectedFiles, ...newFiles];
+      setSelectedFiles(updatedFiles);
+      form.setValue("attachments", updatedFiles);
+    }
+
+    // 입력 필드 초기화
+    e.target.value = "";
+  };
+
+  // 파일 삭제 핸들러
+  const handleRemoveFile = (index: number) => {
+    const updatedFiles = selectedFiles.filter((_, i) => i !== index);
+    setSelectedFiles(updatedFiles);
+    form.setValue("attachments", updatedFiles);
+  };
+
   const handleSubmit = async (data: MentorInfoFormData) => {
     if (!user?.id) return;
 
     setIsSubmitting(true);
-    setResult(null);
 
     try {
       const params: UpdateMentorInfoParams = {
         memberId: user.id,
-        ...data,
+        jobId: data.jobId,
+        career: data.career,
+        currentCompany: data.currentCompany,
+        introduction: data.introduction,
+        files: selectedFiles.length > 0 ? selectedFiles : undefined,
       };
 
       await updateMentorInfo.mutateAsync(params);
 
-      setResult({
-        success: true,
-        message:
-          "멘토 정보가 성공적으로 수정되었습니다. 관리자의 승인 후 반영됩니다.",
-      });
+      toast.success(
+        "멘토 정보가 성공적으로 수정되었습니다. 관리자의 승인 후 반영됩니다."
+      );
 
-      // 성공 후 3초 뒤에 다이얼로그 닫기
-      setTimeout(() => {
-        setOpen(false);
-        setResult(null);
-      }, 3000);
+      // 성공 후 다이얼로그 닫기
+      onClose();
     } catch (error) {
-      console.error("멘토 정보 수정 중 오류 발생:", error);
-      setResult({
-        success: false,
-        message: "멘토 정보 수정 중 오류가 발생했습니다.",
+      toast.error("멘토 정보 수정 중 오류가 발생했습니다.", {
+        description:
+          error instanceof Error ? error.message : JSON.stringify(error),
       });
     } finally {
       setIsSubmitting(false);
@@ -123,42 +173,27 @@ export function MentorProfileEditDialog({
     if (isSubmitting) return;
 
     if (!newOpen) {
-      // 닫을 때 상태 초기화
-      setResult(null);
-      form.reset({
-        jobId: getJobIdFromJobTitle(mentor.job, jobCategories),
-        currentCompany: mentor.currentCompany,
-        introduction: mentor.introduction,
-      });
+      onClose();
     }
-
-    setOpen(newOpen);
   };
 
+  useEffect(() => {
+    return () => {
+      setTimeout(() => {
+        document.body.style.overflow = "auto";
+      }, 100);
+    };
+  }, []);
+
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[550px]">
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>멘토 정보 수정</DialogTitle>
           <DialogDescription>
             멘토 정보를 수정합니다. 변경사항은 관리자 승인 후 적용됩니다.
           </DialogDescription>
         </DialogHeader>
-
-        {/* 결과 표시 */}
-        {result && (
-          <div
-            className={`p-4 rounded-md mb-4 flex items-center gap-2 ${result.success ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"}`}
-          >
-            {result.success ? (
-              <CheckCircle className="size-5" />
-            ) : (
-              <XCircle className="size-5" />
-            )}
-            <span>{result.message}</span>
-          </div>
-        )}
 
         <Form {...form}>
           <form
@@ -253,6 +288,67 @@ export function MentorProfileEditDialog({
                     문법을 사용하여 서식을 꾸밀 수 있습니다.
                   </FormDescription>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="attachments"
+              render={() => (
+                <FormItem>
+                  <FormLabel>첨부파일</FormLabel>
+                  <div className="mt-1">
+                    <label
+                      htmlFor="attachments"
+                      className="flex items-center gap-2 border border-input rounded-md p-2 cursor-pointer hover:bg-muted/50 transition-colors"
+                    >
+                      <Upload className="h-5 w-5" />
+                      <span>
+                        {selectedFiles.length > 0
+                          ? `${selectedFiles.length}개 파일 선택됨`
+                          : "파일을 선택해주세요."}
+                      </span>
+                      <input
+                        id="attachments"
+                        type="file"
+                        className="sr-only"
+                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                        onChange={handleFileChange}
+                        multiple
+                        disabled={isSubmitting}
+                      />
+                    </label>
+
+                    {selectedFiles.length > 0 && (
+                      <div className="mt-3 space-y-2">
+                        {selectedFiles.map((file, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center justify-between border rounded-md p-2"
+                          >
+                            <span className="text-sm truncate max-w-[350px]">
+                              {file.name}
+                            </span>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleRemoveFile(index)}
+                              disabled={isSubmitting}
+                            >
+                              <Trash2 className="h-4 w-4 text-red-500" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    <FormDescription className="mt-1">
+                      PDF, Word, 이미지 파일을 업로드해주세요. (최대{" "}
+                      {MAX_ATTACHMENT_SIZE_MB}MB, 최대 {MAX_ATTACHMENTS}개)
+                    </FormDescription>
+                  </div>
                 </FormItem>
               )}
             />

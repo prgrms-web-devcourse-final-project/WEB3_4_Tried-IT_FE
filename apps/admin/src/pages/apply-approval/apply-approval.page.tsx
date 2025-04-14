@@ -1,5 +1,13 @@
 import { PageLayout } from "@/shared/layouts/page-layout";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
   Badge,
   Pagination,
   PaginationContent,
@@ -16,8 +24,17 @@ import {
 
 import { StatusConst } from "@repo/api";
 import { toast } from "@repo/ui";
+import { useState } from "react";
 import { ApplyItem } from "./components/apply-item";
 import { useApprovalRequests } from "./hooks/use-approval-requests";
+
+type ApprovalType = "approve" | "reject" | null;
+type ApprovalCategory = "modification" | "approval";
+
+interface SelectedMember {
+  memberId: number;
+  category: ApprovalCategory;
+}
 
 export function ApplyApprovalPage() {
   const {
@@ -27,38 +44,64 @@ export function ApplyApprovalPage() {
     rejectRequest,
   } = useApprovalRequests();
 
-  const handleApprove = (
-    memberId: number,
-    category: "modification" | "approval"
-  ) => {
-    approveRequest(
-      { memberId, category },
-      {
-        onSuccess: () => {
-          toast.success("승인되었습니다.");
-        },
-        onError: () => {
-          toast.error("승인 처리 중 오류가 발생했습니다.");
-        },
-      }
-    );
+  const [approvalType, setApprovalType] = useState<ApprovalType>(null);
+  const [selectedMember, setSelectedMember] = useState<SelectedMember | null>(
+    null
+  );
+
+  const handleApprove = (memberId: number, category: ApprovalCategory) => {
+    setApprovalType("approve");
+    setSelectedMember({ memberId, category });
   };
 
-  const handleReject = (
-    memberId: number,
-    category: "modification" | "approval"
-  ) => {
-    rejectRequest(
-      { memberId, category },
-      {
-        onSuccess: () => {
-          toast.success("거절되었습니다.");
+  const handleReject = (memberId: number, category: ApprovalCategory) => {
+    setApprovalType("reject");
+    setSelectedMember({ memberId, category });
+  };
+
+  const handleConfirmAction = () => {
+    if (!selectedMember) return;
+
+    if (approvalType === "approve") {
+      approveRequest(
+        {
+          memberId: selectedMember.memberId,
+          category: selectedMember.category,
         },
-        onError: () => {
-          toast.error("거절 처리 중 오류가 발생했습니다.");
+        {
+          onSuccess: () => {
+            toast.success("승인되었습니다.");
+          },
+          onError: () => {
+            toast.error("승인 처리 중 오류가 발생했습니다.");
+          },
+        }
+      );
+    } else if (approvalType === "reject") {
+      rejectRequest(
+        {
+          memberId: selectedMember.memberId,
+          category: selectedMember.category,
         },
-      }
-    );
+        {
+          onSuccess: () => {
+            toast.success("거절되었습니다.");
+          },
+          onError: () => {
+            toast.error("거절 처리 중 오류가 발생했습니다.");
+          },
+        }
+      );
+    }
+
+    // 다이얼로그 닫기
+    setApprovalType(null);
+    setSelectedMember(null);
+  };
+
+  const handleCloseDialog = () => {
+    setApprovalType(null);
+    setSelectedMember(null);
   };
 
   const pendingModificationCount = modificationRequests.filter(
@@ -139,6 +182,37 @@ export function ApplyApprovalPage() {
           </PaginationContent>
         </Pagination>
       </div>
+
+      <AlertDialog
+        open={approvalType !== null}
+        onOpenChange={handleCloseDialog}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {approvalType === "approve" ? "승인 확인" : "거절 확인"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {approvalType === "approve"
+                ? "정말로 이 요청을 승인하시겠습니까?"
+                : "정말로 이 요청을 거절하시겠습니까? 이 작업은 되돌릴 수 없습니다."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleCloseDialog}>
+              취소
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmAction}
+              className={
+                approvalType === "reject" ? "bg-red-600 hover:bg-red-700" : ""
+              }
+            >
+              {approvalType === "approve" ? "승인" : "거절"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </PageLayout>
   );
 }

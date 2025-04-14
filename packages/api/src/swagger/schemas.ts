@@ -199,6 +199,7 @@ export type MentorEditUpdateRenewalResponse = {
   memberId?: number;
   status?: Enums.Status;
   modifiedAt?: string;
+  jobName?: string;
 };
 
 export type MentorApplyProposalRequestDto = {
@@ -307,7 +308,6 @@ export type ScheduleResponse = {
 };
 
 export type ChatMessageSendDto = {
-  chatRoomId?: number;
   senderType?: Enums.SenderType;
   senderId?: number;
   content?: string;
@@ -327,6 +327,7 @@ export type ChatRoomResponseDto = {
   lastMessage?: string;
   lastMessageAt?: string;
   targetNickname?: string;
+  targetId?: number;
 };
 
 export type ApplyCreateRequest = {
@@ -640,6 +641,13 @@ export type ApplymentInfo = {
   status?: string;
   createdAt?: string;
   modifiedAt?: string;
+  attachments?: Array<AttachmentInfo>;
+};
+
+export type AttachmentInfo = {
+  attachmentId?: number;
+  fileName?: string;
+  fileUrl?: string;
 };
 
 export type JobInfo = {
@@ -684,6 +692,7 @@ export type MentorEditFindAllRenewalResponse = {
   career?: number;
   currentCompany?: string;
   introduction?: string;
+  jobName?: string;
 };
 
 export type PageMentorEditFindAllRenewalResponse = {

@@ -16,6 +16,7 @@ import {
 } from "@repo/ui";
 import MDEditor from "@uiw/react-md-editor";
 import { BookOpen } from "lucide-react";
+import { overlay } from "overlay-kit";
 import { useState } from "react";
 import { MentorProfileEditDialog } from "./mentor-profile-edit-dialog";
 
@@ -28,13 +29,22 @@ export function MentorProfileSubSection({
 }: MentorProfileSubSectionProps) {
   const [isIntroDialogOpen, setIsIntroDialogOpen] = useState(false);
 
+  const handleEditButtonClick = () => {
+    overlay.open(({ isOpen, close }) => (
+      <MentorProfileEditDialog
+        mentor={mentor}
+        isOpen={isOpen}
+        onClose={close}
+      />
+    ));
+  };
+
   return (
     <div className="relative">
       <div className="absolute top-0 right-0">
-        <MentorProfileEditDialog
-          mentor={mentor}
-          trigger={<Button variant="outline">수정</Button>}
-        />
+        <Button variant="outline" onClick={handleEditButtonClick}>
+          수정
+        </Button>
       </div>
       <h3 className="text-lg font-medium mb-4">멘토정보</h3>
       <div className="rounded-md p-4">

@@ -5,6 +5,7 @@ import { OverlayProvider } from "overlay-kit";
 import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
 
 import { ThemeProvider } from "@/app/theme-provider/theme-provider";
+import { ChatAddon } from "@/widgets/chat-addon";
 import Footer from "@/widgets/footer";
 import { NavigationHeader } from "@/widgets/navigation-header";
 
@@ -46,6 +47,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <NavigationHeader />
               <div className="flex-1 flex flex-col">{children}</div>
               <Footer />
+              <ChatAddon />
               <Toaster richColors />
               <ScrollRestoration />
               <Scripts />
