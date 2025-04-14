@@ -11,22 +11,30 @@ import {
 import { cn } from "@repo/utils/cn";
 import { ChevronLeft, MessageCircle, Send } from "lucide-react";
 import { useState } from "react";
-
-interface ChatRoom {
-  id: string;
-  name: string;
-  avatar: string;
-  lastMessage: string;
-  lastMessageTime: string;
-  unreadCount?: number;
-}
+import {
+  ChatRoom,
+  useChatMessages,
+  useChatRooms,
+  useSendMessage,
+} from "./hooks/use-chat-hooks";
 
 export function ChatAddon() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedChat, setSelectedChat] = useState<ChatRoom | null>(null);
 
-  // 임시 채팅방 목록 데이터
-  const chatRooms: ChatRoom[] = [
+  // react-query를 사용하여 채팅방 목록 조회
+  const { data: chatRooms = [], isLoading, error } = useChatRooms(isOpen);
+
+  const handleChatSelect = (chatRoom: ChatRoom) => {
+    setSelectedChat(chatRoom);
+  };
+
+  const handleBackToList = () => {
+    setSelectedChat(null);
+  };
+
+  // 임시 데이터 - API 연동이 안 될 때를 대비해 폴백 데이터로 사용
+  const fallbackChatRooms: ChatRoom[] = [
     {
       id: "1",
       name: "홍길동",
@@ -58,14 +66,6 @@ export function ChatAddon() {
     },
   ];
 
-  const handleChatSelect = (chatRoom: ChatRoom) => {
-    setSelectedChat(chatRoom);
-  };
-
-  const handleBackToList = () => {
-    setSelectedChat(null);
-  };
-
   return (
     <div className="fixed bottom-4 right-4 z-50">
       <Sheet open={isOpen} onOpenChange={setIsOpen} modal={false}>
@@ -86,8 +86,10 @@ export function ChatAddon() {
             <ChatRoomView chatRoom={selectedChat} onBack={handleBackToList} />
           ) : (
             <ChatRoomList
-              chatRooms={chatRooms}
+              chatRooms={chatRooms.length > 0 ? chatRooms : fallbackChatRooms}
               onSelectChat={handleChatSelect}
+              isLoading={isLoading}
+              error={error ? "채팅방 목록을 불러오는데 실패했습니다." : null}
             />
           )}
         </SheetContent>
@@ -99,44 +101,65 @@ export function ChatAddon() {
 interface ChatRoomListProps {
   chatRooms: ChatRoom[];
   onSelectChat: (chatRoom: ChatRoom) => void;
+  isLoading?: boolean;
+  error?: string | null;
 }
 
-function ChatRoomList({ chatRooms, onSelectChat }: ChatRoomListProps) {
+function ChatRoomList({
+  chatRooms,
+  onSelectChat,
+  isLoading,
+  error,
+}: ChatRoomListProps) {
   return (
     <div className="flex flex-col h-full">
       <SheetHeader className="p-4 border-b">
         <SheetTitle className="text-xl">메시지</SheetTitle>
       </SheetHeader>
       <div className="flex-1 overflow-y-auto">
-        {chatRooms.map((chatRoom) => (
-          <div
-            key={chatRoom.id}
-            className="flex items-center gap-3 p-3 cursor-pointer hover:bg-secondary/10 transition-colors"
-            onClick={() => onSelectChat(chatRoom)}
-          >
-            <Avatar>
-              <div className="bg-primary text-primary-foreground w-full h-full flex items-center justify-center">
-                {chatRoom.name.charAt(0)}
-              </div>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <div className="flex justify-between items-center">
-                <span className="font-medium">{chatRoom.name}</span>
-                <span className="text-xs text-muted-foreground">
-                  {chatRoom.lastMessageTime}
-                </span>
-              </div>
-              <p className="text-sm text-muted-foreground truncate">
-                {chatRoom.lastMessage}
-              </p>
-            </div>
-            {chatRoom.unreadCount && (
-              <div className="bg-primary text-primary-foreground text-xs rounded-full h-5 min-w-5 flex items-center justify-center">
-                {chatRoom.unreadCount}
-              </div>
-            )}
+        {isLoading ? (
+          <div className="flex items-center justify-center h-full">
+            <p className="text-muted-foreground">로딩 중...</p>
           </div>
-        ))}
+        ) : error ? (
+          <div className="flex items-center justify-center h-full">
+            <p className="text-destructive">{error}</p>
+          </div>
+        ) : chatRooms.length === 0 ? (
+          <div className="flex items-center justify-center h-full">
+            <p className="text-muted-foreground">채팅방이 없습니다.</p>
+          </div>
+        ) : (
+          chatRooms.map((chatRoom) => (
+            <div
+              key={chatRoom.id}
+              className="flex items-center gap-3 p-3 cursor-pointer hover:bg-secondary/10 transition-colors"
+              onClick={() => onSelectChat(chatRoom)}
+            >
+              <Avatar>
+                <div className="bg-primary text-primary-foreground w-full h-full flex items-center justify-center">
+                  {chatRoom.name.charAt(0)}
+                </div>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">{chatRoom.name}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {chatRoom.lastMessageTime}
+                  </span>
+                </div>
+                <p className="text-sm text-muted-foreground truncate">
+                  {chatRoom.lastMessage}
+                </p>
+              </div>
+              {chatRoom.unreadCount && (
+                <div className="bg-primary text-primary-foreground text-xs rounded-full h-5 min-w-5 flex items-center justify-center">
+                  {chatRoom.unreadCount}
+                </div>
+              )}
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
@@ -147,43 +170,40 @@ interface ChatRoomViewProps {
   onBack: () => void;
 }
 
-interface Message {
-  id: string;
-  text: string;
-  sender: "me" | "other";
-  timestamp: string;
-}
-
 function ChatRoomView({ chatRoom, onBack }: ChatRoomViewProps) {
-  // 임시 메시지 데이터
-  const messages: Message[] = [
-    {
-      id: "1",
-      text: "안녕하세요! 멘토링 문의드립니다.",
-      sender: "other",
-      timestamp: "10:30",
-    },
-    {
-      id: "2",
-      text: "네, 안녕하세요. 어떤 도움이 필요하신가요?",
-      sender: "me",
-      timestamp: "10:31",
-    },
-    {
-      id: "3",
-      text: "저는 프론트엔드 개발을 배우고 있는데, React와 TypeScript에 대해 도움을 얻고 싶습니다.",
-      sender: "other",
-      timestamp: "10:33",
-    },
-    {
-      id: "4",
-      text: "그럼요, 도와드릴 수 있습니다. 어떤 부분에서 어려움을 겪고 계신가요?",
-      sender: "me",
-      timestamp: "10:35",
-    },
-  ];
-
   const [newMessage, setNewMessage] = useState("");
+
+  // react-query를 사용하여 채팅 메시지 조회
+  const {
+    data: messages = [],
+    isLoading,
+    error,
+  } = useChatMessages(chatRoom.id, true);
+
+  // 메시지 전송 mutation
+  const sendMessageMutation = useSendMessage();
+
+  const handleSendMessage = async () => {
+    if (!newMessage.trim()) return;
+
+    try {
+      // 메시지 전송
+      sendMessageMutation.mutateAsync({
+        chatRoomId: chatRoom.id,
+        content: newMessage,
+      });
+    } catch (err) {
+      console.error("메시지 전송 오류:", err);
+    }
+  };
+
+  // 엔터 키로 메시지 전송
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -210,29 +230,46 @@ function ChatRoomView({ chatRoom, onBack }: ChatRoomViewProps) {
       </SheetHeader>
 
       <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={cn(
-              "max-w-[70%] rounded-lg p-3",
-              message.sender === "me"
-                ? "bg-primary text-primary-foreground self-end"
-                : "bg-secondary/30 self-start"
-            )}
-          >
-            <p>{message.text}</p>
+        {isLoading ? (
+          <div className="flex items-center justify-center h-full">
+            <p className="text-muted-foreground">메시지를 불러오는 중...</p>
+          </div>
+        ) : error ? (
+          <div className="text-destructive text-center p-4">
+            <p>메시지를 불러오는데 실패했습니다.</p>
+          </div>
+        ) : messages.length === 0 ? (
+          <div className="flex items-center justify-center h-full text-center">
+            <p className="text-muted-foreground">
+              아직 메시지가 없습니다.
+              <br />첫 메시지를 보내보세요!
+            </p>
+          </div>
+        ) : (
+          messages.map((message) => (
             <div
+              key={message.id}
               className={cn(
-                "text-xs mt-1",
+                "max-w-[70%] rounded-lg p-3",
                 message.sender === "me"
-                  ? "text-primary-foreground/70"
-                  : "text-muted-foreground"
+                  ? "bg-primary text-primary-foreground self-end"
+                  : "bg-secondary/30 self-start"
               )}
             >
-              {message.timestamp}
+              <p>{message.text}</p>
+              <div
+                className={cn(
+                  "text-xs mt-1",
+                  message.sender === "me"
+                    ? "text-primary-foreground/70"
+                    : "text-muted-foreground"
+                )}
+              >
+                {message.timestamp}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       <Separator />
@@ -241,13 +278,17 @@ function ChatRoomView({ chatRoom, onBack }: ChatRoomViewProps) {
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="메시지를 입력하세요..."
           className="flex-1 rounded-full bg-secondary/20 px-4 py-2 focus:outline-none focus:ring-1 focus:ring-primary"
+          disabled={sendMessageMutation.isPending}
         />
         <Button
           size="icon"
+          onClick={handleSendMessage}
           className="rounded-full bg-primary hover:bg-primary/90"
           aria-label="메시지 보내기"
+          disabled={sendMessageMutation.isPending}
         >
           <Send className="size-4" />
         </Button>

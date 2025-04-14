@@ -47,7 +47,7 @@ export const getAdminChatRoomList = generateServiceFetcher<
 
 export const getChatRoomMessages = generateServiceFetcher<
   { chatRoomId: number },
-  { beforeMessageId: number },
+  { beforeMessageId?: number },
   void,
   ChatMessageResponseDto[]
 >({
