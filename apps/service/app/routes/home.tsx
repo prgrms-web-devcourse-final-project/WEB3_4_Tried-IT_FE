@@ -1,4 +1,6 @@
-export { HomePage as default } from "@/pages";
+import { HomePage } from "@/pages";
+
+export default HomePage;
 
 export function meta() {
   return [

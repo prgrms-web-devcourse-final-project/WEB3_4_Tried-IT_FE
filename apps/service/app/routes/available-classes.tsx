@@ -1,4 +1,7 @@
-export { AvailableClassesPage as default } from "@/pages";
+import { withAuth } from "@/features/auth/components/with-auth";
+import { AvailableClassesPage } from "@/pages";
+
+export default withAuth(AvailableClassesPage);
 
 export function meta() {
   return [

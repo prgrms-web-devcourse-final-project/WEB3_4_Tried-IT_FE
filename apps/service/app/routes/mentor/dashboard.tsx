@@ -1,4 +1,9 @@
-export { MentorDashboardPage as default } from "@/pages";
+import { withAuth } from "@/features/auth/components/with-auth";
+import { MentorDashboardPage } from "@/pages";
+
+export default withAuth(MentorDashboardPage, {
+  requireMentor: true,
+});
 
 export function meta() {
   return [
