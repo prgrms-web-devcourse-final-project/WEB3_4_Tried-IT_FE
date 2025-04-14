@@ -1,7 +1,9 @@
+import { Status, StatusConst } from "@repo/api";
 import dayjs from "dayjs";
 
 export interface ApprovalRequestModelJson {
   id: number;
+  memberId: number;
   type: "profile" | "blank";
   category: "modification" | "approval";
   title: string;
@@ -10,11 +12,12 @@ export interface ApprovalRequestModelJson {
   mentor: {
     name: string;
   };
-  approved?: boolean;
+  status: Status;
 }
 
 export interface ApprovalRequestModelConstructorOptions {
   id: number;
+  memberId: number;
   type: "profile" | "blank";
   category: "modification" | "approval";
   title: string;
@@ -23,11 +26,12 @@ export interface ApprovalRequestModelConstructorOptions {
   mentor: {
     name: string;
   };
-  approved?: boolean;
+  status?: Status;
 }
 
 export class ApprovalRequestModel {
   readonly id: number;
+  readonly memberId: number;
   readonly type: "profile" | "blank";
   readonly category: "modification" | "approval";
   readonly title: string;
@@ -36,17 +40,18 @@ export class ApprovalRequestModel {
   readonly mentor: {
     name: string;
   };
-  readonly approved?: boolean;
+  readonly status: Status;
 
   constructor(constructorOptions: ApprovalRequestModelConstructorOptions) {
     this.id = constructorOptions.id;
+    this.memberId = constructorOptions.memberId;
     this.type = constructorOptions.type;
     this.category = constructorOptions.category;
     this.title = constructorOptions.title;
     this.description = constructorOptions.description;
     this.createdAt = dayjs(constructorOptions.createdAt);
     this.mentor = constructorOptions.mentor;
-    this.approved = constructorOptions.approved;
+    this.status = constructorOptions.status ?? StatusConst.PENDING;
   }
 
   get formattedCreatedAt(): string {
@@ -56,13 +61,14 @@ export class ApprovalRequestModel {
   toJson(): ApprovalRequestModelJson {
     return {
       id: this.id,
+      memberId: this.memberId,
       type: this.type,
       category: this.category,
       title: this.title,
       description: this.description,
       createdAt: this.createdAt.toISOString(),
       mentor: this.mentor,
-      approved: this.approved,
+      status: this.status,
     };
   }
 }
