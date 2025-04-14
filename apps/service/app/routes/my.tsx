@@ -1,4 +1,7 @@
-export { MyPage as default } from "@/pages";
+import { withAuth } from "@/features/auth/components/with-auth";
+import { MyPage } from "@/pages";
+
+export default withAuth(MyPage);
 
 export function meta() {
   return [

@@ -118,25 +118,61 @@ export const requestUpdateMentorInfo = generateServiceFetcher<
   {
     mentorUpdateData: {
       jobId: number;
-      career: 3;
+      career: number;
       currentCompany: string;
       introduction: string;
     };
-    files: File[];
+    files?: File[];
   },
   ApiResponseObject
 >({
   endpoint: "/api/mentor/{memberId}",
   method: "PUT",
+  requestContentType: "form-data",
 });
 
 export const getMentorInfoModificationRequestList = generateServiceFetcher<
   { memberId: string },
   { status: Status; page?: number; size?: number },
   void,
-  ApiResponseObject
+  {
+    isSuccess: boolean;
+    code: string;
+    message: string;
+    data?: {
+      modificationRequests: {
+        requestId: number;
+        status: Status;
+        requestDate: string;
+        modifiedFields: {
+          career?: {
+            before: number;
+            after: number;
+          };
+          currentCompany?: {
+            before: string;
+            after: string;
+          };
+          introduction?: {
+            before: string;
+            after: string;
+          };
+          jobId?: {
+            before: number;
+            after: number;
+          };
+        };
+      }[];
+      pagination: {
+        page: number;
+        size: number;
+        totalElements: number;
+        totalPages: number;
+      };
+    };
+  }
 >({
-  endpoint: "/api/mentor/{memberId}/modification-request",
+  endpoint: "/api/mentor/{memberId}/modification-requests",
   method: "GET",
   errorHandlerByCode: {
     "400": (error) => {

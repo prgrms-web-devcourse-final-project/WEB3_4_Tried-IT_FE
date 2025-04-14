@@ -14,16 +14,25 @@ import {
   Typography,
 } from "@repo/ui";
 
+import { StatusConst } from "@repo/api";
 import { toast } from "@repo/ui";
 import { ApplyItem } from "./components/apply-item";
 import { useApprovalRequests } from "./hooks/use-approval-requests";
 
 export function ApplyApprovalPage() {
-  const { requests, approveRequest, rejectRequest } = useApprovalRequests();
+  const {
+    modificationRequests,
+    approvalRequests,
+    approveRequest,
+    rejectRequest,
+  } = useApprovalRequests();
 
-  const handleApprove = (id: number, category: "modification" | "approval") => {
+  const handleApprove = (
+    memberId: number,
+    category: "modification" | "approval"
+  ) => {
     approveRequest(
-      { id, category },
+      { memberId, category },
       {
         onSuccess: () => {
           toast.success("승인되었습니다.");
@@ -35,9 +44,12 @@ export function ApplyApprovalPage() {
     );
   };
 
-  const handleReject = (id: number, category: "modification" | "approval") => {
+  const handleReject = (
+    memberId: number,
+    category: "modification" | "approval"
+  ) => {
     rejectRequest(
-      { id, category },
+      { memberId, category },
       {
         onSuccess: () => {
           toast.success("거절되었습니다.");
@@ -49,12 +61,13 @@ export function ApplyApprovalPage() {
     );
   };
 
-  const modificationRequests = requests.filter(
-    (request) => request.category === "modification"
-  );
-  const approvalRequests = requests.filter(
-    (request) => request.category === "approval"
-  );
+  const pendingModificationCount = modificationRequests.filter(
+    (request) => request.status === StatusConst.PENDING
+  ).length;
+
+  const pendingApprovalCount = approvalRequests.filter(
+    (request) => request.status === StatusConst.PENDING
+  ).length;
 
   return (
     <PageLayout className="max-h-dvh overflow-y-auto">
@@ -66,17 +79,17 @@ export function ApplyApprovalPage() {
         <TabsList className="mb-6">
           <TabsTrigger value="modification" className="relative">
             멤버 정보 수정
-            {modificationRequests.length > 0 && (
+            {pendingModificationCount > 0 && (
               <Badge className="absolute z-10 -top-3 -right-3 w-5 h-5 rounded-full text-xs">
-                {modificationRequests.length}
+                {pendingModificationCount}
               </Badge>
             )}
           </TabsTrigger>
           <TabsTrigger value="approval" className="relative">
             멤버 승인
-            {approvalRequests.length > 0 && (
+            {pendingApprovalCount > 0 && (
               <Badge className="absolute z-10 -top-3 -right-3 w-5 h-5 rounded-full text-xs">
-                {approvalRequests.length}
+                {pendingApprovalCount}
               </Badge>
             )}
           </TabsTrigger>
@@ -88,8 +101,10 @@ export function ApplyApprovalPage() {
               <ApplyItem
                 key={request.id}
                 applicant={request}
-                onApprove={() => handleApprove(request.id, "modification")}
-                onReject={() => handleReject(request.id, "modification")}
+                onApprove={() =>
+                  handleApprove(request.memberId, "modification")
+                }
+                onReject={() => handleReject(request.memberId, "modification")}
               />
             ))}
           </div>
@@ -101,8 +116,8 @@ export function ApplyApprovalPage() {
               <ApplyItem
                 key={request.id}
                 applicant={request}
-                onApprove={() => handleApprove(request.id, "approval")}
-                onReject={() => handleReject(request.id, "approval")}
+                onApprove={() => handleApprove(request.memberId, "approval")}
+                onReject={() => handleReject(request.memberId, "approval")}
               />
             ))}
           </div>

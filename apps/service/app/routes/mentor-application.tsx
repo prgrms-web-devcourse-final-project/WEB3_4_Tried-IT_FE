@@ -1,4 +1,5 @@
-export { MentorApplicationPage as default } from "@/pages";
+import { withAuth } from "@/features/auth/components/with-auth";
+import { MentorApplicationPage } from "@/pages";
 
 export function meta() {
   return [
@@ -6,3 +7,5 @@ export function meta() {
     { name: "description", content: "Apply as a mentor in Dementor" },
   ];
 }
+
+export default withAuth(MentorApplicationPage);

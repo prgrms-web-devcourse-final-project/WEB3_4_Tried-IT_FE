@@ -23,6 +23,34 @@ export const uploadFile = generateServiceFetcher<
   },
 });
 
+export const uploadImages = generateServiceFetcher<
+  void,
+  void,
+  {
+    images: File[];
+  },
+  {
+    isSuccess: boolean;
+    code: string;
+    message: string;
+    data: {
+      status: number;
+      message: string;
+      data: {
+        attachmentId: number;
+        originalFilename: string;
+        fileSize: number;
+        fileUrl: string;
+        uniqueIdentifier: string;
+      }[];
+    };
+  }
+>({
+  endpoint: "/api/files/upload-images",
+  method: "POST",
+  requestContentType: "form-data",
+});
+
 export const deleteFile = generateServiceFetcher<
   { attachmentId: string },
   void,

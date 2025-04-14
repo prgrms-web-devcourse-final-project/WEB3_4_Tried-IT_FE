@@ -1,7 +1,16 @@
 import { useAuth } from "@/features/auth/hooks/use-auth";
-import { Card, CardContent, CardHeader, CardTitle, Typography } from "@repo/ui";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Typography,
+} from "@repo/ui";
+import { FileText } from "lucide-react";
 import { Suspense } from "react";
 import { useGetMentorInfo } from "../hooks/use-get-mentor-info";
+import { MentorModificationRequestsModal } from "./mentor-modification-requests-modal";
 import {
   MentorProfileSubSection,
   MentorProfileSubSectionSkeleton,
@@ -29,6 +38,16 @@ function MentorInfoContent() {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-xl">멘토 관리</CardTitle>
+        {mentorInfo && (
+          <MentorModificationRequestsModal
+            trigger={
+              <Button variant="outline" size="sm" className="gap-2">
+                <FileText className="h-4 w-4" />
+                <span>수정 요청 내역</span>
+              </Button>
+            }
+          />
+        )}
       </CardHeader>
       <CardContent>
         <div className="space-y-8">

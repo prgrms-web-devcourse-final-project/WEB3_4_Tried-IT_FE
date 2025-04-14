@@ -125,7 +125,7 @@ export const approveMentorInfoModification = generateServiceFetcher<
   ApiResponseMentorEditUpdateRenewalResponse
 >({
   endpoint: "/api/admain/mentor/modify/{id}/approve",
-  method: "POST",
+  method: "PUT",
 });
 
 export const rejectMentorInfoModification = generateServiceFetcher<
@@ -135,7 +135,7 @@ export const rejectMentorInfoModification = generateServiceFetcher<
   ApiResponseMentorEditUpdateRenewalResponse
 >({
   endpoint: "/api/admain/mentor/modify/{id}/reject",
-  method: "POST",
+  method: "PUT",
 });
 
 export const getMentorInfoModificationList = generateServiceFetcher<
