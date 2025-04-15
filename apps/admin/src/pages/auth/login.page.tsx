@@ -15,8 +15,8 @@ export function LoginPage() {
   };
 
   return (
-    <PageLayout className="flex flex-col items-center justify-center">
-      <div className="space-y-4 w-full px-4 max-w-xl">
+    <PageLayout>
+      <div className="space-y-4 w-full">
         <div>
           <Logo className="text-center" />
         </div>

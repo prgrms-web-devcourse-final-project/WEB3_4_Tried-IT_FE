@@ -8,7 +8,11 @@ import { useMemo } from "react";
 import { useNavigate } from "react-router";
 export function useAuth() {
   const navigate = useNavigate();
-  const { data: mentorApplicant, refetch } = useGetMentorApplicant({
+  const {
+    data: mentorApplicant,
+    isLoading,
+    refetch,
+  } = useGetMentorApplicant({
     page: 1,
     size: 10,
   });
@@ -41,5 +45,5 @@ export function useAuth() {
     },
   });
 
-  return { login, logout: handleLogout, isLoggedIn };
+  return { login, logout: handleLogout, isLoggedIn, isLoading };
 }

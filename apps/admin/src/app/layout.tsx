@@ -4,6 +4,7 @@ import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
 import { ThemeProvider } from "@/app/theme-provider/theme-provider";
 
 import { AppSidebar } from "@/widgets/app-sidebar";
+import { NavigationHeader } from "@/widgets/navigation-header";
 import { SidebarProvider } from "@repo/ui";
 
 import "@/app/styles/index.css";
@@ -28,7 +29,7 @@ const queryClient = new QueryClient();
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="system">
+      <ThemeProvider defaultTheme="light">
         <html lang="en">
           <head>
             <meta charSet="utf-8" />
@@ -40,7 +41,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <Links />
           </head>
           <body>
-            {/* <NavigationHeader /> */}
+            <div className="block sm:hidden">
+              <NavigationHeader />
+            </div>
             <SidebarProvider open={true}>
               <AppSidebar />
               <div className="flex-1 flex flex-col">{children}</div>

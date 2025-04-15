@@ -303,6 +303,9 @@ function RequestRow({ request }: RequestRowProps) {
                       <div className="whitespace-pre-wrap text-xs sm:text-sm">
                         <MDEditor.Markdown
                           className="bg-transparent!"
+                          style={{
+                            color: "var(--background-foreground)",
+                          }}
                           source={request.modifiedFields.introduction.before}
                         />
                       </div>
@@ -314,6 +317,9 @@ function RequestRow({ request }: RequestRowProps) {
                       <div className="whitespace-pre-wrap text-xs sm:text-sm">
                         <MDEditor.Markdown
                           className="bg-transparent!"
+                          style={{
+                            color: "var(--background-foreground)",
+                          }}
                           source={request.modifiedFields.introduction.after}
                         />
                       </div>

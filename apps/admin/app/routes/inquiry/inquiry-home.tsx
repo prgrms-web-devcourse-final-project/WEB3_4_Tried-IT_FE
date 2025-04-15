@@ -1,8 +1,11 @@
-export { InqueryPage as default } from "@/pages";
+import { withAuth } from "@/features/auth/components/with-auth";
+import { InqueryPage } from "@/pages";
+
+export default withAuth(InqueryPage);
 
 export function meta() {
   return [
-    { title: "문의사항 관리 - DeMentor Admin" },
-    { name: "description", content: "문의사항 관리 페이지" },
+    { title: "디멘터 어드민 | 문의사항 관리" },
+    { name: "description", content: "디멘터 어드민 문의사항 관리 페이지" },
   ];
 }
