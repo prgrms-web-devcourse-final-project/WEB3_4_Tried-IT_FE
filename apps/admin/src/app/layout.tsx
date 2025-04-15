@@ -2,7 +2,6 @@ import { Route } from ".react-router/types/app/+types/root";
 import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
 
 import { ThemeProvider } from "@/app/theme-provider/theme-provider";
-import Footer from "@/widgets/footer";
 
 import { AppSidebar } from "@/widgets/app-sidebar";
 import { SidebarProvider } from "@repo/ui";
@@ -46,7 +45,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <AppSidebar />
               <div className="flex-1 flex flex-col">{children}</div>
             </SidebarProvider>
-            <Footer />
             <ScrollRestoration />
             <Scripts />
           </body>

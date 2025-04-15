@@ -1,101 +1,85 @@
 "use client";
 
 import { ArrowLeft, MoreHorizontal, Send } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
   Button,
+  Input,
   ScrollArea,
-  Textarea,
 } from "@repo/ui";
-import { useNavigate } from "react-router";
-
-type Message = {
-  id: number;
-  content: string;
-  timestamp: string;
-  isMe: boolean;
-};
-
-type ChatUser = {
-  id: number;
-  username: string;
-  message: string;
-  date: string;
-  time: string;
-  avatar: string;
-  notifications: number;
-  messages: Message[];
-};
-
-const MOCK_CHAT_ROOM: ChatUser = {
-  id: 1,
-  username: "jdkskjka 님",
-  message:
-    "안녕하세요 메니저님, 제가 멤토링을 신청했는데 결제창에서 버튼이 안 눌려요...",
-  date: "2025-03-21",
-  time: "12:46",
-  avatar: "/placeholder.svg?height=40&width=40",
-  notifications: 1,
-  messages: [
-    {
-      id: 1,
-      content:
-        "안녕하세요 메니저님, 제가 멤토링을 신청했는데 결제창에서 버튼이 안 눌려요...",
-      timestamp: "12:30",
-      isMe: false,
-    },
-    {
-      id: 2,
-      content:
-        "어떤 버튼이 안 눌리시나요? 좀 더 자세히 설명해주실 수 있을까요?",
-      timestamp: "12:35",
-      isMe: true,
-    },
-    {
-      id: 3,
-      content:
-        "결제하기 버튼이 회색으로 비활성화되어 있어요. 클릭해도 아무 반응이 없습니다.",
-      timestamp: "12:38",
-      isMe: false,
-    },
-    {
-      id: 4,
-      content:
-        "혹시 모든 필수 입력 항목을 작성하셨나요? 이름, 연락처, 이메일 등이 모두 입력되어야 버튼이 활성화됩니다.",
-      timestamp: "12:40",
-      isMe: true,
-    },
-    {
-      id: 5,
-      content: "아, 이메일을 입력하지 않았네요. 확인해보겠습니다. 감사합니다!",
-      timestamp: "12:43",
-      isMe: false,
-    },
-  ],
-};
+import { useChatMessages, useChatRoom } from "../hooks/use-chat-hooks";
+import { useWebSocket, WebSocketStatus } from "../hooks/use-websocket";
 
 export function InquiryChat() {
   const navigate = useNavigate();
-  const activeChat = MOCK_CHAT_ROOM;
-
+  const { id: chatRoomId } = useParams<{ id: string }>();
   const [newMessage, setNewMessage] = useState("");
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // 채팅방 정보 가져오기
+  const { data: chatRoom, isLoading: isLoadingRoom } = useChatRoom(
+    chatRoomId || ""
+  );
+
+  // 웹소켓 연결 설정
+  const {
+    status: wsStatus,
+    error: wsError,
+    sendMessage,
+  } = useWebSocket(chatRoomId || null);
+
+  // 채팅 메시지 가져오기 (웹소켓 연결 상태에 따라 활성화)
+  const { data: messages = [], isLoading: isLoadingMessages } = useChatMessages(
+    chatRoomId || "",
+    Boolean(chatRoomId)
+  );
+
+  // 메시지 전송 처리
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
 
-    // In a real app, you would send this message to a backend
-    // For now, we'll just clear the input
-    setNewMessage("");
+    // 웹소켓으로 메시지 전송
+    const success = sendMessage(newMessage.trim());
+
+    if (success) {
+      setNewMessage("");
+    }
   };
 
+  // 새 메시지가 오면 스크롤 맨 아래로 이동
+  useEffect(() => {
+    // 애니메이션 프레임 사용하여 다음 렌더링 사이클에서 스크롤 실행
+    const scrollToBottom = () => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+
+    // 메시지가 로드된 후에만 스크롤
+    if (!isLoadingMessages && messages.length > 0) {
+      requestAnimationFrame(scrollToBottom);
+    }
+  }, [messages, isLoadingMessages]);
+
+  // 로딩 중 표시
+  if (isLoadingRoom || !chatRoom) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        로딩 중...
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Chat Header */}
-      <div className="border-b p-4 flex items-center">
+    <div className="h-full flex flex-col overflow-hidden">
+      {/* 채팅 헤더 */}
+      <div className="border-b p-4 flex items-center shrink-0">
         <Button
           variant="ghost"
           size="icon"
@@ -105,13 +89,20 @@ export function InquiryChat() {
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <Avatar className="h-10 w-10">
-          <AvatarImage src={activeChat.avatar} alt={activeChat.username} />
-          <AvatarFallback>{activeChat.username.charAt(0)}</AvatarFallback>
+          <AvatarImage
+            src="/placeholder.svg?height=40&width=40"
+            alt={chatRoom.targetNickname}
+          />
+          <AvatarFallback>
+            {chatRoom.targetNickname?.charAt(0) || "?"}
+          </AvatarFallback>
         </Avatar>
         <div className="ml-3">
-          <div className="font-medium">{activeChat.username}</div>
+          <div className="font-medium">
+            {chatRoom.targetNickname || "사용자"}
+          </div>
           <div className="text-xs text-muted-foreground">
-            최근 접속: 오늘 12:50
+            {wsStatus === WebSocketStatus.CONNECTED ? "연결됨" : "오프라인"}
           </div>
         </div>
         <Button variant="ghost" size="icon" className="ml-auto">
@@ -119,67 +110,89 @@ export function InquiryChat() {
         </Button>
       </div>
 
-      {/* Chat Messages */}
-      <ScrollArea className="flex-1 p-4">
-        <div className="space-y-4">
-          {activeChat.messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${message.isMe ? "justify-end" : "justify-start"}`}
-            >
-              {!message.isMe && (
-                <Avatar className="h-8 w-8 mr-2 mt-1">
-                  <AvatarImage
-                    src={activeChat.avatar}
-                    alt={activeChat.username}
-                  />
-                  <AvatarFallback>
-                    {activeChat.username.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-              )}
-              <div
-                className={`max-w-[70%] rounded-2xl px-4 py-2 ${
-                  message.isMe
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted/50"
-                }`}
-              >
-                <p>{message.content}</p>
-                <div
-                  className={`text-xs mt-1 ${message.isMe ? "text-primary-foreground/70" : "text-muted-foreground"}`}
-                >
-                  {message.timestamp}
-                </div>
-              </div>
+      {/* 채팅 메시지 */}
+
+      <ScrollArea className="h-[80vh]" ref={scrollAreaRef}>
+        <div className="p-4 space-y-4">
+          {isLoadingMessages ? (
+            <div className="text-center py-4">메시지 로딩 중...</div>
+          ) : messages.length === 0 ? (
+            <div className="text-center py-4 text-muted-foreground">
+              메시지가 없습니다.
             </div>
-          ))}
+          ) : (
+            <>
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${message.sender === "me" ? "justify-end" : "justify-start"}`}
+                >
+                  {message.sender !== "me" && (
+                    <Avatar className="h-8 w-8 mr-2 mt-1">
+                      <AvatarImage
+                        src="/placeholder.svg?height=40&width=40"
+                        alt={chatRoom.targetNickname || "사용자"}
+                      />
+                      <AvatarFallback>
+                        {chatRoom.targetNickname?.charAt(0) || "?"}
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
+                  <div
+                    className={`max-w-[70%] rounded-2xl px-4 py-2 ${
+                      message.sender === "me"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted/50"
+                    }`}
+                  >
+                    <p>{message.text}</p>
+                    <div
+                      className={`text-xs mt-1 ${message.sender === "me" ? "text-primary-foreground/70" : "text-muted-foreground"}`}
+                    >
+                      {message.timestamp}
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {/* 스크롤 위치 잡기 위한 빈 요소 */}
+              <div ref={messagesEndRef} />
+            </>
+          )}
         </div>
       </ScrollArea>
 
-      {/* Message Input */}
-      <div className="border-t p-4 flex items-end gap-2">
-        <Textarea
+      {/* 웹소켓 에러 표시 */}
+      {wsError && (
+        <div className="bg-destructive/10 p-2 text-sm text-destructive text-center shrink-0">
+          {wsError}
+        </div>
+      )}
+
+      {/* 메시지 입력 */}
+      <form
+        className="border-t p-4 flex items-end gap-2 shrink-0"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSendMessage();
+        }}
+      >
+        <Input
           placeholder="메시지를 입력하세요..."
           className="min-h-10 resize-none"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              handleSendMessage();
-            }
-          }}
         />
         <Button
           size="icon"
           className="rounded-full h-10 w-10 flex-shrink-0"
-          onClick={handleSendMessage}
-          disabled={!newMessage.trim()}
+          type="submit"
+          disabled={
+            !newMessage.trim() || wsStatus !== WebSocketStatus.CONNECTED
+          }
         >
           <Send className="h-5 w-5" />
         </Button>
-      </div>
+      </form>
     </div>
   );
 }
