@@ -24,7 +24,7 @@ export function getDatesFromDay(
 
   while (currentDay.isBefore(endDate)) {
     if (currentDay.day() === dayOfWeekMap[day]) {
-      dates.push(currentDay.toDate());
+      dates.push(currentDay);
     }
     currentDay = currentDay.add(1, "day");
   }

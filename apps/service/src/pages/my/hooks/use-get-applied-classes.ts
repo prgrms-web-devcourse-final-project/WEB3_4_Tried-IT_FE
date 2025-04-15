@@ -47,7 +47,7 @@ export function useGetAppliedClasses({
           mentor: {
             name: item.name ?? "",
           },
-          schedule: item.schedule ?? new Date(),
+          schedule: item.schedule?.replace("Z", "") ?? new Date(),
           status: item.status ?? StatusConst.PENDING,
         })
       );
