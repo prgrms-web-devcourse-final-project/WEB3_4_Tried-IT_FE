@@ -9,7 +9,7 @@ import {
   SheetTrigger,
 } from "@repo/ui";
 import { cn } from "@repo/utils/cn";
-import { ChevronLeft, MessageCircle, Send, Wifi, WifiOff } from "lucide-react";
+import { ChevronLeft, Dot, MessageCircle, Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import {
   ChatRoom,
@@ -39,7 +39,7 @@ export function ChatAddon() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-8 right-8 z-50">
       <Sheet open={isOpen} onOpenChange={setIsOpen} modal={false}>
         <SheetTrigger asChild>
           <div className="relative inline-block">
@@ -235,12 +235,12 @@ function ChatRoomView({ chatRoom, onBack }: ChatRoomViewProps) {
           <div className="ml-auto flex items-center gap-1">
             {isConnected ? (
               <>
-                <Wifi className="size-4 text-green-500" />
+                <Dot className="size-4 text-green-500" />
                 <span className="text-xs text-muted-foreground">연결됨</span>
               </>
             ) : (
               <>
-                <WifiOff className="size-4 text-red-500" />
+                <X className="size-4 text-red-500" />
                 <span className="text-xs text-muted-foreground">연결 끊김</span>
               </>
             )}
@@ -279,10 +279,10 @@ function ChatRoomView({ chatRoom, onBack }: ChatRoomViewProps) {
             <div
               key={message.id}
               className={cn(
-                "max-w-[70%] rounded-lg p-3",
+                "max-w-[70%] rounded-lg p-3 shadow",
                 message.sender === "me"
-                  ? "bg-primary text-primary-foreground self-end"
-                  : "bg-secondary/30 self-start"
+                  ? "self-end bg-gradient-to-br from-primary to-secondary text-primary-foreground"
+                  : "self-start bg-muted/30"
               )}
             >
               <p>{message.text}</p>

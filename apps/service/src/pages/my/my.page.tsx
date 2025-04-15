@@ -2,6 +2,7 @@ import { handleError } from "@/app/error-handler/error-handler";
 import { AppliedClassesSection } from "@/pages/my/components/applied-classes-section";
 import { MyInfoSection } from "@/pages/my/components/my-info-section";
 import { usePutUserInfo } from "@/pages/my/hooks/use-put-user-info";
+import { MenteeTheme } from "@/shared/components/mentee-theme/mentee-theme";
 import { PageLayout } from "@/shared/layouts/page-layout";
 import { toast } from "@repo/ui";
 import { Suspense } from "react";
@@ -20,14 +21,16 @@ export function MyPage() {
 
   return (
     <PageLayout>
-      <div className="container mx-auto space-y-8 py-10 px-4">
-        <Suspense fallback={<MyInfoSection.Skeleton />}>
-          <MyInfoSection onChangeUserInfo={handleChangeUserInfo} />
-        </Suspense>
-        <Suspense fallback={<AppliedClassesSection.Skeleton />}>
-          <AppliedClassesSection />
-        </Suspense>
-      </div>
+      <MenteeTheme>
+        <div className="container mx-auto space-y-8 py-10 px-4">
+          <Suspense fallback={<MyInfoSection.Skeleton />}>
+            <MyInfoSection onChangeUserInfo={handleChangeUserInfo} />
+          </Suspense>
+          <Suspense fallback={<AppliedClassesSection.Skeleton />}>
+            <AppliedClassesSection />
+          </Suspense>
+        </div>
+      </MenteeTheme>
     </PageLayout>
   );
 }
