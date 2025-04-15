@@ -4,7 +4,7 @@ export default HomePage;
 
 export function meta() {
   return [
-    { title: "홈 - 디멘터" },
+    { title: "디멘터 | 홈" },
     { name: "description", content: "디멘터에서 나만의 멘토를 찾아보세요!" },
   ];
 }

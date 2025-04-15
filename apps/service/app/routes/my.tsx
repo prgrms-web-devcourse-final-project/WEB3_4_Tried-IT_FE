@@ -5,7 +5,7 @@ export default withAuth(MyPage);
 
 export function meta() {
   return [
-    { title: "My Page - Dementor" },
-    { name: "description", content: "My Page in Dementor" },
+    { title: "디멘터 | 마이 페이지" },
+    { name: "description", content: "디멘터 마이 페이지" },
   ];
 }

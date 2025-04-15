@@ -25,7 +25,7 @@ export function ClassCard({ model, onClick }: ClassCardProps) {
               alt={title}
               width={400}
               height={225}
-              className="object-cover w-full h-full"
+              className="object-contain w-full h-full"
             />
           </AspectRatio>
         </div>

@@ -3,8 +3,8 @@ import { MentorApplicationPage } from "@/pages";
 
 export function meta() {
   return [
-    { title: "Apply as Mentor - Dementor" },
-    { name: "description", content: "Apply as a mentor in Dementor" },
+    { title: "디멘터 | 멘토 신청" },
+    { name: "description", content: "디멘터 멘토 신청 페이지" },
   ];
 }
 
