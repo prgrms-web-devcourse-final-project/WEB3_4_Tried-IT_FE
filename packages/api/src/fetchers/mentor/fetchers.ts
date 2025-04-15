@@ -134,7 +134,7 @@ export const requestUpdateMentorInfo = generateServiceFetcher<
 
 export const getMentorInfoModificationRequestList = generateServiceFetcher<
   { memberId: string },
-  { status: Status; page?: number; size?: number },
+  { status?: Status; page?: number; size?: number; proposalId?: number },
   void,
   {
     isSuccess: boolean;

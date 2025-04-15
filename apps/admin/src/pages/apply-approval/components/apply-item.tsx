@@ -1,4 +1,5 @@
 import { ApprovalRequestModel } from "@/entities/approval/approval-request.model";
+import { MentorModificationDetailModal } from "@/pages/apply-approval/components/mentor-modification-detail-modal";
 import { StatusConst } from "@repo/api";
 import {
   Badge,
@@ -85,15 +86,13 @@ export function ApplyItem({ applicant, onApprove, onReject }: ApplyItemProps) {
               <p className="text-sm font-medium">{applicant.mentor.name}</p>
             </div>
             <div className="flex gap-2 items-center">
-              {isApprovalCategory && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleOpenDetailModal}
-                >
-                  상세 보기
-                </Button>
-              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleOpenDetailModal}
+              >
+                상세 보기
+              </Button>
               {isPending && (
                 <>
                   <Button variant="outline" onClick={onReject}>
@@ -107,11 +106,18 @@ export function ApplyItem({ applicant, onApprove, onReject }: ApplyItemProps) {
         </CardContent>
       </Card>
 
-      {isApprovalCategory && (
+      {isApprovalCategory ? (
         <ApplyDetailModal
           isOpen={isDetailModalOpen}
           onClose={handleCloseDetailModal}
           applymentId={applicant.memberId}
+        />
+      ) : (
+        <MentorModificationDetailModal
+          isOpen={isDetailModalOpen}
+          onClose={handleCloseDetailModal}
+          memberId={applicant.memberId}
+          proposalId={applicant.id}
         />
       )}
     </>

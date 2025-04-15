@@ -190,7 +190,6 @@ function ChatRoomView({ chatRoom, onBack }: ChatRoomViewProps) {
   const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
-    console.log(`newMessage: ${newMessage}`);
 
     try {
       // WebSocket을 통해 메시지 전송

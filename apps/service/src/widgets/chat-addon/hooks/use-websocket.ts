@@ -54,14 +54,12 @@ export function useWebSocket(chatRoomId: string | null) {
       try {
         // 구독 해제
         if (subscriptionRef.current) {
-          console.log("구독 해제");
           subscriptionRef.current.unsubscribe();
           subscriptionRef.current = null;
         }
 
         // 연결 종료
         if (stompClientRef.current) {
-          console.log("연결 종료");
           stompClientRef.current.deactivate();
           stompClientRef.current = null;
         }
@@ -99,8 +97,7 @@ export function useWebSocket(chatRoomId: string | null) {
       });
 
       // 연결 성공 시 콜백
-      client.onConnect = (frame: IFrame) => {
-        console.log("WebSocket 연결 성공:", frame);
+      client.onConnect = () => {
         setStatus(WebSocketStatus.CONNECTED);
         setError(null);
 
@@ -111,7 +108,6 @@ export function useWebSocket(chatRoomId: string | null) {
             try {
               // 수신된 메시지 처리
               const data = JSON.parse(message.body) as WebSocketMessage;
-              console.log("메시지 수신:", data);
 
               // 새 메시지 생성
               const newMessage: ChatMessage = {
