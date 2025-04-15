@@ -7,7 +7,7 @@ interface MessageStepProps {
 
 export function MessageStep({ message, onMessageChange }: MessageStepProps) {
   return (
-    <div className="flex-1 flex flex-col gap-4 max-w-dvw sm:min-w-xl">
+    <div className="flex-1 flex flex-col gap-4">
       <Typography.H4>멘토에게 보낼 메시지</Typography.H4>
 
       <Textarea
