@@ -34,6 +34,31 @@ export function useGetClassDetail(classId: number) {
       if (!data) {
         throw new NotFoundError("수업 정보를 찾을 수 없습니다.");
       }
+
+      const unavailableSchedules =
+        data.unavailableSchedules?.map((applyment) => ({
+          date: dayjs(applyment.schedule).format("YYYY-MM-DD"),
+          time: `${dayjs(applyment.schedule).format("HH")}:00`,
+        })) ?? [];
+      const availableSchedules = (
+        data.schedules?.flatMap((schedule) =>
+          getDatesFromDay(
+            schedule.dayOfWeek!,
+            dayjs(),
+            dayjs().add(1, "month")
+          ).map((date) => ({
+            date: date.format("YYYY-MM-DD"),
+            time: schedule.time?.split("~")[0] ?? "",
+          }))
+        ) ?? []
+      ).filter(
+        (schedule) =>
+          !unavailableSchedules.some(
+            (unavailableSchedule) =>
+              unavailableSchedule.date === schedule.date &&
+              unavailableSchedule.time === schedule.time
+          )
+      );
       return ModelCreator.create(ClassDetailModel, {
         id: data.classId ?? -1,
         description: data.content ?? "",
@@ -47,22 +72,8 @@ export function useGetClassDetail(classId: number) {
         message: data.content ?? "",
         stack: data.stack?.join(",") ?? "",
         title: data.title ?? "",
-        availableSchedules:
-          data.schedules?.flatMap((schedule) =>
-            getDatesFromDay(
-              schedule.dayOfWeek!,
-              dayjs(),
-              dayjs().add(1, "month")
-            ).map((date) => ({
-              date: date.toISOString(),
-              time: schedule.time?.split("~")[0] ?? "",
-            }))
-          ) ?? [],
-        unavailableSchedules:
-          data.unavailableSchedules?.map((applyment) => ({
-            date: applyment.schedule!,
-            time: `${dayjs(applyment.schedule).format("HH")}:00`,
-          })) ?? [],
+        availableSchedules,
+        unavailableSchedules,
       });
     },
   });

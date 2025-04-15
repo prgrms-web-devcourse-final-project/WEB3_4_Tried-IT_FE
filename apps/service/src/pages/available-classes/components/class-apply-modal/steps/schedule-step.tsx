@@ -19,8 +19,6 @@ export function ScheduleStep({
   onDateChange,
   onTimeSlotChange,
 }: ScheduleStepProps) {
-  const schedules = [...availableSchedules, ...unavailableSchedules];
-
   return (
     <div className="space-y-4 flex flex-col md:flex-row max-w-2xl gap-8">
       <div className="flex-1 space-y-2 flex flex-col items-center">
@@ -30,7 +28,9 @@ export function ScheduleStep({
           id="date"
           selected={selectedDate.toDate()}
           disabled={(date) =>
-            !schedules.some((schedule) => schedule.date.isSame(date, "day"))
+            !availableSchedules.some((schedule) =>
+              schedule.date.isSame(date, "day")
+            )
           }
           navClassName="[&>button]:hover:bg-secondary [&>button]:hover:text-secondary-foreground dark:[&>button]:hover:bg-secondary/80 dark:[&>button]:hover:text-secondary-foreground"
           dayButtonClassName="hover:bg-secondary/80 hover:text-secondary-foreground dark:hover:bg-secondary/80 dark:hover:text-secondary-foreground"

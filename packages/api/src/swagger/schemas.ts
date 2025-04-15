@@ -328,6 +328,7 @@ export type ChatRoomResponseDto = {
   lastMessageAt?: string;
   targetNickname?: string;
   targetId?: number;
+  hasUnread: boolean;
 };
 
 export type ApplyCreateRequest = {

@@ -9,11 +9,12 @@ export function useApplyClass() {
       const schedule = dayjs(applyment.date)
         .set("hour", parseInt(applyment.timeSlot.split(":")[0]))
         .set("minute", parseInt(applyment.timeSlot.split(":")[1]));
+
       return dementorApiFetchers.applyClass.applyClass({
         body: {
           classId: applyment.classId,
           inquiry: applyment.message,
-          schedule: schedule.toISOString(),
+          schedule: schedule.format("YYYY-MM-DDTHH:mm:ss"),
         },
       });
     },

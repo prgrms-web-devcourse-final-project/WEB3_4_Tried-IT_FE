@@ -48,7 +48,7 @@ export function AvailableClassesPage() {
       <div className="relative">
         {isMentor && (
           <Button
-            className="fixed right-10 bottom-10 z-50"
+            className="fixed left-10 bottom-10 z-50 shadow-xl"
             onClick={handleCreateClass}
           >
             <Plus className="mr-2 h-4 w-4" />
