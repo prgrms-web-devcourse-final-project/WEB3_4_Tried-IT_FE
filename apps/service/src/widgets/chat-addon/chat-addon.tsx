@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   ChatRoom,
   useChatMessages,
+  useChatRoom,
   useChatRooms,
 } from "./hooks/use-chat-hooks";
 import { WebSocketStatus, useWebSocket } from "./hooks/use-websocket";
@@ -23,7 +24,11 @@ export function ChatAddon() {
   const [selectedChat, setSelectedChat] = useState<ChatRoom | null>(null);
 
   // react-query를 사용하여 채팅방 목록 조회
-  const { data: chatRooms = [], isLoading, error } = useChatRooms(isOpen);
+  const { data: chatRooms = [], isLoading, error } = useChatRooms(true);
+
+  // 안읽은 메시지가 있는지 확인
+  const hasUnreadMessages =
+    !isLoading && chatRooms.some((chat) => chat.isUnread);
 
   const handleChatSelect = (chatRoom: ChatRoom) => {
     setSelectedChat(chatRoom);
@@ -33,50 +38,25 @@ export function ChatAddon() {
     setSelectedChat(null);
   };
 
-  // 임시 데이터 - API 연동이 안 될 때를 대비해 폴백 데이터로 사용
-  const fallbackChatRooms: ChatRoom[] = [
-    {
-      id: "1",
-      name: "홍길동",
-      avatar: "",
-      lastMessage: "안녕하세요! 멘토링 문의드립니다.",
-      lastMessageTime: "10:30",
-      unreadCount: 3,
-    },
-    {
-      id: "2",
-      name: "김철수",
-      avatar: "",
-      lastMessage: "오늘 세션 일정 확인해주세요.",
-      lastMessageTime: "어제",
-    },
-    {
-      id: "3",
-      name: "이영희",
-      avatar: "",
-      lastMessage: "자료 잘 받았습니다. 감사합니다!",
-      lastMessageTime: "1월 15일",
-    },
-    {
-      id: "4",
-      name: "박지성",
-      avatar: "",
-      lastMessage: "다음 미팅은 언제로 잡을까요?",
-      lastMessageTime: "1월 10일",
-    },
-  ];
-
   return (
     <div className="fixed bottom-4 right-4 z-50">
       <Sheet open={isOpen} onOpenChange={setIsOpen} modal={false}>
         <SheetTrigger asChild>
-          <Button
-            size="icon"
-            className="rounded-full w-14 h-14 shadow-lg bg-primary hover:bg-primary/90"
-            aria-label="채팅 열기"
-          >
-            <MessageCircle className="size-6" />
-          </Button>
+          <div className="relative inline-block">
+            <Button
+              size="icon"
+              variant="gradient"
+              className="rounded-full w-14 h-14 shadow-xl"
+              aria-label="채팅 열기"
+            >
+              <MessageCircle className="size-6 text-white" />
+            </Button>
+            {hasUnreadMessages && (
+              <div className="absolute -top-1 -right-1 bg-secondary text-secondary-foreground shadow rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold animate-bounce">
+                {chatRooms.filter((chat) => chat.isUnread).length}
+              </div>
+            )}
+          </div>
         </SheetTrigger>
         <SheetContent
           side="right"
@@ -86,7 +66,7 @@ export function ChatAddon() {
             <ChatRoomView chatRoom={selectedChat} onBack={handleBackToList} />
           ) : (
             <ChatRoomList
-              chatRooms={chatRooms.length > 0 ? chatRooms : fallbackChatRooms}
+              chatRooms={chatRooms}
               onSelectChat={handleChatSelect}
               isLoading={isLoading}
               error={error ? "채팅방 목록을 불러오는데 실패했습니다." : null}
@@ -136,6 +116,9 @@ function ChatRoomList({
               className="flex items-center gap-3 p-3 cursor-pointer hover:bg-secondary/10 transition-colors"
               onClick={() => onSelectChat(chatRoom)}
             >
+              {chatRoom.isUnread && (
+                <div className="bg-primary/80  text-xs rounded-full h-2 w-2 flex items-center justify-center" />
+              )}
               <Avatar>
                 <div className="bg-primary text-primary-foreground w-full h-full flex items-center justify-center">
                   {chatRoom.name.charAt(0)}
@@ -152,11 +135,6 @@ function ChatRoomList({
                   {chatRoom.lastMessage}
                 </p>
               </div>
-              {chatRoom.unreadCount && (
-                <div className="bg-primary text-primary-foreground text-xs rounded-full h-5 min-w-5 flex items-center justify-center">
-                  {chatRoom.unreadCount}
-                </div>
-              )}
             </div>
           ))
         )}
@@ -180,6 +158,9 @@ function ChatRoomView({ chatRoom, onBack }: ChatRoomViewProps) {
     error: wsError,
     sendMessage: wsSendMessage,
   } = useWebSocket(chatRoom.id);
+
+  // 채팅방 읽음 처리 목적
+  useChatRoom(chatRoom.id);
 
   // 기존 메시지들을 불러오기 위한 쿼리 (이전 메시지 로딩용)
   const {

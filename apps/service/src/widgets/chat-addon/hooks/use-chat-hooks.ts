@@ -1,10 +1,10 @@
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { dementorApiFetchers } from "@repo/api";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 
 // 채팅방 목록을 가져오는 훅
-export function useChatRooms(isOpen: boolean) {
+export function useChatRooms(enabled: boolean) {
   return useQuery({
     queryKey: ["chatRooms"],
     queryFn: async () => {
@@ -18,14 +18,36 @@ export function useChatRooms(isOpen: boolean) {
         lastMessageTime: room.lastMessageAt
           ? dayjs(room.lastMessageAt).locale("ko").fromNow()
           : "",
+        isUnread: room.hasUnread,
       }));
     },
-    // 채팅창이 열려있을 때만 활성화
-    enabled: isOpen,
-    // 1분마다 자동 갱신 (필요에 따라 조정)
-    refetchInterval: 60 * 1000,
-    // 에러 발생 시 자동 재시도
+    enabled: enabled,
+    refetchInterval: 30 * 1000,
     retry: 1,
+  });
+}
+
+export function useChatRoom(chatRoomId: string) {
+  const queryClient = useQueryClient();
+  return useQuery({
+    queryKey: ["chatRoom", chatRoomId],
+    queryFn: async () => {
+      const response = await dementorApiFetchers.chat.getChatRoom({
+        pathParams: {
+          chatRoomId: parseInt(chatRoomId, 10),
+        },
+      });
+
+      queryClient.setQueryData(["chatRooms"], (old: ChatRoom[]) => {
+        return old.map((room) =>
+          room.id === chatRoomId ? { ...room, isUnread: false } : room
+        );
+      });
+
+      return response;
+    },
+
+    enabled: Boolean(chatRoomId),
   });
 }
 
@@ -52,7 +74,6 @@ export function useChatMessages(chatRoomId: string, enabled: boolean) {
       });
 
       const currentUserId = parseInt(user?.id || "0");
-
       return response.map((msg, index) => ({
         id: index.toString(), // API 응답에 messageId가 없으므로 index 사용
         text: msg.content || "",
@@ -77,7 +98,7 @@ export interface ChatRoom {
   avatar: string;
   lastMessage: string;
   lastMessageTime: string;
-  unreadCount?: number;
+  isUnread: boolean;
 }
 
 export interface Message {
