@@ -24,6 +24,9 @@ export default defineConfig({
       "@app": path.resolve(__dirname, "./app"),
     },
   },
+  define: {
+    global: "window",
+  },
   optimizeDeps: {
     include: ["@repo/ui", "@repo/design-system"],
   },

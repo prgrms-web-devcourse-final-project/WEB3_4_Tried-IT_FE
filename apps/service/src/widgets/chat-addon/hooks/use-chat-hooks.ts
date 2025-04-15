@@ -1,6 +1,6 @@
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { dementorApiFetchers } from "@repo/api";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 
 // 채팅방 목록을 가져오는 훅
@@ -54,7 +54,7 @@ export function useChatMessages(chatRoomId: string, enabled: boolean) {
       const currentUserId = parseInt(user?.id || "0");
 
       return response.map((msg, index) => ({
-        id: index.toString(), // 실제로는 메시지 ID가 있어야 함
+        id: index.toString(), // API 응답에 messageId가 없으므로 index 사용
         text: msg.content || "",
         // 본인이 보낸 메시지인지 확인
         sender: msg.senderId === currentUserId ? "me" : "other",
@@ -62,84 +62,11 @@ export function useChatMessages(chatRoomId: string, enabled: boolean) {
       }));
     },
     enabled: Boolean(chatRoomId) && enabled,
-    // 새 메시지를 자주 가져오기 위해 짧은 간격으로 설정
-    refetchInterval: 5 * 1000,
-  });
-}
-
-// 메시지 전송을 위한 훅
-export function useSendMessage() {
-  const { user } = useAuth();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({
-      chatRoomId,
-      content,
-    }: {
-      chatRoomId: string;
-      content: string;
-    }) => {
-      if (!user) {
-        throw new Error("로그인 상태가 아닙니다.");
-      }
-
-      const chatRoomIdNum = parseInt(chatRoomId, 10);
-
-      if (isNaN(chatRoomIdNum)) {
-        throw new Error("유효하지 않은 채팅방 ID");
-      }
-
-      const response = await dementorApiFetchers.chat.sendMessage({
-        body: {
-          content,
-          senderType: "MEMBER",
-          senderId: parseInt(user.id),
-        },
-        pathParams: {
-          chatRoomId: chatRoomIdNum,
-        },
-      });
-
-      return response;
-    },
-
-    onMutate: async ({ content, chatRoomId }) => {
-      // 낙관적 메시지 생성
-      const optimisticMessage: Message = {
-        id: `temp-${Date.now()}`,
-        text: content,
-        sender: "me",
-        timestamp: dayjs().format("HH:mm"),
-      };
-
-      const prevChatMessages = queryClient.getQueryData<Message[]>([
-        "chatMessages",
-        chatRoomId,
-      ]);
-
-      queryClient.setQueryData<Message[]>(
-        ["chatMessages", chatRoomId],
-        (old) => [...(old || []), optimisticMessage]
-      );
-
-      return { prevChatMessages };
-    },
-    // 메시지 전송 성공 시 채팅 메시지 목록 갱신
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: ["chatMessages", variables.chatRoomId],
-      });
-
-      // 채팅방 목록도 함께 갱신 (마지막 메시지 업데이트를 위해)
-      queryClient.invalidateQueries({ queryKey: ["chatRooms"] });
-    },
-    onError: (_, variables, context) => {
-      queryClient.setQueryData<Message[]>(
-        ["chatMessages", variables.chatRoomId],
-        context?.prevChatMessages
-      );
-    },
+    // WebSocket 연결이 없는 상황에 대비한 백업 역할로
+    // 5분마다 한 번씩 갱신
+    refetchInterval: 5 * 60 * 1000,
+    // 데이터를 상대적으로 오래 유지
+    staleTime: 60 * 1000,
   });
 }
 

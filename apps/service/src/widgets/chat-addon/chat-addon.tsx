@@ -9,14 +9,14 @@ import {
   SheetTrigger,
 } from "@repo/ui";
 import { cn } from "@repo/utils/cn";
-import { ChevronLeft, MessageCircle, Send } from "lucide-react";
-import { useState } from "react";
+import { ChevronLeft, MessageCircle, Send, Wifi, WifiOff } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import {
   ChatRoom,
   useChatMessages,
   useChatRooms,
-  useSendMessage,
 } from "./hooks/use-chat-hooks";
+import { WebSocketStatus, useWebSocket } from "./hooks/use-websocket";
 
 export function ChatAddon() {
   const [isOpen, setIsOpen] = useState(false);
@@ -172,38 +172,62 @@ interface ChatRoomViewProps {
 
 function ChatRoomView({ chatRoom, onBack }: ChatRoomViewProps) {
   const [newMessage, setNewMessage] = useState("");
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
-  // react-query를 사용하여 채팅 메시지 조회
+  // WebSocket 훅을 사용하여 실시간 메시징 구현
+  const {
+    status: wsStatus,
+    error: wsError,
+    sendMessage: wsSendMessage,
+  } = useWebSocket(chatRoom.id);
+
+  // 기존 메시지들을 불러오기 위한 쿼리 (이전 메시지 로딩용)
   const {
     data: messages = [],
     isLoading,
-    error,
+    error: apiError,
   } = useChatMessages(chatRoom.id, true);
 
-  // 메시지 전송 mutation
-  const sendMessageMutation = useSendMessage();
+  // 메시지 목록이 변경되거나 로딩이 완료되면 스크롤을 맨 아래로 이동
+  useEffect(() => {
+    if (!isLoading && messages.length > 0 && messagesContainerRef.current) {
+      scrollToBottom();
+    }
+  }, [messages, isLoading]);
 
-  const handleSendMessage = async () => {
+  // 스크롤을 맨 아래로 이동시키는 함수
+  const scrollToBottom = () => {
+    if (messagesContainerRef.current) {
+      const container = messagesContainerRef.current;
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!newMessage.trim()) return;
+    console.log(`newMessage: ${newMessage}`);
 
     try {
-      // 메시지 전송
-      sendMessageMutation.mutateAsync({
-        chatRoomId: chatRoom.id,
-        content: newMessage,
-      });
+      // WebSocket을 통해 메시지 전송
+      const success = wsSendMessage(newMessage.trim());
+      if (success) {
+        setNewMessage("");
+        // 메시지 전송 후 스크롤을 맨 아래로 이동
+        setTimeout(scrollToBottom, 100);
+      }
     } catch (err) {
       console.error("메시지 전송 오류:", err);
     }
   };
 
-  // 엔터 키로 메시지 전송
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
+  const isConnecting = wsStatus === WebSocketStatus.CONNECTING;
+  const isConnected = wsStatus === WebSocketStatus.CONNECTED;
+  const hasError = wsError || apiError;
+  const noMessages = !isLoading && messages.length === 0;
 
   return (
     <div className="flex flex-col h-full">
@@ -218,7 +242,7 @@ function ChatRoomView({ chatRoom, onBack }: ChatRoomViewProps) {
           >
             <ChevronLeft className="size-4" />
           </Button>
-          <div className="flex items-center gap-2">
+          <div className="flex-1 flex items-center gap-2">
             <Avatar>
               <div className="bg-primary text-primary-foreground w-full h-full flex items-center justify-center">
                 {chatRoom.name.charAt(0)}
@@ -226,19 +250,43 @@ function ChatRoomView({ chatRoom, onBack }: ChatRoomViewProps) {
             </Avatar>
             <SheetTitle>{chatRoom.name}</SheetTitle>
           </div>
+          {/* WebSocket 연결 상태 표시 */}
+          <div className="ml-auto flex items-center gap-1">
+            {isConnected ? (
+              <>
+                <Wifi className="size-4 text-green-500" />
+                <span className="text-xs text-muted-foreground">연결됨</span>
+              </>
+            ) : (
+              <>
+                <WifiOff className="size-4 text-red-500" />
+                <span className="text-xs text-muted-foreground">연결 끊김</span>
+              </>
+            )}
+          </div>
         </div>
       </SheetHeader>
 
-      <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
-        {isLoading ? (
+      <div
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto p-4 flex flex-col gap-3"
+      >
+        {isLoading || isConnecting ? (
           <div className="flex items-center justify-center h-full">
             <p className="text-muted-foreground">메시지를 불러오는 중...</p>
           </div>
-        ) : error ? (
+        ) : hasError ? (
           <div className="text-destructive text-center p-4">
-            <p>메시지를 불러오는데 실패했습니다.</p>
+            <p>
+              {wsError || "메시지를 불러오는데 실패했습니다."}
+              {!isConnected && (
+                <span className="block mt-2 text-sm">
+                  실시간 메시지 연결이 끊겼습니다. 다시 시도해주세요.
+                </span>
+              )}
+            </p>
           </div>
-        ) : messages.length === 0 ? (
+        ) : noMessages ? (
           <div className="flex items-center justify-center h-full text-center">
             <p className="text-muted-foreground">
               아직 메시지가 없습니다.
@@ -274,24 +322,25 @@ function ChatRoomView({ chatRoom, onBack }: ChatRoomViewProps) {
 
       <Separator />
       <div className="p-3 flex gap-2">
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="메시지를 입력하세요..."
-          className="flex-1 rounded-full bg-secondary/20 px-4 py-2 focus:outline-none focus:ring-1 focus:ring-primary"
-          disabled={sendMessageMutation.isPending}
-        />
-        <Button
-          size="icon"
-          onClick={handleSendMessage}
-          className="rounded-full bg-primary hover:bg-primary/90"
-          aria-label="메시지 보내기"
-          disabled={sendMessageMutation.isPending}
-        >
-          <Send className="size-4" />
-        </Button>
+        <form onSubmit={handleSendMessage} className="w-full flex gap-2">
+          <input
+            type="text"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="메시지를 입력하세요..."
+            className="flex-1 rounded-full bg-secondary/20 px-4 py-2 focus:outline-none focus:ring-1 focus:ring-primary"
+            disabled={!isConnected}
+          />
+          <Button
+            size="icon"
+            type="submit"
+            className="rounded-full bg-primary hover:bg-primary/90"
+            aria-label="메시지 보내기"
+            disabled={!isConnected}
+          >
+            <Send className="size-4" />
+          </Button>
+        </form>
       </div>
     </div>
   );
