@@ -1,3 +1,4 @@
+import { useGetJobCategories } from "@/features/job/hooks/use-get-job-categories";
 import { usePagination } from "@/widgets/pagination";
 import {
   Badge,
@@ -27,6 +28,7 @@ import {
   TabsTrigger,
   toast,
 } from "@repo/ui";
+import MDEditor from "@uiw/react-md-editor";
 import { Download, FileText, Info } from "lucide-react";
 import { Suspense, useState } from "react";
 import {
@@ -210,6 +212,7 @@ interface RequestRowProps {
 }
 
 function RequestRow({ request }: RequestRowProps) {
+  const { data: jobCategories } = useGetJobCategories();
   const [detailOpen, setDetailOpen] = useState(false);
 
   // 파일 다운로드 처리 함수
@@ -333,7 +336,13 @@ function RequestRow({ request }: RequestRowProps) {
                         이전
                       </div>
                       <div className="text-xs sm:text-sm">
-                        {request.modifiedFields.jobId.before}
+                        {
+                          jobCategories?.find(
+                            (category) =>
+                              category.id ===
+                              request.modifiedFields.jobId?.before.toString()
+                          )?.label
+                        }
                       </div>
                     </div>
                     <div className="p-2 bg-muted/30 rounded-md">
@@ -341,7 +350,13 @@ function RequestRow({ request }: RequestRowProps) {
                         변경
                       </div>
                       <div className="text-xs sm:text-sm">
-                        {request.modifiedFields.jobId.after}
+                        {
+                          jobCategories?.find(
+                            (category) =>
+                              category.id ===
+                              request.modifiedFields.jobId?.after.toString()
+                          )?.label
+                        }
                       </div>
                     </div>
                   </div>
@@ -411,7 +426,15 @@ function RequestRow({ request }: RequestRowProps) {
                         이전
                       </div>
                       <div className="whitespace-pre-wrap text-xs sm:text-sm">
-                        {request.modifiedFields.introduction.before}
+                        <MDEditor.Markdown
+                          style={{
+                            color: "var(--background-foreground)",
+                          }}
+                          className="bg-transparent!"
+                          source={
+                            request.modifiedFields.introduction.before as string
+                          }
+                        />
                       </div>
                     </div>
                     <div className="p-2 bg-muted/30 rounded-md">
@@ -419,7 +442,15 @@ function RequestRow({ request }: RequestRowProps) {
                         변경
                       </div>
                       <div className="whitespace-pre-wrap text-xs sm:text-sm">
-                        {request.modifiedFields.introduction.after}
+                        <MDEditor.Markdown
+                          style={{
+                            color: "var(--background-foreground)",
+                          }}
+                          className="bg-transparent!"
+                          source={
+                            request.modifiedFields.introduction.after as string
+                          }
+                        />
                       </div>
                     </div>
                   </div>
