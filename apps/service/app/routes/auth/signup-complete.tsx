@@ -2,7 +2,7 @@ export { SignupCompletePage as default } from "@/pages";
 
 export function meta() {
   return [
-    { title: "Sign Up Complete - Dementor" },
-    { name: "description", content: "Sign up completed in Dementor" },
+    { title: "디멘터 | 회원가입 완료" },
+    { name: "description", content: "디멘터 회원가입 완료 페이지" },
   ];
 }

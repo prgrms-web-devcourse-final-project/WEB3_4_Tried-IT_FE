@@ -166,12 +166,12 @@ export function ApplyDetailModal({
             <div className="md:col-span-2 space-y-3">
               <h3 className="text-sm font-semibold text-gray-500">자기소개</h3>
               <div className="border rounded-md p-5">
-                <div className="rounded-md bg-background dark:bg-background">
+                <div className="rounded-md">
                   {applicationDetail.introduction ? (
                     <MDEditor.Markdown
+                      className="bg-transparent!"
                       style={{
-                        backgroundColor: "transparent",
-                        fontSize: "14px",
+                        color: "var(--background-foreground)",
                       }}
                       source={applicationDetail.introduction}
                     />

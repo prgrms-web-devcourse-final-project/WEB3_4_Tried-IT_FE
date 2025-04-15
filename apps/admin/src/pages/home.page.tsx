@@ -1,13 +1,6 @@
 import { PageLayout } from "@/shared/layouts/page-layout";
 import { Typography } from "@repo/ui";
 
-export function homePageMeta() {
-  return [
-    { title: "DeMentor Admin" },
-    { name: "description", content: "DeMentor 관리자 대시보드" },
-  ];
-}
-
 export function HomePage() {
   return (
     <PageLayout>

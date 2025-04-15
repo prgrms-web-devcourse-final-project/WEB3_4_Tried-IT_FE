@@ -1,3 +1,4 @@
+import { ScrollArea } from "@repo/ui";
 import { cn } from "@repo/utils/cn";
 
 export interface PageLayoutProps {
@@ -7,8 +8,8 @@ export interface PageLayoutProps {
 
 export function PageLayout({ children, className }: PageLayoutProps) {
   return (
-    <main className={cn("flex-1 bg-background p-8", className)}>
-      {children}
+    <main className={cn("flex-1 bg-background p-4 pr-0", className)}>
+      <ScrollArea className="h-full pr-4">{children}</ScrollArea>
     </main>
   );
 }

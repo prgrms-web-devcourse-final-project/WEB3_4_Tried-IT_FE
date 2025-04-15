@@ -1,3 +1,5 @@
+import { useAuth } from "@/features/auth/hooks/use-auth";
+import { ROUTE_PATH } from "@app/routes";
 import {
   Avatar,
   Button,
@@ -11,6 +13,7 @@ import {
 import { cn } from "@repo/utils/cn";
 import { ChevronLeft, Dot, MessageCircle, Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router";
 import {
   ChatRoom,
   useChatMessages,
@@ -20,15 +23,21 @@ import {
 import { WebSocketStatus, useWebSocket } from "./hooks/use-websocket";
 
 export function ChatAddon() {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedChat, setSelectedChat] = useState<ChatRoom | null>(null);
+  const { isAuthenticated } = useAuth();
 
   // react-query를 사용하여 채팅방 목록 조회
-  const { data: chatRooms = [], isLoading, error } = useChatRooms(true);
+  const {
+    data: chatRooms = [],
+    isLoading,
+    error,
+  } = useChatRooms(isAuthenticated);
 
   // 안읽은 메시지가 있는지 확인
   const hasUnreadMessages =
-    !isLoading && chatRooms.some((chat) => chat.isUnread);
+    isAuthenticated && !isLoading && chatRooms.some((chat) => chat.isUnread);
 
   const handleChatSelect = (chatRoom: ChatRoom) => {
     setSelectedChat(chatRoom);
@@ -36,6 +45,11 @@ export function ChatAddon() {
 
   const handleBackToList = () => {
     setSelectedChat(null);
+  };
+
+  const handleLoginButtonClick = () => {
+    navigate(ROUTE_PATH.AUTH.LOGIN);
+    setIsOpen(false);
   };
 
   return (
@@ -62,7 +76,9 @@ export function ChatAddon() {
           side="right"
           className="sm:max-w-md w-[90vw] p-0 rounded-t-xl sm:rounded-l-xl h-[80vh] sm:h-[500px] bottom-0 right-0 top-auto"
         >
-          {selectedChat ? (
+          {!isAuthenticated ? (
+            <LoginPrompt onLoginButtonClick={handleLoginButtonClick} />
+          ) : selectedChat ? (
             <ChatRoomView chatRoom={selectedChat} onBack={handleBackToList} />
           ) : (
             <ChatRoomList
@@ -74,6 +90,25 @@ export function ChatAddon() {
           )}
         </SheetContent>
       </Sheet>
+    </div>
+  );
+}
+
+interface LoginPromptProps {
+  onLoginButtonClick: () => void;
+}
+
+function LoginPrompt({ onLoginButtonClick }: LoginPromptProps) {
+  return (
+    <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+      <MessageCircle className="size-12 text-muted-foreground mb-4" />
+      <h2 className="text-xl font-bold mb-2">로그인이 필요합니다</h2>
+      <p className="text-muted-foreground mb-6">
+        채팅 기능을 이용하기 위해서는 로그인이 필요합니다.
+      </p>
+      <Button variant="gradient" size="lg" onClick={onLoginButtonClick}>
+        로그인 하러 가기
+      </Button>
     </div>
   );
 }

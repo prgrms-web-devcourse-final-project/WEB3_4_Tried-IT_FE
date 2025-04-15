@@ -1,4 +1,5 @@
 import { useTheme } from "@/app/theme-provider/theme-provider";
+import { AuthButton } from "@/widgets/auth/auth-button";
 import { ROUTE_PATH } from "@app/routes";
 import {
   Button,
@@ -12,9 +13,35 @@ import {
   SheetTrigger,
 } from "@repo/ui";
 import { cn } from "@repo/utils/cn";
-import { Menu, MoonIcon, SunIcon } from "lucide-react";
-import { ComponentProps } from "react";
+import {
+  CheckSquare,
+  Contact2,
+  Inbox,
+  Menu,
+  MoonIcon,
+  SunIcon,
+} from "lucide-react";
+import { ComponentProps, Suspense } from "react";
 import { Link, useLocation } from "react-router";
+
+// AppSidebar와 동일한 아이템 목록을 사용
+const sidebarItems = [
+  {
+    title: "승인 요청 목록",
+    url: ROUTE_PATH.APPLY_APPROVAL,
+    icon: CheckSquare,
+  },
+  {
+    title: "문의 채팅 목록",
+    url: ROUTE_PATH.INQUERY,
+    icon: Inbox,
+  },
+  {
+    title: "직무 카테고리 설정",
+    url: ROUTE_PATH.JOB_CATEGORY,
+    icon: Contact2,
+  },
+];
 
 export function NavigationHeader() {
   const { theme, setTheme } = useTheme();
@@ -72,19 +99,37 @@ export function NavigationHeader() {
                 <SheetHeader>
                   <SheetTitle>
                     <SheetClose asChild>
-                      <Link to={ROUTE_PATH.HOME}>DeMentor</Link>
+                      <Link to={ROUTE_PATH.HOME}>
+                        <div className="text-xl font-bold">
+                          DeMentor <span className="text-sm">Admin</span>
+                        </div>
+                      </Link>
                     </SheetClose>
                   </SheetTitle>
                 </SheetHeader>
                 <SheetDescription></SheetDescription>
-                <div className="flex flex-col">
-                  <div className="flex flex-col gap-2 px-2">
+                <div className="flex flex-col py-4">
+                  {/* 사이드바 아이템들 */}
+                  {sidebarItems.map((item) => (
                     <NavigationMenuMobile
-                      to={ROUTE_PATH.AUTH.LOGIN}
-                      className="rounded-md"
-                      variant="outline"
-                      label="로그인"
+                      key={item.title}
+                      to={item.url}
+                      className="flex items-center gap-2 py-3"
+                      label={
+                        <>
+                          <item.icon className="size-5 mr-2" />
+                          {item.title}
+                        </>
+                      }
                     />
+                  ))}
+                  <Separator className="my-4" />
+                  <div className="flex flex-col gap-2 px-2">
+                    <Suspense fallback={<div>로딩중...</div>}>
+                      <div className="px-3 py-2">
+                        <AuthButton />
+                      </div>
+                    </Suspense>
                   </div>
                 </div>
               </SheetContent>
@@ -102,7 +147,7 @@ export function NavigationHeaderPadding() {
 
 interface NavigationMenuProps {
   to: string;
-  label: string;
+  label: string | React.ReactNode;
   className?: string;
   variant?: ComponentProps<typeof Button>["variant"];
 }

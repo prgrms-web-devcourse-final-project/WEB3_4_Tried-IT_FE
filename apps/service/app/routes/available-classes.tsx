@@ -5,7 +5,7 @@ export default withAuth(AvailableClassesPage);
 
 export function meta() {
   return [
-    { title: "Available Classes - Dementor" },
-    { name: "description", content: "Available Classes in Dementor" },
+    { title: "디멘터 | 수업 조회" },
+    { name: "description", content: "디멘터 수업 조회 페이지" },
   ];
 }

@@ -1,7 +1,6 @@
-import { useAuth } from "@/features/auth/hooks/use-auth";
+import { AuthButton } from "@/widgets/auth/auth-button";
 import { ROUTE_PATH } from "@app/routes";
 import {
-  Button,
   Sidebar,
   SidebarContent,
   SidebarGroup,
@@ -13,6 +12,7 @@ import {
   SidebarSeparator,
 } from "@repo/ui";
 import { CheckSquare, Contact2, Inbox } from "lucide-react";
+import { Suspense } from "react";
 import { Link } from "react-router";
 
 const items = [
@@ -34,8 +34,6 @@ const items = [
 ];
 
 export function AppSidebar() {
-  const { isLoggedIn, logout } = useAuth();
-
   return (
     <Sidebar variant="sidebar" collapsible="icon">
       <SidebarHeader>
@@ -71,15 +69,9 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {isLoggedIn ? (
-                <Button variant="outline" onClick={logout}>
-                  로그아웃
-                </Button>
-              ) : (
-                <Button variant="outline" asChild>
-                  <Link to={ROUTE_PATH.AUTH.LOGIN}>로그인</Link>
-                </Button>
-              )}
+              <Suspense fallback={<div />}>
+                <AuthButton />
+              </Suspense>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

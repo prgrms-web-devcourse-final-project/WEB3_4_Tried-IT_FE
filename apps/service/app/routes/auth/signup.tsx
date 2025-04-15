@@ -2,7 +2,7 @@ export { SignupPage as default } from "@/pages";
 
 export function meta() {
   return [
-    { title: "Sign Up - Dementor" },
-    { name: "description", content: "Sign up for Dementor" },
+    { title: "디멘터 | 회원가입" },
+    { name: "description", content: "디멘터 회원가입 페이지" },
   ];
 }

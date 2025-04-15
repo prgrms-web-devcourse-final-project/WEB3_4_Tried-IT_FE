@@ -1,5 +1,5 @@
 import { dementorApiFetchers } from "@repo/api";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 export interface UseGetMentorApplicantProps {
   page: number;
@@ -10,7 +10,7 @@ export function useGetMentorApplicant({
   page,
   size,
 }: UseGetMentorApplicantProps) {
-  return useQuery({
+  return useSuspenseQuery({
     queryKey: ["mentor-applicant", page, size],
     queryFn: async () => {
       try {

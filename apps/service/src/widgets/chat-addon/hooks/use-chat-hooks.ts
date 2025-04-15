@@ -10,16 +10,18 @@ export function useChatRooms(enabled: boolean) {
     queryFn: async () => {
       const response = await dementorApiFetchers.chat.getMemberChatRoomList();
 
-      return response.map((room) => ({
-        id: room.chatRoomId?.toString() || "",
-        name: room.targetNickname || "알 수 없음",
-        avatar: "",
-        lastMessage: room.lastMessage || "새로운 대화를 시작하세요",
-        lastMessageTime: room.lastMessageAt
-          ? dayjs(room.lastMessageAt).locale("ko").fromNow()
-          : "",
-        isUnread: room.hasUnread,
-      }));
+      return response
+        .map((room) => ({
+          id: room.chatRoomId?.toString() || "",
+          name: room.targetNickname || "알 수 없음",
+          avatar: "",
+          lastMessage: room.lastMessage || "새로운 대화를 시작하세요",
+          lastMessageTime: room.lastMessageAt
+            ? dayjs(room.lastMessageAt).locale("ko").fromNow()
+            : "",
+          isUnread: room.hasUnread,
+        }))
+        .sort((a, b) => +b.isUnread - +a.isUnread);
     },
     enabled: enabled,
     refetchInterval: 30 * 1000,

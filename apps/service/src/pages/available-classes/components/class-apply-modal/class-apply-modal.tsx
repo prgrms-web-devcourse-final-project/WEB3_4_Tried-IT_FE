@@ -43,7 +43,7 @@ export function ClassApplyModal({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <MenteeTheme asChild>
-        <DialogContent className="flex flex-col max-w-dvw sm:max-w-fit min-h-[50vh] max-h-[80vh] overflow-y-hidden justify-between">
+        <DialogContent className="sm:max-w-[550px] min-h-[80vh] max-h-[90vh] overflow-y-auto flex flex-col">
           <Suspense fallback={<ClassApplyModalSkeleton />}>
             <ClassApplyModalContent classId={classId} onClose={onClose} />
           </Suspense>
