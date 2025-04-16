@@ -1,6 +1,6 @@
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { dementorApiFetchers } from "@repo/api";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 
 // 채팅방 목록을 가져오는 훅
@@ -14,6 +14,7 @@ export function useChatRooms(enabled: boolean) {
         .map((room) => ({
           id: room.chatRoomId?.toString() || "",
           name: room.targetNickname || "알 수 없음",
+          roomType: room.roomType,
           avatar: "",
           lastMessage: room.lastMessage || "새로운 대화를 시작하세요",
           lastMessageTime: room.lastMessageAt
@@ -26,6 +27,19 @@ export function useChatRooms(enabled: boolean) {
     enabled: enabled,
     refetchInterval: 30 * 1000,
     retry: 1,
+  });
+}
+
+export function useCreateAdminChatRoom() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      const response = await dementorApiFetchers.chat.createAdminChatRoom();
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["chatRooms"] });
+    },
   });
 }
 
