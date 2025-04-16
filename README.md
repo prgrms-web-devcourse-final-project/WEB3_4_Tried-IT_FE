@@ -6,6 +6,11 @@
 
 디멘터는 B2C 기반의 개발자 멘토링 플랫폼입니다. 취업 준비생, 신입 개발자, 그리고 개발을 희망하는 사람들이 현업 개발자와 직접 소통하며 성장할 수 있도록 돕는 것을 목표로 합니다.
 
+### 배포 링크
+
+- [서비스](https://www.dementor.site)
+- [관리자](https://admin.dementor.site)
+
 ### 주요 기능
 
 - **멘토링 매칭**: 멘티와 멘토 간의 효율적인 매칭 시스템
@@ -27,6 +32,7 @@
 
 - `ui/` - 공통 UI 컴포넌트
 - `design-system/` - 디자인 시스템
+- `api/` - Dementor API 통신 관련 유틸리티 및 타입 정의
 - `utils/` - 유틸리티 함수
 - `typescript-config/` - TypeScript 설정
 - `eslint-config/` - ESLint 설정
@@ -69,13 +75,18 @@
 ## 기술 스택
 
 - **프론트엔드**: React 19, TypeScript
-- **빌드 도구**: Vite
-- **스타일링**: Tailwind CSS
-- **상태 관리**: TanStack Query
-- **폼 관리**: React Hook Form
-- **라우팅**: React Router
-- **타입 검증**: Zod
-- **테스트**: Vitest, Testing Library
+- **라우팅**: React Router 7
+- **빌드 도구**: Vite 6
+- **스타일링**: Tailwind CSS 4
+- **상태 관리**: TanStack Query 5
+- **폼 관리**: React Hook Form 7
+- **타입 검증**: Zod 3
+- **마크다운 에디터**: @uiw/react-md-editor
+- **웹소켓**: SockJS, StompJS
+- **UI 확장**: overlay-kit
+- **테스트**: Vitest 3, Testing Library 16
+
+## 명령어
 
 ```bash
 # 의존성 설치
@@ -89,4 +100,8 @@ pnpm build
 
 # 테스트 실행
 pnpm test
+
+# 린트 실행
+pnpm lint
+
 ```
